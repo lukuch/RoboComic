@@ -1,0 +1,24 @@
+[project]
+name = "standupcomedy"
+version = "0.1.0"
+description = "AI Comedy Duel: Two AI comedians, an AI audience, Streamlit UI, and ElevenLabs TTS."
+authors = [
+    {name = "Lukasz", email = "lukuch12@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.11,<4.0"
+openai = "^1.93.0"
+autogen = {version = "^0.9.4", python = ">=3.9,<3.14"}
+streamlit = "^1.46.1"
+elevenlabs = "^2.5.0"
+injector = "^0.22.0"
+python-dotenv = "^1.1.1"
+requests = "^2.32.4"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
