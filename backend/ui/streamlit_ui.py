@@ -79,7 +79,9 @@ def render_message(msg, i, tts_service, voice_mode, lang):
 
 
 def run_ui(agent_manager, tts_service):
-    with open('ui/style.css') as f:
+    import os
+    css_path = os.path.join(os.path.dirname(__file__), 'style.css')
+    with open(css_path) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
     
     """Main entry point for the Streamlit UI."""
