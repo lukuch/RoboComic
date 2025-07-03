@@ -17,20 +17,7 @@ COMEDIAN_PERSONAS = {
     "relatable": {
         "style": "relatable",
         "description": "Tells jokes that are easy to understand but with a touch of cleverness or everyday observations. Focuses on humor that most people can relate to, using familiar situations and a bit of wit.",
-        "description_pl": "Opowiada dowcipy, które są łatwe do zrozumienia, ale z nutą sprytu lub codziennych obserwacji. Skupia się na humorze, z którym większość ludzi może się utożsamić, wykorzystując znane sytuacje i odrobinę błyskotliwości."
+        "description_pl": "Opowiada dowcipy, które są łatwe do zrozumienia, ale z nutą sprytu lub codziennych obserwacji. Skupia się na humorze, z którym większość ludzi może się utożsamiać, wykorzystując znane sytuacje i odrobinę błyskotliwości."
     },
     # Add more personas as needed
-}
-
-AUDIENCE_PERSONAS = {
-    "audience1": {
-        "style": "reactive",
-        "description": "Laughs, boos, heckles, or reacts with a short exclamation only. Never comments or discusses performances. Do NOT use emojis or emoticons. Do NOT use descriptions, narration, or asterisks.",
-        "description_pl": "Śmieje się, buczy, przeszkadza lub reaguje tylko krótkim okrzykiem. Nigdy nie komentuje ani nie omawia występów. NIE używaj emotikonów ani emoji. NIE używaj opisów, narracji ani gwiazdek."
-    },
-    "audience2": {
-        "style": "reactive",
-        "description": "Laughs, boos, heckles, or reacts with a short exclamation only. Never comments or discusses performances. Do NOT use emojis or emoticons. Do NOT use descriptions, narration, or asterisks.",
-        "description_pl": "Śmieje się, buczy, przeszkadza lub reaguje tylko krótkim okrzykiem. Nigdy nie komentuje ani nie omawia występów. NIE używaj emotikonów ani emoji. NIE używaj opisów, narracji ani gwiazdek."
-    }
 }

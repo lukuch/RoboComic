@@ -1,15 +1,12 @@
 from agents.comedian_agent import ComedianAgent
-from agents.audience_agent import AudienceAgent
 from services.prompt_templates import COMEDIAN_PROMPT_TEMPLATE
 from autogen import GroupChat, GroupChatManager
 from config import settings
 
 class AgentManager:
-    def __init__(self, comedian1_key="sarcastic", comedian2_key="absurd", audience1_key="audience1", audience2_key="audience2", lang="en"):
+    def __init__(self, comedian1_key="sarcastic", comedian2_key="absurd", lang="en"):
         self.comedian1_key = comedian1_key
         self.comedian2_key = comedian2_key
-        self.audience1_key = audience1_key
-        self.audience2_key = audience2_key
         self.lang = lang
         self.reset_agents()
         self.history = []
@@ -17,14 +14,10 @@ class AgentManager:
     def reset_agents(self):
         self.comedian1 = ComedianAgent(self.comedian1_key, display_name="Comedian_1", lang=self.lang)
         self.comedian2 = ComedianAgent(self.comedian2_key, display_name="Comedian_2", lang=self.lang)
-        self.audience1 = AudienceAgent(self.audience1_key, display_name="Audience_1", lang=self.lang)
-        self.audience2 = AudienceAgent(self.audience2_key, display_name="Audience_2", lang=self.lang)
 
-    def set_personas(self, comedian1_key, comedian2_key, audience1_key="audience1", audience2_key="audience2", lang=None):
+    def set_personas(self, comedian1_key, comedian2_key, lang=None):
         self.comedian1_key = comedian1_key
         self.comedian2_key = comedian2_key
-        self.audience1_key = audience1_key
-        self.audience2_key = audience2_key
         if lang is not None:
             self.lang = lang
         self.reset_agents()
@@ -33,9 +26,7 @@ class AgentManager:
         self.reset_agents()
         agents = [
             self.comedian1.agent,
-            #self.audience1.agent,
             self.comedian2.agent,
-            #self.audience2.agent,
         ]
         if mode == "topical":
             initial_prompt = COMEDIAN_PROMPT_TEMPLATE[lang][mode].format(
