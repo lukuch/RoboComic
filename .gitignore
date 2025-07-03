@@ -87,3 +87,5 @@ $RECYCLE.BIN/
 
 # Other
 *.log 
+
+node_modules/ 
