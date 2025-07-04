@@ -1,5 +1,5 @@
 [project]
-name = "standupcomedy"
+name = "RoboComic"
 version = "0.1.0"
 description = "AI Standup Comedy App - RoboComic"
 authors = [

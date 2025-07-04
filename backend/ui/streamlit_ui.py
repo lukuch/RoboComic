@@ -90,7 +90,7 @@ def run_ui(agent_manager, tts_service):
     st.markdown(
         f"""
         <h1 style="margin-bottom: 0.2em; display: flex; align-items: center;">
-            AI Standup
+            RoboComic
             <span class='powered-by-info'>
                 (powered by <span style=\"color:#1e90ff;\">{settings.LLM_MODEL}</span>)
             </span>
