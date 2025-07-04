@@ -32,15 +32,29 @@ function getAvatar(role: string) {
 export default function ShowHistory({ history, lang, ttsMode }: ShowHistoryProps) {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [playingIdx, setPlayingIdx] = useState<number | null>(null);
+  const [loadingIdx, setLoadingIdx] = useState<number | null>(null);
   const [showManagerMsg, setShowManagerMsg] = useState(false);
   const [popupLeft, setPopupLeft] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
   const avatarRef = useRef<HTMLDivElement>(null);
+  const [ttsCache, setTtsCache] = useState<{ [key: string]: string }>({});
 
   async function handlePlay(text: string, idx: number) {
-    setPlayingIdx(idx);
+    setLoadingIdx(idx);
+    setPlayingIdx(null); // Stop any currently playing audio immediately
+    setAudioUrl(null);   // Remove current audio
+    const cacheKey = text + '|' + lang;
+    if (ttsCache[cacheKey]) {
+      setAudioUrl(ttsCache[cacheKey]);
+      setPlayingIdx(idx);
+      setLoadingIdx(null);
+      return;
+    }
     const url = await tts(text, lang);
+    setTtsCache(prev => ({ ...prev, [cacheKey]: url }));
     setAudioUrl(url);
+    setPlayingIdx(idx);
+    setLoadingIdx(null);
   }
 
   useEffect(() => {
@@ -100,24 +114,34 @@ export default function ShowHistory({ history, lang, ttsMode }: ShowHistoryProps
                   {getAvatar(role)}
                 </div>
                 <div className={`rounded-2xl px-6 py-4 shadow-md ${bubbleColor} max-w-[80vw] md:max-w-[70%] w-fit border border-gray-200 dark:border-gray-700`}>
-                  <div className="font-semibold mb-1 text-xs text-gray-500 dark:text-gray-300">{role}</div>
+                  <div className="font-semibold mb-1 text-xs text-gray-500 dark:text-gray-300">{
+                    lang === 'pl' && role.startsWith('Comedian')
+                      ? role.replace('Comedian', 'Komik')
+                      : role
+                  }</div>
                   <div className="mb-3 whitespace-pre-line text-base leading-relaxed text-gray-900 dark:text-gray-100 font-medium">{msg.content}</div>
                   {ttsMode && !role.toLowerCase().includes('manager') && (
                     <button
                       className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold p-2 rounded-full shadow transition disabled:opacity-50 flex items-center justify-center group"
                       onClick={() => handlePlay(msg.content, i)}
-                      disabled={playingIdx === i}
+                      disabled={playingIdx === i || loadingIdx === i}
                       title="Play TTS"
                     >
-                      <span className="flex items-end justify-center gap-[1.5px] h-5 w-7">
-                        <span className="block w-[2px] h-2 bg-white rounded-full group-hover:h-5 transition-all duration-200"></span>
-                        <span className="block w-[2px] h-4 bg-white rounded-full group-hover:h-3 transition-all duration-200"></span>
-                        <span className="block w-[2px] h-3 bg-white rounded-full group-hover:h-4 transition-all duration-200"></span>
-                        <span className="block w-[2px] h-5 bg-white rounded-full group-hover:h-2 transition-all duration-200"></span>
-                        <span className="block w-[2px] h-3 bg-white rounded-full group-hover:h-5 transition-all duration-200"></span>
-                        <span className="block w-[2px] h-2 bg-white rounded-full group-hover:h-4 transition-all duration-200"></span>
-                        <span className="block w-[2px] h-4 bg-white rounded-full group-hover:h-3 transition-all duration-200"></span>
-                      </span>
+                      {loadingIdx === i ? (
+                        <span className="flex items-center justify-center h-5 w-7">
+                          <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>
+                        </span>
+                      ) : (
+                        <span className="flex items-end justify-center gap-[1.5px] h-5 w-7">
+                          <span className="block w-[2px] h-2 bg-white rounded-full group-hover:h-5 transition-all duration-200"></span>
+                          <span className="block w-[2px] h-4 bg-white rounded-full group-hover:h-3 transition-all duration-200"></span>
+                          <span className="block w-[2px] h-3 bg-white rounded-full group-hover:h-4 transition-all duration-200"></span>
+                          <span className="block w-[2px] h-5 bg-white rounded-full group-hover:h-2 transition-all duration-200"></span>
+                          <span className="block w-[2px] h-3 bg-white rounded-full group-hover:h-5 transition-all duration-200"></span>
+                          <span className="block w-[2px] h-2 bg-white rounded-full group-hover:h-4 transition-all duration-200"></span>
+                          <span className="block w-[2px] h-4 bg-white rounded-full group-hover:h-3 transition-all duration-200"></span>
+                        </span>
+                      )}
                     </button>
                   )}
                   {audioUrl && playingIdx === i && (

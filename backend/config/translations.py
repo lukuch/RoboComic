@@ -1,6 +1,6 @@
 TRANSLATIONS = {
     "en": {
-        "title": "AI Standup",
+        "title": "RoboComic",
         "comedian1_style": "Comedian 1 Style",
         "comedian2_style": "Comedian 2 Style",
         "topic": "Topic (optional)",
@@ -13,7 +13,7 @@ TRANSLATIONS = {
         "comedian2": "Comedian 2"
     },
     "pl": {
-        "title": "AI Standup",
+        "title": "RoboComic",
         "comedian1_style": "Styl Komika 1",
         "comedian2_style": "Styl Komika 2",
         "topic": "Temat (opcjonalnie)",

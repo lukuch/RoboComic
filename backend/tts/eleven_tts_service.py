@@ -9,7 +9,7 @@ class ElevenTTSService(TTSService):
         self.voice_ids = [COMEDIAN1_VOICE_ID, COMEDIAN2_VOICE_ID]
         self.voice_index = 0
 
-    def speak(self, text):
+    def speak(self, text, lang=None):
         voice_id = self.voice_ids[self.voice_index]
         self.voice_index = (self.voice_index + 1) % len(self.voice_ids)
         url = f"{self.base_url}{voice_id}"

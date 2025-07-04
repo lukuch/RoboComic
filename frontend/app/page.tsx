@@ -109,7 +109,7 @@ export default function Home() {
         </div>
       </div>
       <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-10 text-gray-900 dark:text-white drop-shadow-lg">
-        <span className="block md:inline">AI Standup</span> <span className="block md:inline">Comedy Duel</span>
+        RoboComic AI
       </h1>
       <ShowForm onSubmit={handleGenerateShow} loading={loading} lang={lang} t={t} />
       {error && <div className="text-red-600 text-center mt-4 font-semibold">{error}</div>}

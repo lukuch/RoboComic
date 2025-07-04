@@ -9,7 +9,7 @@ import io
 from services.llm_utils import generate_topic_context_llm
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+app = FastAPI(title="RoboComic", description="AI Standup Comedy App - RoboComic")
 
 app.add_middleware(
     CORSMiddleware,

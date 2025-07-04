@@ -26,7 +26,7 @@ def test_tts():
     response = client.post(
         "/tts",
         json={
-            "text": "This is a test of the standup comedy TTS system.",
+            "text": "This is a test of the RoboComic TTS system.",
             "lang": "en"
         }
     )

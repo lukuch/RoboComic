@@ -1,7 +1,7 @@
 [project]
 name = "standupcomedy"
 version = "0.1.0"
-description = "AI Comedy Duel: Two AI comedians, an AI audience, Streamlit UI, and ElevenLabs TTS."
+description = "AI Standup Comedy App - RoboComic"
 authors = [
     {name = "Lukasz", email = "lukuch12@gmail.com"}
 ]
