@@ -1,3 +1,6 @@
+// Get backend URL from environment or default to localhost
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+
 export async function generateShow(params: {
   comedian1_style: string;
   comedian2_style: string;
@@ -6,7 +9,7 @@ export async function generateShow(params: {
   topic: string;
   num_rounds: number;
 }) {
-  const res = await fetch('http://localhost:8000/generate-show', {
+  const res = await fetch(`${BACKEND_URL}/generate-show`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(params),
@@ -16,7 +19,7 @@ export async function generateShow(params: {
 }
 
 export async function tts(text: string, lang: string) {
-  const res = await fetch('http://localhost:8000/tts', {
+  const res = await fetch(`${BACKEND_URL}/tts`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text, lang }),
