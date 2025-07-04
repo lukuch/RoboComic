@@ -8,6 +8,7 @@ import uvicorn
 import io
 from services.llm_utils import generate_topic_context_llm
 from fastapi.middleware.cors import CORSMiddleware
+from config.personas import COMEDIAN_PERSONAS
 
 app = FastAPI(title="RoboComic", description="AI Standup Comedy App - RoboComic")
 
@@ -50,6 +51,10 @@ async def tts_api(request: Request):
         return StreamingResponse(buf, media_type="audio/wav")
     else:
         return StreamingResponse(io.BytesIO(audio_result), media_type="audio/wav")
+
+@app.get("/personas")
+def get_personas():
+    return COMEDIAN_PERSONAS
 
 def main():
     agent_manager = container.get(AgentManager)

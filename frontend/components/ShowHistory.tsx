@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
-import { tts } from './Api';
+import { tts } from '../services/apiService';
+import { toTitleCase } from '../utils/toTitleCase';
 
 interface ShowHistoryProps {
   history: { role: string; content: string }[];
   lang: string;
   ttsMode: boolean;
+  comedian1Persona: string;
+  comedian2Persona: string;
 }
 
 const bubbleColors = [
@@ -29,7 +32,7 @@ function getAvatar(role: string) {
   return avatars[key] || '👤';
 }
 
-export default function ShowHistory({ history, lang, ttsMode }: ShowHistoryProps) {
+export default function ShowHistory({ history, lang, ttsMode, comedian1Persona, comedian2Persona }: ShowHistoryProps) {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [playingIdx, setPlayingIdx] = useState<number | null>(null);
   const [loadingIdx, setLoadingIdx] = useState<number | null>(null);
@@ -106,21 +109,17 @@ export default function ShowHistory({ history, lang, ttsMode }: ShowHistoryProps
         {rest.map((msg, i) => {
           const align = i % 2 === 0 ? 'items-start' : 'items-end';
           const bubbleColor = bubbleColors[i % bubbleColors.length];
-          const role = msg.role.replace('_', ' ').trim();
+          const personaKey = i % 2 === 0 ? comedian1Persona : comedian2Persona;
           return (
             <div key={i} className={`flex ${align} w-full`}>
               <div className={`flex gap-3 ${align === 'items-end' ? 'flex-row-reverse' : ''} w-fit`}>
                 <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-400 dark:from-blue-700 dark:to-purple-800 flex items-center justify-center text-2xl shadow-md">
-                  {getAvatar(role)}
+                  {getAvatar(personaKey)}
                 </div>
                 <div className={`rounded-2xl px-6 py-4 shadow-md ${bubbleColor} max-w-[80vw] md:max-w-[70%] w-fit border border-gray-200 dark:border-gray-700`}>
-                  <div className="font-semibold mb-1 text-xs text-gray-500 dark:text-gray-300">{
-                    lang === 'pl' && role.startsWith('Comedian')
-                      ? role.replace('Comedian', 'Komik')
-                      : role
-                  }</div>
+                  <div className="font-semibold mb-1 text-xs text-gray-500 dark:text-gray-300">Comedian {toTitleCase(personaKey)}</div>
                   <div className="mb-3 whitespace-pre-line text-base leading-relaxed text-gray-900 dark:text-gray-100 font-medium">{msg.content}</div>
-                  {ttsMode && !role.toLowerCase().includes('manager') && (
+                  {ttsMode && !msg.role.toLowerCase().includes('manager') && (
                     <button
                       className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold p-2 rounded-full shadow transition disabled:opacity-50 flex items-center justify-center group"
                       onClick={() => handlePlay(msg.content, i)}

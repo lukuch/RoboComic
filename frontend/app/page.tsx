@@ -2,7 +2,7 @@
 
 import ShowForm from '../components/ShowForm';
 import ShowHistory from '../components/ShowHistory';
-import { generateShow } from '../components/Api';
+import { generateShow } from '../services/apiService';
 import { useState } from 'react';
 import CountryFlag from 'react-country-flag';
 
@@ -48,16 +48,21 @@ const LANGUAGES = [
 
 export default function Home() {
   const [history, setHistory] = useState<{ role: string; content: string }[]>([]);
-  const [lang, setLang] = useState('en');
+  const [lang, setLang] = useState('pl');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [ttsMode, setTtsMode] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [comedian1, setComedian1] = useState('relatable');
+  const [comedian2, setComedian2] = useState('relatable');
 
   async function handleGenerateShow(params: any) {
     setLoading(true);
     setError(null);
     setTtsMode(params.tts_mode);
+    setComedian1(params.comedian1_style);
+    setComedian2(params.comedian2_style);
+    setHistory([]);
     try {
       const data = await generateShow({
         comedian1_style: params.comedian1_style,
@@ -80,6 +85,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-purple-100 dark:from-gray-950 dark:via-gray-900 dark:to-blue-950 flex flex-col items-center py-12 px-2">
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+        </div>
+      )}
       <div className="w-full max-w-2xl flex justify-end mb-6 relative z-10">
         <div className="relative">
           <button
@@ -108,12 +118,13 @@ export default function Home() {
           )}
         </div>
       </div>
-      <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-10 text-gray-900 dark:text-white drop-shadow-lg">
+      <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-10 text-gray-900 dark:text-white drop-shadow-lg flex items-center justify-center gap-4">
+        <img src="/icon-192x192.png" alt="RoboComic Icon" className="w-12 h-12 inline-block align-middle" />
         RoboComic AI
       </h1>
       <ShowForm onSubmit={handleGenerateShow} loading={loading} lang={lang} t={t} />
       {error && <div className="text-red-600 text-center mt-4 font-semibold">{error}</div>}
-      <ShowHistory history={history} lang={lang} ttsMode={ttsMode} />
+      <ShowHistory history={history} lang={lang} ttsMode={ttsMode} comedian1Persona={comedian1} comedian2Persona={comedian2} />
     </div>
   );
 }

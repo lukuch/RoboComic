@@ -1,6 +1,8 @@
-import { useState, Fragment } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import { fetchPersonas } from '../services/apiService';
+import { toTitleCase } from '../utils/toTitleCase';
 
 interface ShowFormProps {
   onSubmit: (params: {
@@ -32,20 +34,22 @@ interface ShowFormProps {
   };
 }
 
-const personaOptions = [
-  'sarcastic',
-  'absurd',
-  'simple',
-  'relatable',
-];
-
 export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) {
-  const [comedian1, setComedian1] = useState('relatable');
-  const [comedian2, setComedian2] = useState('relatable');
+  const [comedian1, setComedian1] = useState('uncle_heniek');
+  const [comedian2, setComedian2] = useState('gen_z');
   const [topic, setTopic] = useState('');
   const [numRounds, setNumRounds] = useState(1);
-  const [roastMode, setRoastMode] = useState(false);
-  const [ttsMode, setTtsMode] = useState(false);
+  const [roastMode, setRoastMode] = useState(true);
+  const [ttsMode, setTtsMode] = useState(true);
+  const [personas, setPersonas] = useState<{[key: string]: {description: string; description_pl: string}} | null>(null);
+
+  useEffect(() => {
+    fetchPersonas()
+      .then(data => setPersonas(data))
+      .catch(() => setPersonas(null));
+  }, []);
+
+  const personaOptions = personas ? Object.keys(personas) : [];
 
   return (
     <section className="w-full flex flex-col items-center mb-10">
@@ -71,7 +75,7 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
             <Listbox value={comedian1} onChange={setComedian1}>
               <div className="relative">
                 <Listbox.Button className="relative w-full cursor-pointer rounded-xl bg-white/10 dark:bg-gray-800/40 border border-gray-400 dark:border-gray-700 py-2 pl-4 pr-10 text-left shadow focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-900 dark:text-gray-100">
-                  <span className="block truncate capitalize">{comedian1}</span>
+                  <span className="block truncate">{toTitleCase(comedian1)}</span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                     <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                   </span>
@@ -82,18 +86,19 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
                       <Listbox.Option
                         key={option}
                         className={({ active }) =>
-                          `relative cursor-pointer select-none py-2 pl-10 pr-4 capitalize ${active ? 'bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100' : 'text-gray-900 dark:text-gray-100'}`
+                          `relative cursor-pointer select-none py-2 pl-10 pr-4 ${active ? 'bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100' : 'text-gray-900 dark:text-gray-100'}`
                         }
                         value={option}
                       >
                         {({ selected }: { selected: boolean }) => (
                           <>
-                            <span className={`block truncate ${selected ? 'font-bold' : 'font-normal'}`}>{option}</span>
+                            <span className={`block truncate ${selected ? 'font-bold' : 'font-normal'}`}>{toTitleCase(option)}</span>
                             {selected ? (
                               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600 dark:text-blue-400">
                                 <CheckIcon className="h-5 w-5" aria-hidden="true" />
                               </span>
                             ) : null}
+                            <span className="block text-xs text-gray-500 dark:text-gray-400">{personas?.[option]?.[lang === 'pl' ? 'description_pl' : 'description']}</span>
                           </>
                         )}
                       </Listbox.Option>
@@ -108,7 +113,7 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
             <Listbox value={comedian2} onChange={setComedian2}>
               <div className="relative">
                 <Listbox.Button className="relative w-full cursor-pointer rounded-xl bg-white/10 dark:bg-gray-800/40 border border-gray-400 dark:border-gray-700 py-2 pl-4 pr-10 text-left shadow focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-900 dark:text-gray-100">
-                  <span className="block truncate capitalize">{comedian2}</span>
+                  <span className="block truncate">{toTitleCase(comedian2)}</span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                     <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                   </span>
@@ -119,18 +124,19 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
                       <Listbox.Option
                         key={option}
                         className={({ active }) =>
-                          `relative cursor-pointer select-none py-2 pl-10 pr-4 capitalize ${active ? 'bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100' : 'text-gray-900 dark:text-gray-100'}`
+                          `relative cursor-pointer select-none py-2 pl-10 pr-4 ${active ? 'bg-blue-100 dark:bg-blue-900 text-blue-900 dark:text-blue-100' : 'text-gray-900 dark:text-gray-100'}`
                         }
                         value={option}
                       >
                         {({ selected }: { selected: boolean }) => (
                           <>
-                            <span className={`block truncate ${selected ? 'font-bold' : 'font-normal'}`}>{option}</span>
+                            <span className={`block truncate ${selected ? 'font-bold' : 'font-normal'}`}>{toTitleCase(option)}</span>
                             {selected ? (
                               <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-600 dark:text-blue-400">
                                 <CheckIcon className="h-5 w-5" aria-hidden="true" />
                               </span>
                             ) : null}
+                            <span className="block text-xs text-gray-500 dark:text-gray-400">{personas?.[option]?.[lang === 'pl' ? 'description_pl' : 'description']}</span>
                           </>
                         )}
                       </Listbox.Option>
