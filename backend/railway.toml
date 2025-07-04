@@ -1,0 +1,9 @@
+[build]
+builder = "nixpacks"
+buildCommand = "poetry install"
+
+[deploy]
+startCommand = "poetry run uvicorn main:app --host 0.0.0.0 --port $PORT"
+healthcheckPath = "/"
+healthcheckTimeout = 300
+restartPolicyType = "on_failure" 
