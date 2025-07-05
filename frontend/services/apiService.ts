@@ -1,25 +1,79 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { 
+  GenerateShowParams, 
+  GenerateShowResponse, 
+  Personas, 
+  ApiError 
+} from '../types';
+import { API_CONFIG, ERROR_MESSAGES } from '../constants';
 
-const BACKEND_URL = process.env.PUBLIC_BACKEND_URL || 'http://localhost:8000';
+// Create axios instance with default config
+const api = axios.create({
+  baseURL: API_CONFIG.BASE_URL,
+  timeout: API_CONFIG.TIMEOUT,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-export async function generateShow(params: {
-  comedian1_style: string;
-  comedian2_style: string;
-  lang: string;
-  mode: string;
-  topic: string;
-  num_rounds: number;
-}) {
-  const { data } = await axios.post(`${BACKEND_URL}/generate-show`, params);
-  return data;
+// Error handler
+function handleApiError(error: AxiosError): ApiError {
+  if (error.response) {
+    // Server responded with error status
+    const responseData = error.response.data as any;
+    return {
+      message: responseData?.message || `HTTP ${error.response.status}: ${error.response.statusText}`,
+      status: error.response.status,
+    };
+  } else if (error.request) {
+    // Network error
+    return {
+      message: ERROR_MESSAGES.NETWORK_ERROR,
+    };
+  } else {
+    // Other error
+    return {
+      message: error.message || ERROR_MESSAGES.UNEXPECTED_ERROR,
+    };
+  }
 }
 
-export async function tts(text: string, lang: string) {
-  const res = await axios.post(`${BACKEND_URL}/tts`, { text, lang }, { responseType: 'blob' });
-  return URL.createObjectURL(res.data);
+export async function generateShow(params: GenerateShowParams): Promise<GenerateShowResponse> {
+  try {
+    const { data } = await api.post<GenerateShowResponse>('/generate-show', params);
+    return data;
+  } catch (error) {
+    throw handleApiError(error as AxiosError);
+  }
 }
 
-export async function fetchPersonas() {
-  const { data } = await axios.get(`${BACKEND_URL}/personas`);
-  return data;
+export async function tts(text: string, lang: string): Promise<string> {
+  try {
+    const response = await api.post('/tts', { text, lang }, { 
+      responseType: 'blob',
+      timeout: API_CONFIG.TTS_TIMEOUT,
+    });
+    return URL.createObjectURL(response.data);
+  } catch (error) {
+    throw handleApiError(error as AxiosError);
+  }
+}
+
+export async function fetchPersonas(): Promise<Personas> {
+  try {
+    const { data } = await api.get<Personas>('/personas');
+    return data;
+  } catch (error) {
+    throw handleApiError(error as AxiosError);
+  }
+}
+
+// Health check function
+export async function healthCheck(): Promise<boolean> {
+  try {
+    await api.get('/health');
+    return true;
+  } catch (error) {
+    return false;
+  }
 } 

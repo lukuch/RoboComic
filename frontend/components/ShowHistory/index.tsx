@@ -1,0 +1,87 @@
+import { useState } from 'react';
+import { tts } from '../../services/apiService';
+import { ChatBubble } from './ChatBubble';
+import { ManagerBubble } from './ManagerBubble';
+
+interface ShowHistoryProps {
+  history: { role: string; content: string }[];
+  lang: string;
+  ttsMode: boolean;
+  comedian1Persona: string;
+  comedian2Persona: string;
+}
+
+const bubbleColors = [
+  'bg-blue-100 dark:bg-blue-800',
+  'bg-green-100 dark:bg-green-800',
+  'bg-purple-100 dark:bg-purple-800',
+  'bg-pink-100 dark:bg-pink-800',
+  'bg-yellow-100 dark:bg-yellow-800',
+  'bg-gray-100 dark:bg-gray-700',
+];
+
+export default function ShowHistory({ history, lang, ttsMode, comedian1Persona, comedian2Persona }: ShowHistoryProps) {
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [playingIdx, setPlayingIdx] = useState<number | null>(null);
+  const [loadingIdx, setLoadingIdx] = useState<number | null>(null);
+  const [ttsCache, setTtsCache] = useState<{ [key: string]: string }>({});
+
+  async function handlePlay(text: string, idx: number) {
+    setLoadingIdx(idx);
+    setPlayingIdx(null); // Stop any currently playing audio immediately
+    setAudioUrl(null);   // Remove current audio
+    const cacheKey = text + '|' + lang;
+    if (ttsCache[cacheKey]) {
+      setAudioUrl(ttsCache[cacheKey]);
+      setPlayingIdx(idx);
+      setLoadingIdx(null);
+      return;
+    }
+    const url = await tts(text, lang);
+    setTtsCache(prev => ({ ...prev, [cacheKey]: url }));
+    setAudioUrl(url);
+    setPlayingIdx(idx);
+    setLoadingIdx(null);
+  }
+
+  if (!history.length) return null;
+
+  // Find the first chat manager message and the rest
+  const managerIdx = history.findIndex(msg => msg.role.toLowerCase().includes('manager'));
+  const managerMsg = managerIdx !== -1 ? history[managerIdx] : null;
+  const rest = history.filter((msg, i) => i !== managerIdx);
+
+  return (
+    <section className="w-full flex flex-col items-center mt-12">
+      <div className="w-full max-w-4xl flex flex-col gap-8 items-center">
+        {/* Chat manager bubble center-aligned above the rest */}
+        {managerMsg && (
+          <ManagerBubble message={managerMsg} />
+        )}
+        {/* The rest of the chat bubbles, first one is Comedian 1 */}
+        {rest.map((msg, i) => {
+          const align = i % 2 === 0 ? 'items-start' : 'items-end';
+          const bubbleColor = bubbleColors[i % bubbleColors.length];
+          const personaKey = i % 2 === 0 ? comedian1Persona : comedian2Persona;
+          
+          return (
+            <ChatBubble
+              key={i}
+              message={msg}
+              index={i}
+              personaKey={personaKey}
+              bubbleColor={bubbleColor}
+              align={align}
+              ttsMode={ttsMode}
+              onPlayTTS={handlePlay}
+              playingIdx={playingIdx}
+              loadingIdx={loadingIdx}
+              audioUrl={audioUrl}
+              onAudioEnd={() => setPlayingIdx(null)}
+            />
+          );
+        })}
+      </div>
+    </section>
+  );
+} 
