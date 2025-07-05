@@ -1,0 +1,52 @@
+import injector
+import structlog
+from typing import Union, Tuple
+import numpy as np
+from services.agent_manager import AgentManager
+from tts.tts_service import TTSService
+from services.llm_utils import generate_topic_context_llm
+from models import GenerateShowRequest, GenerateShowResponse, ChatMessage, TTSRequest
+from utils import APIException, TTSServiceException
+import io
+
+class ApiService:
+    @injector.inject
+    def __init__(self, agent_manager: AgentManager, tts_service: TTSService, logger: structlog.BoundLogger):
+        self.agent_manager = agent_manager
+        self.tts_service = tts_service
+        self.logger = logger
+
+    def generate_show(self, request: GenerateShowRequest) -> GenerateShowResponse:
+        self.logger.info(f"Generating show: {request.comedian1_style} vs {request.comedian2_style}, mode={request.mode}, rounds={request.num_rounds}")
+        try:
+            self.agent_manager.set_personas(request.comedian1_style, request.comedian2_style, lang=request.lang)
+            context = ""
+            if request.mode == "topical":
+                self.logger.info(f"Generating topic context for: {request.topic}")
+                context = generate_topic_context_llm(request.topic, request.lang)
+            self.logger.info(f"Starting comedy duel with {request.num_rounds} rounds")
+            history = self.agent_manager.run_duel(request.mode, request.topic, max_rounds=request.num_rounds, lang=request.lang, context=context)
+            chat_messages = [ChatMessage(role=msg["role"], content=msg["content"]) for msg in history]
+            self.logger.info(f"Successfully generated show with {len(chat_messages)} messages")
+            return GenerateShowResponse(history=chat_messages)
+        except Exception as e:
+            self.logger.error(f"Failed to generate show: {str(e)}", exc_info=True)
+            raise APIException(
+                message="Failed to generate comedy show",
+                status_code=500,
+                error_code="SHOW_GENERATION_FAILED",
+                details={"original_error": str(e)}
+            )
+
+    def tts(self, request: TTSRequest) -> Union[bytes, Tuple[np.ndarray, int]]:
+        self.logger.info(f"TTS request: {len(request.text)} characters, lang={request.lang}")
+        try:
+            audio_result = self.tts_service.speak(request.text, lang=request.lang)
+            return audio_result
+        except Exception as e:
+            self.logger.error(f"TTS generation failed: {str(e)}", exc_info=True)
+            raise TTSServiceException(
+                message="Failed to generate audio",
+                error_code="TTS_GENERATION_FAILED",
+                details={"original_error": str(e)}
+            ) 

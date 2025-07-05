@@ -1,3 +1,5 @@
+"""ElevenTTSService for RoboComic backend."""
+
 import requests
 import injector
 import structlog
@@ -13,7 +15,7 @@ class ElevenTTSService(TTSService):
         self.voice_ids = [COMEDIAN1_VOICE_ID, COMEDIAN2_VOICE_ID]
         self.voice_index = 0
 
-    def speak(self, text, lang=None):
+    def speak(self, text: str, lang: str = None) -> bytes:
         voice_id = self.voice_ids[self.voice_index]
         self.voice_index = (self.voice_index + 1) % len(self.voice_ids)
         

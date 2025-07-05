@@ -1,8 +1,12 @@
-import openai
-import streamlit as st
-from config import settings
+"""LLM utility functions for RoboComic backend."""
 
-def generate_topic_context_llm(topic, lang):
+import openai
+from config import settings
+from utils.logger import get_logger
+
+logger = get_logger(__name__)
+
+def generate_topic_context_llm(topic: str, lang: str) -> str:
     """Generate a list of anecdotes or facts about the topic using LLM."""
     if not topic:
         return ""
@@ -26,11 +30,11 @@ def generate_topic_context_llm(topic, lang):
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
-        st.error(f"Error generating topic context: {e}")
+        logger.error(f"Error generating topic context: {e}")
         return "" 
 
 
-def comedianify_text_llm(text, gender="MAN", lang="en"):
+def comedianify_text_llm(text: str, gender: str = "MAN", lang: str = "en") -> str:
     """Use OpenAI LLM to rewrite text as a standup comedian performance with Bark-compatible stage effects, in the specified language."""
     if not text:
         return ""
@@ -60,5 +64,5 @@ def comedianify_text_llm(text, gender="MAN", lang="en"):
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
-        st.error(f"Error comedianifying text: {e}")
+        logger.error(f"Error comedianifying text: {e}")
         return text 

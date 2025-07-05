@@ -41,7 +41,7 @@ function handleApiError(error: AxiosError): ApiError {
 export async function generateShow(params: GenerateShowParams): Promise<GenerateShowResponse> {
   try {
     const { data } = await api.post<GenerateShowResponse>('/generate-show', params);
-    return data;
+  return data;
   } catch (error) {
     throw handleApiError(error as AxiosError);
   }
@@ -62,7 +62,7 @@ export async function tts(text: string, lang: string): Promise<string> {
 export async function fetchPersonas(): Promise<Personas> {
   try {
     const { data } = await api.get<Personas>('/personas');
-    return data;
+  return data;
   } catch (error) {
     throw handleApiError(error as AxiosError);
   }

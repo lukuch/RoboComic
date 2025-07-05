@@ -6,6 +6,8 @@ from tts.tts_service import TTSService
 from tts.eleven_tts_service import ElevenTTSService
 from tts.bark_tts_service import BarkTTSService
 from utils.logger import setup_logger
+from services.api_service import ApiService
+from ui.streamlit_ui import UIService
 
 class AppContainer(injector.Module):
     def configure(self, binder: injector.Binder) -> None:
@@ -14,8 +16,10 @@ class AppContainer(injector.Module):
         binder.bind(structlog.BoundLogger, to=logger, scope=injector.SingletonScope)
         
         # Bind services
-        binder.bind(ComedianAgent, to=ComedianAgent)
+        binder.bind(ComedianAgent, to=ComedianAgent, scope=injector.SingletonScope)
         binder.bind(AgentManager, to=AgentManager, scope=injector.SingletonScope)
         binder.bind(TTSService, to=ElevenTTSService, scope=injector.SingletonScope)
+        binder.bind(ApiService, to=ApiService, scope=injector.SingletonScope)
+        binder.bind(UIService, to=UIService, scope=injector.SingletonScope)
 
 container = injector.Injector([AppContainer()])
