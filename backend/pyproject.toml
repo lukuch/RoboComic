@@ -23,6 +23,7 @@ soundfile = "^0.13.1"
 numpy = "1.26.4"
 fastapi = "^0.115.14"
 uvicorn = "^0.35.0"
+structlog = "^24.1.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"

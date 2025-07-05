@@ -1,9 +1,13 @@
 import requests
+import injector
+import structlog
 from config.settings import ELEVENLABS_API_KEY, COMEDIAN1_VOICE_ID, COMEDIAN2_VOICE_ID
 from .tts_service import TTSService
 
 class ElevenTTSService(TTSService):
-    def __init__(self):
+    @injector.inject
+    def __init__(self, logger: structlog.BoundLogger):
+        self.logger = logger
         self.api_key = ELEVENLABS_API_KEY
         self.base_url = "https://api.elevenlabs.io/v1/text-to-speech/"
         self.voice_ids = [COMEDIAN1_VOICE_ID, COMEDIAN2_VOICE_ID]
@@ -12,6 +16,9 @@ class ElevenTTSService(TTSService):
     def speak(self, text, lang=None):
         voice_id = self.voice_ids[self.voice_index]
         self.voice_index = (self.voice_index + 1) % len(self.voice_ids)
+        
+        self.logger.info(f"TTS request to ElevenLabs: voice_id={voice_id}, text_length={len(text)}")
+        
         url = f"{self.base_url}{voice_id}"
         headers = {
             "xi-api-key": self.api_key,
@@ -21,6 +28,12 @@ class ElevenTTSService(TTSService):
             "text": text,
             "voice_settings": {"stability": 0.5, "similarity_boost": 0.5}
         }
-        response = requests.post(url, headers=headers, json=data)
-        response.raise_for_status()
-        return response.content
+        
+        try:
+            response = requests.post(url, headers=headers, json=data)
+            response.raise_for_status()
+            self.logger.info(f"ElevenLabs TTS successful: {len(response.content)} bytes")
+            return response.content
+        except requests.exceptions.RequestException as e:
+            self.logger.error(f"ElevenLabs TTS failed: {str(e)}")
+            raise

@@ -21,8 +21,6 @@ class GenerateShowRequest(BaseModel):
     @field_validator('topic')
     @classmethod
     def validate_topic(cls, v):
-        if not v.strip():
-            raise ValueError('Topic cannot be empty')
         if len(v) > 500:
             raise ValueError('Topic too long (max 500 characters)')
         return v.strip()
