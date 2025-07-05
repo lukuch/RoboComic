@@ -21,6 +21,7 @@ export default function Home() {
     comedian1,
     comedian2,
     generateShow: handleGenerateShow,
+    clearError,
   } = useShowGeneration();
 
   const t = TRANSLATIONS[lang as 'en' | 'pl'];
@@ -31,7 +32,7 @@ export default function Home() {
       <LanguageSelector currentLang={lang} onLanguageChange={setLang} />
       <AppHeader />
       <ShowForm onSubmit={handleGenerateShow} loading={loading} lang={lang} t={t} />
-      <ErrorDisplay error={error} />
+      <ErrorDisplay error={error} onDismiss={clearError} />
       <ShowHistory history={history} lang={lang} ttsMode={ttsMode} comedian1Persona={comedian1} comedian2Persona={comedian2} />
     </div>
   );
