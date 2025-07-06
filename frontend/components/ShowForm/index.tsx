@@ -108,19 +108,20 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
           placeholder={t.placeholder}
           disabled={roastMode}
         />
-        {roastMode && (
-          <div className="text-xs text-gray-400 -mt-4 mb-2">{t.roastModeTopicDisabledExplanation}</div>
-        )}
-        {!roastMode && (
-          <div className="flex gap-6 -mt-4">
-            <CheckboxWithTooltip
-              checked={buildContext}
-              onChange={setBuildContext}
-              label={t.buildContext}
-              tooltip={t.buildContextTooltip}
-            />
-          </div>
-        )}
+        <div className="h-8 -mt-4 flex items-center">
+          {roastMode ? (
+            <div className="text-xs text-gray-400 leading-relaxed">{t.roastModeTopicDisabledExplanation}</div>
+          ) : (
+            <div className="flex gap-6">
+              <CheckboxWithTooltip
+                checked={buildContext}
+                onChange={setBuildContext}
+                label={t.buildContext}
+                tooltip={t.buildContextTooltip}
+              />
+            </div>
+          )}
+        </div>
         <NumberInput
           value={numRounds}
           onChange={setNumRounds}

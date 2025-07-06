@@ -1,7 +1,7 @@
 import { Avatar } from './Avatar';
 import { TTSButton } from './TTSButton';
 import { toTitleCase } from '../../utils/toTitleCase';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 interface ChatBubbleProps {
   message: { role: string; content: string };
@@ -36,7 +36,39 @@ export function ChatBubble({
 }: ChatBubbleProps) {
   const isComedian = !['manager', 'chat_manager', 'system'].includes(message.role.toLowerCase());
   const [showPopup, setShowPopup] = useState(false);
+  const [popupPosition, setPopupPosition] = useState<'left' | 'center' | 'right'>('center');
+  const popupRef = useRef<HTMLDivElement>(null);
+  const avatarRef = useRef<HTMLDivElement>(null);
   const persona = personas?.[personaKey];
+
+  useEffect(() => {
+    if (showPopup && popupRef.current && avatarRef.current) {
+      const popupRect = popupRef.current.getBoundingClientRect();
+      const avatarRect = avatarRef.current.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      
+      // Check if popup would go outside viewport
+      const spaceLeft = avatarRect.left;
+      const spaceRight = viewportWidth - avatarRect.right;
+      const popupWidth = 256; // w-64 = 16rem = 256px
+      
+      if (spaceLeft < popupWidth / 2) {
+        setPopupPosition('left');
+      } else if (spaceRight < popupWidth / 2) {
+        setPopupPosition('right');
+      } else {
+        setPopupPosition('center');
+      }
+    }
+  }, [showPopup]);
+
+  // Helper to strip leading/trailing quotes
+  function stripQuotes(text: string) {
+    if (text.length > 1 && text.startsWith('"') && text.endsWith('"')) {
+      return text.slice(1, -1);
+    }
+    return text;
+  }
 
   return (
     <div className={`flex ${align} w-full`}>
@@ -47,12 +79,23 @@ export function ChatBubble({
             onMouseLeave={() => setShowPopup(false)}
             className="mr-2"
           >
-            <div className={`relative flex flex-col items-center`}>
+            <div className={`relative flex flex-col items-center`} ref={avatarRef}>
               <Avatar role={personaKey} />
               {isComedian && showPopup && persona && (
-                <div className="absolute bottom-full mb-3 z-40 bg-gray-900/90 text-gray-100 rounded-2xl shadow-xl border border-gray-700 px-6 py-4 w-64 text-sm backdrop-blur transition-all duration-200 opacity-100 scale-100 left-1/2 -translate-x-1/2">
+                <div 
+                  ref={popupRef}
+                  className={`absolute bottom-full mb-3 z-40 bg-gray-900/90 text-gray-100 rounded-2xl shadow-xl border border-gray-700 px-6 py-4 w-64 text-sm backdrop-blur ${
+                    popupPosition === 'left' ? 'left-0' : 
+                    popupPosition === 'right' ? 'right-0' : 
+                    'left-1/2 -translate-x-1/2'
+                  }`}
+                >
                   {/* Arrow */}
-                  <div className="absolute bottom-[-14px] left-1/2 -translate-x-1/2">
+                  <div className={`absolute bottom-[-14px] ${
+                    popupPosition === 'left' ? 'left-4' : 
+                    popupPosition === 'right' ? 'right-4' : 
+                    'left-1/2 -translate-x-1/2'
+                  }`}>
                     <svg width="28" height="14" viewBox="0 0 28 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <polygon points="0,0 28,0 14,14" fill="#23272f" />
                     </svg>
@@ -69,7 +112,7 @@ export function ChatBubble({
             {toTitleCase(personaKey)}
           </div>
           <div className="mb-3 whitespace-pre-line text-base leading-relaxed text-gray-900 dark:text-gray-100 font-medium">
-            {message.content}
+            {stripQuotes(message.content)}
           </div>
           {ttsMode && !message.role.toLowerCase().includes('manager') && (
             <TTSButton

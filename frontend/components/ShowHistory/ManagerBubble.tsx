@@ -7,19 +7,26 @@ interface ManagerBubbleProps {
 
 export function ManagerBubble({ message }: ManagerBubbleProps) {
   const [showManagerMsg, setShowManagerMsg] = useState(false);
-  const [popupLeft, setPopupLeft] = useState(false);
+  const [popupPosition, setPopupPosition] = useState<'left' | 'center' | 'right'>('center');
   const popupRef = useRef<HTMLDivElement>(null);
   const avatarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (showManagerMsg && popupRef.current && avatarRef.current) {
-      const popupRect = popupRef.current.getBoundingClientRect();
       const avatarRect = avatarRef.current.getBoundingClientRect();
-      const spaceRight = window.innerWidth - avatarRect.right;
-      if (spaceRight < popupRect.width + 16) {
-        setPopupLeft(true);
+      const viewportWidth = window.innerWidth;
+      
+      // Check if popup would go outside viewport
+      const spaceLeft = avatarRect.left;
+      const spaceRight = viewportWidth - avatarRect.right;
+      const popupWidth = 512; // w-[32rem] = 32rem = 512px
+      
+      if (spaceLeft < popupWidth / 2) {
+        setPopupPosition('left');
+      } else if (spaceRight < popupWidth / 2) {
+        setPopupPosition('right');
       } else {
-        setPopupLeft(false);
+        setPopupPosition('center');
       }
     }
   }, [showManagerMsg]);
@@ -37,9 +44,12 @@ export function ManagerBubble({ message }: ManagerBubbleProps) {
         {showManagerMsg && (
           <div
             ref={popupRef}
-            className={`absolute left-1/2 -translate-x-1/2 bottom-full z-30 rounded-2xl px-6 py-4 shadow-xl bg-gray-900/90 max-w-2xl w-[32rem] border border-gray-700 text-left font-medium text-gray-100 text-sm backdrop-blur transition-all duration-200
-              ${showManagerMsg ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}
-            style={{ minWidth: '20rem', bottom: 'calc(100% + 4.2rem)' }}
+            className={`absolute 
+              md:${popupPosition === 'left' ? 'left-0' : popupPosition === 'right' ? 'right-0' : 'left-1/2 -translate-x-1/2'}
+              left-1/2 -translate-x-1/2
+              bottom-full z-30 rounded-2xl px-6 py-4 shadow-xl bg-gray-900/90 max-w-2xl w-[32rem] max-w-[90vw] md:w-[32rem] border border-gray-700 text-left font-medium text-gray-100 text-sm backdrop-blur
+              ${showManagerMsg ? '' : 'hidden'}`}
+            style={{ minWidth: '16rem', bottom: 'calc(100% + 4.2rem)' }}
           >
             {/* Arrow */}
             <div className="absolute bottom-[-14px] left-1/2 -translate-x-1/2">
