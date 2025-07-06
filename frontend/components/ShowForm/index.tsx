@@ -36,6 +36,7 @@ interface ShowFormProps {
     roastModeTooltip: string;
     ttsModeTooltip: string;
     numRoundsTooltip: string;
+    roastModeTopicDisabledExplanation: string;
   };
 }
 
@@ -100,7 +101,11 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
           value={topic}
           onChange={setTopic}
           placeholder={t.placeholder}
+          disabled={roastMode}
         />
+        {roastMode && (
+          <div className="text-xs text-gray-400 -mt-4 mb-2">{t.roastModeTopicDisabledExplanation}</div>
+        )}
         <NumberInput
           value={numRounds}
           onChange={setNumRounds}

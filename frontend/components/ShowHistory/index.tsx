@@ -60,6 +60,13 @@ export default function ShowHistory({ history, lang, ttsMode, comedian1Persona, 
   const managerMsg = managerIdx !== -1 ? history[managerIdx] : null;
   const rest = history.filter((msg, i) => i !== managerIdx);
 
+  // Group chat bubbles by round (4 bubbles per round)
+  const bubblesPerRound = 4;
+  const rounds = [];
+  for (let i = 0; i < rest.length; i += bubblesPerRound) {
+    rounds.push(rest.slice(i, i + bubblesPerRound));
+  }
+
   return (
     <section className="w-full flex flex-col items-center mt-12">
       <ErrorDisplay error={ttsError} onDismiss={() => setTtsError(null)} />
@@ -68,31 +75,43 @@ export default function ShowHistory({ history, lang, ttsMode, comedian1Persona, 
         {managerMsg && (
           <ManagerBubble message={managerMsg} />
         )}
-        {/* The rest of the chat bubbles, first one is Comedian 1 */}
-        {rest.map((msg, i) => {
-          const align = i % 2 === 0 ? 'items-start' : 'items-end';
-          const bubbleColor = bubbleColors[i % bubbleColors.length];
-          const personaKey = i % 2 === 0 ? comedian1Persona : comedian2Persona;
-          
-          return (
-            <ChatBubble
-              key={i}
-              message={msg}
-              index={i}
-              personaKey={personaKey}
-              personas={personas}
-              lang={lang}
-              bubbleColor={bubbleColor}
-              align={align}
-              ttsMode={ttsMode}
-              onPlayTTS={handlePlay}
-              playingIdx={playingIdx}
-              loadingIdx={loadingIdx}
-              audioUrl={audioUrl}
-              onAudioEnd={() => setPlayingIdx(null)}
-            />
-          );
-        })}
+        {/* Grouped chat bubbles by round */}
+        {rounds.map((round, roundIdx) => (
+          <div key={roundIdx} className="w-full flex flex-col items-center mb-2">
+            <div className="flex items-center w-full mb-7 -mt-1">
+              <div className="flex-grow border-t border-gray-700 opacity-50"></div>
+              <span className="mx-4 px-4 py-1 rounded-full bg-gradient-to-r from-blue-800/80 to-purple-800/80 text-blue-100 text-xs font-bold shadow border border-blue-700 tracking-wide">
+                🥊 Round {roundIdx + 1}
+              </span>
+              <div className="flex-grow border-t border-gray-700 opacity-50"></div>
+            </div>
+            <div className="flex flex-col gap-5 w-full">
+              {round.map((msg, i) => {
+                const align = (roundIdx * bubblesPerRound + i) % 2 === 0 ? 'items-start' : 'items-end';
+                const bubbleColor = bubbleColors[(roundIdx * bubblesPerRound + i) % bubbleColors.length];
+                const personaKey = (roundIdx * bubblesPerRound + i) % 2 === 0 ? comedian1Persona : comedian2Persona;
+                return (
+                  <ChatBubble
+                    key={i}
+                    message={msg}
+                    index={roundIdx * bubblesPerRound + i}
+                    personaKey={personaKey}
+                    personas={personas}
+                    lang={lang}
+                    bubbleColor={bubbleColor}
+                    align={align}
+                    ttsMode={ttsMode}
+                    onPlayTTS={handlePlay}
+                    playingIdx={playingIdx}
+                    loadingIdx={loadingIdx}
+                    audioUrl={audioUrl}
+                    onAudioEnd={() => setPlayingIdx(null)}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );

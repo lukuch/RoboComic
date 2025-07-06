@@ -1,14 +1,14 @@
 // API Configuration
 export const API_CONFIG = {
-  TIMEOUT: 30000,
-  TTS_TIMEOUT: 60000,
-  BASE_URL: process.env.PUBLIC_BACKEND_URL || 'http://localhost:8000',
-} as const;
+  BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+  TIMEOUT: 120000, // 2 minutes
+  TTS_TIMEOUT: 60000, // 1 minute (if you want to increase this too, adjust here)
+};
 
 // Default Values
 export const DEFAULTS = {
   LANGUAGE: 'pl',
-  COMEDIAN1: 'uncle_heniek',
+  COMEDIAN1: 'janusz',
   COMEDIAN2: 'gen_z',
   NUM_ROUNDS: 1,
   ROAST_MODE: true,
@@ -17,8 +17,8 @@ export const DEFAULTS = {
 
 // UI Constants
 export const UI = {
-  MAX_ROUNDS: 10,
   MIN_ROUNDS: 1,
+  MAX_ROUNDS: 5,
   LOADING_SPINNER_SIZE: 64,
 } as const;
 

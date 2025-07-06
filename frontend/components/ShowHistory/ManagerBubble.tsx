@@ -31,7 +31,7 @@ export function ManagerBubble({ message }: ManagerBubbleProps) {
         onMouseEnter={() => setShowManagerMsg(true)}
         onMouseLeave={() => setShowManagerMsg(false)}
       >
-        <div ref={avatarRef} className="mb-2 -mt-12">
+        <div ref={avatarRef} className="mb-2 -mt-14">
           <Avatar role={message.role} size="lg" />
         </div>
         {showManagerMsg && (
@@ -39,7 +39,7 @@ export function ManagerBubble({ message }: ManagerBubbleProps) {
             ref={popupRef}
             className={`absolute left-1/2 -translate-x-1/2 bottom-full z-30 rounded-2xl px-6 py-4 shadow-xl bg-gray-900/90 max-w-2xl w-[32rem] border border-gray-700 text-left font-medium text-gray-100 text-sm backdrop-blur transition-all duration-200
               ${showManagerMsg ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}
-            style={{ minWidth: '20rem', bottom: 'calc(100% + 3.75rem)' }}
+            style={{ minWidth: '20rem', bottom: 'calc(100% + 4.2rem)' }}
           >
             {/* Arrow */}
             <div className="absolute bottom-[-14px] left-1/2 -translate-x-1/2">

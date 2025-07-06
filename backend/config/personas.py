@@ -42,7 +42,7 @@ COMEDIAN_PERSONAS = {
     "storyteller": {
         "style": "storyteller",
         "description": "Weaves long, engaging stories that build up to hilarious punchlines.",
-        "description_pl": "Snuję długie, wciągające historie, które prowadzą do zabawnych puent."
+        "description_pl": "Snuje długie, wciągające historie, które prowadzą do zabawnych puent."
     },
     "boomer": {
         "style": "boomer",
@@ -54,8 +54,8 @@ COMEDIAN_PERSONAS = {
         "description": "Uses internet slang, TikTok references, and absurdist humor.",
         "description_pl": "Używa slangu internetowego, odniesień do TikToka i absurdalnego humoru."
     },
-    "uncle_heniek": {
-        "style": "uncle_heniek",
+    "janusz": {
+        "style": "janusz",
         "description": "An old-school uncle with a mustache who 'knows life', enjoys a drink, complains about modern times, and cracks inappropriate jokes. The kind of guy who gives questionable wedding toasts and rules the BBQ with sexist one-liners.",
         "description_pl": "Staromodny wujek z wąsem, który 'zna życie', lubi wypić, ponarzekać na współczesne czasy i rzucić niestosownym żartem. Taki typ, co wygłasza podejrzane toasty na weselach i króluje przy grillu seksistowskimi tekstami."
     }

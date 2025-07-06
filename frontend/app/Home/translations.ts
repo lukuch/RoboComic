@@ -31,6 +31,7 @@ export const TRANSLATIONS = {
     balancedDesc: 'Good balance of creativity and coherence',
     creativeDesc: 'More creative and varied responses',
     experimentalDesc: 'Highly creative, unexpected responses',
+    roastModeTopicDisabledExplanation: 'Topic selection is disabled in roast mode because the comedians will roast each other.',
   },
   pl: {
     customize: 'Dostosuj pojedynek komików',
@@ -64,6 +65,7 @@ export const TRANSLATIONS = {
     balancedDesc: 'Dobry balans kreatywności i spójności',
     creativeDesc: 'Bardziej kreatywne i zróżnicowane odpowiedzi',
     experimentalDesc: 'Wysoce kreatywne, nieoczekiwane odpowiedzi',
+    roastModeTopicDisabledExplanation: 'W trybie roast wybór tematu jest wyłączony, ponieważ komicy będą roastować siebie nawzajem.',
   },
 } as const;
 
