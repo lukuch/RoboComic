@@ -10,6 +10,7 @@ interface ShowHistoryProps {
   ttsMode: boolean;
   comedian1Persona: string;
   comedian2Persona: string;
+  personas: {[key: string]: {description: string; description_pl: string}} | null;
 }
 
 const bubbleColors = [
@@ -21,7 +22,7 @@ const bubbleColors = [
   'bg-gray-100 dark:bg-gray-700',
 ];
 
-export default function ShowHistory({ history, lang, ttsMode, comedian1Persona, comedian2Persona }: ShowHistoryProps) {
+export default function ShowHistory({ history, lang, ttsMode, comedian1Persona, comedian2Persona, personas }: ShowHistoryProps) {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [playingIdx, setPlayingIdx] = useState<number | null>(null);
   const [loadingIdx, setLoadingIdx] = useState<number | null>(null);
@@ -79,6 +80,8 @@ export default function ShowHistory({ history, lang, ttsMode, comedian1Persona, 
               message={msg}
               index={i}
               personaKey={personaKey}
+              personas={personas}
+              lang={lang}
               bubbleColor={bubbleColor}
               align={align}
               ttsMode={ttsMode}

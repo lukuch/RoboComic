@@ -52,7 +52,7 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
 
   useEffect(() => {
     fetchPersonas()
-      .then((data: any) => setPersonas(data.personas))
+      .then(setPersonas)
       .catch(() => setPersonas(null));
   }, []);
 

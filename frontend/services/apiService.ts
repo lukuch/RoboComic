@@ -43,7 +43,7 @@ function handleApiError(error: AxiosError): ApiError {
 export async function generateShow(params: GenerateShowParams): Promise<GenerateShowResponse> {
   try {
     const { data } = await api.post<GenerateShowResponse>('/generate-show', params);
-  return data;
+    return data;
   } catch (error) {
     throw handleApiError(error as AxiosError);
   }
@@ -51,7 +51,7 @@ export async function generateShow(params: GenerateShowParams): Promise<Generate
 
 export async function tts(text: string, lang: string): Promise<string> {
   try {
-    const response = await api.post('/tts', { text, lang }, { 
+    const response = await api.post<Blob>('/tts', { text, lang }, { 
       responseType: 'blob',
       timeout: API_CONFIG.TTS_TIMEOUT,
     });
@@ -63,8 +63,8 @@ export async function tts(text: string, lang: string): Promise<string> {
 
 export async function fetchPersonas(): Promise<Personas> {
   try {
-    const { data } = await api.get<Personas>('/personas');
-  return data;
+    const { data } = await api.get<{ personas: Personas }>('/personas');
+    return data.personas;
   } catch (error) {
     throw handleApiError(error as AxiosError);
   }
