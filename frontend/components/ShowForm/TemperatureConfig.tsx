@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { TemperaturePreset, LLMConfig } from '../../types';
 import { getDefaultLLMConfig, getTemperaturePresets } from '../../services/apiService';
+import { toTitleCase, toSentenceCase } from '../../utils/toTitleCase';
 
 interface TemperatureConfigProps {
   temperature: number;
@@ -135,7 +136,7 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
             <label className="block text-sm font-medium text-gray-300 mb-3">
               {t.quickPresets}
             </label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {presets.map((preset) => (
                 <button
                   key={preset.name}
@@ -145,15 +146,15 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
                     e.stopPropagation();
                     handlePresetSelect(preset);
                   }}
-                  className={`p-3 text-left rounded-lg border transition-colors font-medium capitalize text-gray-100 ${
+                  className={`min-w-0 p-2 sm:p-3 text-left rounded-lg border transition-colors font-medium text-gray-100 whitespace-normal text-sm sm:text-base ${
                     Math.abs(temperature - preset.temperature) < 0.05
                       ? 'border-blue-500 bg-blue-900/60 text-blue-400'
                       : 'border-gray-700 bg-gray-800 hover:border-gray-600 hover:bg-gray-700'
                   }`}
                 >
-                  <div>{t[preset.name]}</div>
-                  <div className="text-sm text-gray-400">{preset.temperature}</div>
-                  <div className="text-xs text-gray-500 mt-1 normal-case">{t[`${preset.name}Desc`]}</div>
+                  <div className="whitespace-normal text-sm sm:text-base font-bold">{t[preset.name]}</div>
+                  <div className="text-xs sm:text-sm text-gray-400 whitespace-normal">{preset.temperature}</div>
+                  <div className="text-xs text-gray-500 mt-1 whitespace-normal normal-case">{toSentenceCase(t[`${preset.name}Desc`]?.trim())}</div>
                 </button>
               ))}
             </div>
