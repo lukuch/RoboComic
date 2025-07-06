@@ -2,8 +2,7 @@ name: Deploy to Render (with status)
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main, deploy-test ]
   workflow_dispatch:
 
 jobs:
@@ -25,14 +24,20 @@ jobs:
           API_KEY="${{ secrets.RENDER_API_KEY }}"
           echo "Waiting for deploy to complete for service $SERVICE_ID"
           for i in {1..30}; do
-            status=$(curl -s -H "Authorization: Bearer $API_KEY" "https://api.render.com/v1/services/$SERVICE_ID/deploys?limit=1" | jq -r '.deploys[0].status')
-            echo "Current deploy status: $status"
-            if [[ "$status" == "live" ]]; then
-              echo "✅ Deploy succeeded!"
-              exit 0
-            elif [[ "$status" == "build_failed" || "$status" == "update_failed" || "$status" == "canceled" ]]; then
-              echo "❌ Deploy failed with status: $status"
-              exit 1
+            response=$(curl -s -H "Authorization: Bearer $API_KEY" "https://api.render.com/v1/services/$SERVICE_ID/deploys?limit=1")
+            # Check if response contains 'deploys'
+            if echo "$response" | jq -e '.deploys' > /dev/null; then
+              status=$(echo "$response" | jq -r '.deploys[0].status')
+              echo "Current deploy status: $status"
+              if [[ "$status" == "live" ]]; then
+                echo "✅ Deploy succeeded!"
+                exit 0
+              elif [[ "$status" == "build_failed" || "$status" == "update_failed" || "$status" == "canceled" ]]; then
+                echo "❌ Deploy failed with status: $status"
+                exit 1
+              fi
+            else
+              echo "⚠️ Unexpected API response: $response"
             fi
             sleep 10
           done

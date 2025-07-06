@@ -2,7 +2,7 @@ name: Quick Test
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, deploy-test ]
   pull_request:
     branches: [ main ]
 
