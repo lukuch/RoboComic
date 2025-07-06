@@ -39,7 +39,13 @@ export function ManagerBubble({ message }: ManagerBubbleProps) {
             ref={popupRef}
             className={`rounded-2xl px-6 py-4 shadow-md bg-blue-200 dark:bg-blue-900 max-w-2xl w-[32rem] border border-gray-200 dark:border-gray-700 text-left font-medium text-gray-900 dark:text-gray-100 z-30 absolute top-1/2 -translate-y-1/2 ${popupLeft ? 'right-full mr-4 left-auto' : 'left-full ml-4 right-auto'}`}
           >
-            {message.content}
+            <span className="font-bold">Chat Manager:</span><br />
+            {message.content.split('\n').map((line, i) => (
+              <span key={i}>
+                {line}
+                <br />
+              </span>
+            ))}
           </div>
         )}
       </div>

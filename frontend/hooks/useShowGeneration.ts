@@ -27,6 +27,7 @@ export function useShowGeneration() {
         mode: params.roast_mode ? 'roast' : 'topical',
         topic: params.topic,
         num_rounds: params.num_rounds,
+        temperature: params.temperature,
       });
       setHistory(data.history);
     } catch (e: unknown) {

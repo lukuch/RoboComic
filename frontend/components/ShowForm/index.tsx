@@ -5,6 +5,7 @@ import { FormInput } from './FormInput';
 import { NumberInput } from './NumberInput';
 import { CheckboxWithTooltip } from './CheckboxWithTooltip';
 import { SubmitButton } from './SubmitButton';
+import TemperatureConfig from './TemperatureConfig';
 import { UI, DEFAULTS } from '../../constants';
 
 interface ShowFormProps {
@@ -16,6 +17,7 @@ interface ShowFormProps {
     num_rounds: number;
     roast_mode: boolean;
     tts_mode: boolean;
+    temperature?: number;
   }) => void;
   loading: boolean;
   lang: string;
@@ -44,11 +46,13 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
   const [numRounds, setNumRounds] = useState<number>(DEFAULTS.NUM_ROUNDS);
   const [roastMode, setRoastMode] = useState<boolean>(DEFAULTS.ROAST_MODE);
   const [ttsMode, setTtsMode] = useState<boolean>(DEFAULTS.TTS_MODE);
+  const [temperature, setTemperature] = useState<number>(0.9);
+  const [showAdvanced, setShowAdvanced] = useState<boolean>(false);
   const [personas, setPersonas] = useState<{[key: string]: {description: string; description_pl: string}} | null>(null);
 
   useEffect(() => {
     fetchPersonas()
-      .then(data => setPersonas(data))
+      .then((data: any) => setPersonas(data.personas))
       .catch(() => setPersonas(null));
   }, []);
 
@@ -68,6 +72,7 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
             num_rounds: numRounds,
             roast_mode: roastMode,
             tts_mode: ttsMode,
+            temperature: temperature,
           });
         }}
       >
@@ -118,6 +123,15 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
             tooltip={t.ttsModeTooltip}
           />
         </div>
+        
+        <TemperatureConfig
+          temperature={temperature}
+          onTemperatureChange={setTemperature}
+          isOpen={showAdvanced}
+          onToggle={() => setShowAdvanced(!showAdvanced)}
+          t={t}
+        />
+        
         <SubmitButton
           loading={loading}
           loadingText={t.generating}

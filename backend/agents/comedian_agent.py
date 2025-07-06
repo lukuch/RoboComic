@@ -15,7 +15,7 @@ class ComedianAgent:
         self.style = None
         self.agent = None
     
-    def _setup_agent(self, persona_key: str, display_name: str, lang: str = "en") -> None:
+    def _setup_agent(self, persona_key: str, display_name: str, lang: str = "en", temperature: float = None) -> None:
         """Setup the agent with specific persona and language"""
         self.name = display_name
         self.persona = COMEDIAN_PERSONAS[persona_key]
@@ -26,6 +26,9 @@ class ComedianAgent:
         else:
             description = self.persona["description"]
         
+        # Use provided temperature or default
+        temp = temperature if temperature is not None else settings.DEFAULT_TEMPERATURE
+        
         self.agent = ConversableAgent(
             name=display_name,
             system_message=f"You are {display_name}, a {self.style} comedian. {description}",
@@ -33,9 +36,9 @@ class ComedianAgent:
                 "config_list": [
                     {"model": settings.LLM_MODEL, "api_key": settings.OPENAI_API_KEY}
                 ],
-                "temperature": 0.9
+                "temperature": temp
             },
             human_input_mode="NEVER"
         )
         
-        self.logger.debug(f"Created ComedianAgent: {display_name} with style {self.style}")
+        self.logger.debug(f"Created ComedianAgent: {display_name} with style {self.style}, temperature: {temp}")

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { tts } from '../../services/apiService';
 import { ChatBubble } from './ChatBubble';
 import { ManagerBubble } from './ManagerBubble';
+import { ErrorDisplay } from '../../app/Home/ErrorDisplay';
 
 interface ShowHistoryProps {
   history: { role: string; content: string }[];
@@ -25,11 +26,13 @@ export default function ShowHistory({ history, lang, ttsMode, comedian1Persona, 
   const [playingIdx, setPlayingIdx] = useState<number | null>(null);
   const [loadingIdx, setLoadingIdx] = useState<number | null>(null);
   const [ttsCache, setTtsCache] = useState<{ [key: string]: string }>({});
+  const [ttsError, setTtsError] = useState<string | null>(null); // Add error state
 
   async function handlePlay(text: string, idx: number) {
     setLoadingIdx(idx);
-    setPlayingIdx(null); // Stop any currently playing audio immediately
-    setAudioUrl(null);   // Remove current audio
+    setPlayingIdx(null);
+    setAudioUrl(null);
+    setTtsError(null); // Reset error on new play
     const cacheKey = text + '|' + lang;
     if (ttsCache[cacheKey]) {
       setAudioUrl(ttsCache[cacheKey]);
@@ -37,11 +40,16 @@ export default function ShowHistory({ history, lang, ttsMode, comedian1Persona, 
       setLoadingIdx(null);
       return;
     }
-    const url = await tts(text, lang);
-    setTtsCache(prev => ({ ...prev, [cacheKey]: url }));
-    setAudioUrl(url);
-    setPlayingIdx(idx);
-    setLoadingIdx(null);
+    try {
+      const url = await tts(text, lang);
+      setTtsCache(prev => ({ ...prev, [cacheKey]: url }));
+      setAudioUrl(url);
+      setPlayingIdx(idx);
+    } catch (error: any) {
+      setTtsError('Text-to-speech is temporarily unavailable (likely out of credits). Please try again later or contact support.');
+    } finally {
+      setLoadingIdx(null);
+    }
   }
 
   if (!history.length) return null;
@@ -53,6 +61,7 @@ export default function ShowHistory({ history, lang, ttsMode, comedian1Persona, 
 
   return (
     <section className="w-full flex flex-col items-center mt-12">
+      <ErrorDisplay error={ttsError} onDismiss={() => setTtsError(null)} />
       <div className="w-full max-w-4xl flex flex-col gap-8 items-center">
         {/* Chat manager bubble center-aligned above the rest */}
         {managerMsg && (

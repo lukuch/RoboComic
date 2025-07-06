@@ -8,6 +8,9 @@ from .api_models import (
     ErrorResponse,
     PersonasResponse,
     HealthResponse,
+    LLMConfig,
+    TemperaturePresetConfig,
+    TemperaturePreset,
 )
 
 __all__ = [
@@ -20,4 +23,7 @@ __all__ = [
     'ErrorResponse',
     'PersonasResponse',
     'HealthResponse',
+    'LLMConfig',
+    'TemperaturePresetConfig',
+    'TemperaturePreset',
 ] 

@@ -17,14 +17,13 @@ class AgentManager:
         self.reset_agents()
         self.history = []
 
-    def reset_agents(self) -> None:
+    def reset_agents(self, temperature: float = None) -> None:
         self.logger.debug(f"Resetting agents: {self.comedian1_key} and {self.comedian2_key}")
-        # Create agents through the container to get proper dependency injection
-        from container import container
-        self.comedian1 = container.get(ComedianAgent)
-        self.comedian1._setup_agent(self.comedian1_key, "Comedian_1", self.lang)
-        self.comedian2 = container.get(ComedianAgent)
-        self.comedian2._setup_agent(self.comedian2_key, "Comedian_2", self.lang)
+        # Instantiate new ComedianAgent objects directly to avoid singleton issue
+        self.comedian1 = ComedianAgent(self.logger)
+        self.comedian1._setup_agent(self.comedian1_key, "Comedian_1", self.lang, temperature)
+        self.comedian2 = ComedianAgent(self.logger)
+        self.comedian2._setup_agent(self.comedian2_key, "Comedian_2", self.lang, temperature)
 
     def set_personas(self, comedian1_key: str, comedian2_key: str, lang: str = None) -> None:
         self.logger.info(f"Setting personas: {comedian1_key} vs {comedian2_key}, lang={lang or self.lang}")
@@ -34,9 +33,9 @@ class AgentManager:
             self.lang = lang
         self.reset_agents()
 
-    def run_duel(self, mode: str, topic: str = None, max_rounds: int = 2, lang: str = "en", context: str = "") -> list:
-        self.logger.info(f"Starting duel: mode={mode}, topic={topic}, max_rounds={max_rounds}, lang={lang}")
-        self.reset_agents()
+    def run_duel(self, mode: str, topic: str = None, max_rounds: int = 2, lang: str = "en", context: str = "", temperature: float = None) -> list:
+        self.logger.info(f"Starting duel: mode={mode}, topic={topic}, max_rounds={max_rounds}, lang={lang}, temperature={temperature}")
+        self.reset_agents(temperature)
         agents = [
             self.comedian1.agent,
             self.comedian2.agent,

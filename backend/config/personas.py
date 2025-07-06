@@ -46,8 +46,8 @@ COMEDIAN_PERSONAS = {
     },
     "boomer": {
         "style": "boomer",
-        "description": "Loves nostalgia, ‘back in my day’ stories, and poking fun at modern trends.",
-        "description_pl": "Uwielbia nostalgię, historie ‘za moich czasów’ i żarty z nowoczesnych trendów."
+        "description": "Loves nostalgia, 'back in my day' stories, and poking fun at modern trends.",
+        "description_pl": "Uwielbia nostalgię, historie 'za moich czasów' i żarty z nowoczesnych trendów."
     },
     "gen_z": {
         "style": "gen_z",
@@ -61,3 +61,22 @@ COMEDIAN_PERSONAS = {
     }
     # Add more personas as needed
 }
+
+def get_valid_comedian_styles() -> list[str]:
+    """Get the list of valid comedian styles from the personas configuration.
+    
+    Returns:
+        List of valid comedian style names.
+    """
+    return list(COMEDIAN_PERSONAS.keys())
+
+def validate_comedian_style(style: str) -> bool:
+    """Validate if a comedian style is valid.
+    
+    Args:
+        style: The comedian style to validate.
+        
+    Returns:
+        True if the style is valid, False otherwise.
+    """
+    return style in COMEDIAN_PERSONAS

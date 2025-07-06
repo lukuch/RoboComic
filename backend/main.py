@@ -14,15 +14,18 @@ from models import (
     TTSRequest,
     PersonasResponse,
     ChatMessage,
-    HealthResponse
+    HealthResponse,
+    LLMConfig,
+    TemperaturePresetConfig
 )
+from typing import List
 from utils import (
     validation_exception_handler,
     general_exception_handler
 )
 from services.api_service import ApiService
 from datetime import datetime, UTC
-
+from config.settings import DEFAULT_TEMPERATURE, TEMPERATURE_PRESETS
 
 
 app = FastAPI(
@@ -75,6 +78,22 @@ def health_check():
         version="1.0.0",
         timestamp=datetime.now(UTC).isoformat()
     ) 
+
+@app.get("/llm-config", response_model=LLMConfig)
+def get_default_llm_config():
+    """Get default LLM configuration."""
+    return LLMConfig(temperature=DEFAULT_TEMPERATURE)
+
+@app.get("/temperature-presets", response_model=List[TemperaturePresetConfig])
+def get_temperature_presets():
+    """Get available temperature presets."""
+    return [
+        TemperaturePresetConfig(
+            name=name,
+            temperature=preset["temperature"]
+        )
+        for name, preset in TEMPERATURE_PRESETS.items()
+    ]
 
 if __name__ == "__main__":
     import sys

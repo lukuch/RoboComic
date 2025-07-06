@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, field_validator
 from typing import List, Dict, Any, Optional
 from enum import Enum
+from config.personas import get_valid_comedian_styles, validate_comedian_style
 
 class Language(str, Enum):
     ENGLISH = "en"
@@ -10,6 +11,19 @@ class Mode(str, Enum):
     TOPICAL = "topical"
     ROAST = "roast"
 
+class TemperaturePreset(str, Enum):
+    CONSERVATIVE = "conservative"
+    BALANCED = "balanced"
+    CREATIVE = "creative"
+    EXPERIMENTAL = "experimental"
+
+class LLMConfig(BaseModel):
+    temperature: float = Field(0.9, ge=0.0, le=1.0, description="Creativity level (0.0-1.0)")
+
+class TemperaturePresetConfig(BaseModel):
+    name: str = Field(..., description="Preset name")
+    temperature: float = Field(..., description="Temperature value")
+
 class GenerateShowRequest(BaseModel):
     comedian1_style: str = Field(..., description="Style of the first comedian")
     comedian2_style: str = Field(..., description="Style of the second comedian")
@@ -17,6 +31,7 @@ class GenerateShowRequest(BaseModel):
     mode: Mode = Field(default=Mode.TOPICAL, description="Mode of the comedy duel")
     topic: str = Field(default="", description="Topic for the comedy duel")
     num_rounds: int = Field(default=1, ge=1, le=10, description="Number of rounds (1-10)")
+    temperature: Optional[float] = Field(None, ge=0.0, le=1.0, description="LLM temperature (0.0-1.0)")
 
     @field_validator('topic')
     @classmethod
@@ -28,12 +43,9 @@ class GenerateShowRequest(BaseModel):
     @field_validator('comedian1_style', 'comedian2_style')
     @classmethod
     def validate_comedian_style(cls, v):
-        valid_styles = [
-            'relatable', 'sarcastic', 'absurd', 'uncle_heniek', 
-            'gen_z', 'simple', 'philosophical', 'dark'
-        ]
-        if v not in valid_styles:
-            raise ValueError(f'Invalid comedian style. Must be one of: {valid_styles}')
+        if not validate_comedian_style(v):
+            valid_styles = get_valid_comedian_styles()
+            raise ValueError(f'Invalid comedian style "{v}". Must be one of: {", ".join(valid_styles)}')
         return v
 
 class TTSRequest(BaseModel):

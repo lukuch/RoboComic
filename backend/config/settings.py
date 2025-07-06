@@ -40,10 +40,21 @@ except ConfigError as e:
 
 # Optional settings with defaults
 LLM_MODEL = get_optional_env("LLM_MODEL", "gpt-3.5-turbo", "OpenAI model to use for LLM operations")
+DEFAULT_TEMPERATURE = float(get_optional_env("DEFAULT_TEMPERATURE", "0.9", "Default LLM temperature"))
+DEFAULT_MAX_TOKENS = int(get_optional_env("DEFAULT_MAX_TOKENS", "1000", "Default max tokens for LLM responses"))
+DEFAULT_LANG = get_optional_env("DEFAULT_LANG", "en", "Default language for LLM operations")
 API_HOST = get_optional_env("API_HOST", "0.0.0.0", "Host for the API server")
 API_PORT = int(get_optional_env("API_PORT", "8000", "Port for the API server"))
 LOG_LEVEL = get_optional_env("LOG_LEVEL", "INFO", "Logging level")
 LOG_FORMAT = get_optional_env("LOG_FORMAT", "json", "Log format (json or human)")
+
+# Temperature presets
+TEMPERATURE_PRESETS = {
+    "conservative": {"temperature": 0.3},
+    "balanced": {"temperature": 0.7},
+    "creative": {"temperature": 0.9},
+    "experimental": {"temperature": 1.0}
+}
 
 # Validate optional settings
 if LOG_FORMAT not in ["json", "human"]:

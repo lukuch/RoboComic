@@ -3,7 +3,9 @@ import {
   GenerateShowParams, 
   GenerateShowResponse, 
   Personas, 
-  ApiError 
+  ApiError,
+  TemperaturePreset,
+  LLMConfig
 } from '../types';
 import { API_CONFIG, ERROR_MESSAGES } from '../constants';
 
@@ -75,5 +77,24 @@ export async function healthCheck(): Promise<boolean> {
     return true;
   } catch (error) {
     return false;
+  }
+}
+
+// Temperature configuration functions
+export async function getDefaultLLMConfig(): Promise<LLMConfig> {
+  try {
+    const { data } = await api.get<LLMConfig>('/llm-config');
+    return data;
+  } catch (error) {
+    throw handleApiError(error as AxiosError);
+  }
+}
+
+export async function getTemperaturePresets(): Promise<TemperaturePreset[]> {
+  try {
+    const { data } = await api.get<TemperaturePreset[]>('/temperature-presets');
+    return data;
+  } catch (error) {
+    throw handleApiError(error as AxiosError);
   }
 } 

@@ -3,10 +3,11 @@
 import openai
 from config import settings
 from utils.logger import get_logger
+import re
 
 logger = get_logger(__name__)
 
-def generate_topic_context_llm(topic: str, lang: str) -> str:
+def generate_topic_context_llm(topic: str, lang: str = "en") -> str:
     """Generate a list of anecdotes or facts about the topic using LLM."""
     if not topic:
         return ""
@@ -25,13 +26,15 @@ def generate_topic_context_llm(topic: str, lang: str) -> str:
         response = client.chat.completions.create(
             model=settings.LLM_MODEL,
             messages=[{"role": "user", "content": prompt}],
-            max_tokens=1000,
-            temperature=0.8,
+            max_tokens=settings.DEFAULT_MAX_TOKENS,
+            temperature=settings.DEFAULT_TEMPERATURE,
         )
-        return response.choices[0].message.content.strip()
+        context = response.choices[0].message.content.strip()
+        context = re.sub(r'(?<!\d)\. ', '.\n', context)
+        return f"\n{context}\n"
     except Exception as e:
         logger.error(f"Error generating topic context: {e}")
-        return "" 
+        return ""
 
 
 def comedianify_text_llm(text: str, gender: str = "MAN", lang: str = "en") -> str:
@@ -59,8 +62,8 @@ def comedianify_text_llm(text: str, gender: str = "MAN", lang: str = "en") -> st
         response = client.chat.completions.create(
             model=settings.LLM_MODEL,
             messages=[{"role": "user", "content": prompt}],
-            max_tokens=500,
-            temperature=0.9,
+            max_tokens=settings.DEFAULT_MAX_TOKENS,
+            temperature=settings.DEFAULT_TEMPERATURE,
         )
         return response.choices[0].message.content.strip()
     except Exception as e:

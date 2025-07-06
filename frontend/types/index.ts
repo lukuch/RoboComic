@@ -6,6 +6,7 @@ export interface GenerateShowParams {
   mode: string;
   topic: string;
   num_rounds: number;
+  temperature?: number;
 }
 
 export interface GenerateShowResponse {
@@ -39,6 +40,27 @@ export interface ShowFormParams {
   num_rounds: number;
   roast_mode: boolean;
   tts_mode: boolean;
+  temperature?: number;
+}
+
+export interface ShowFormData {
+  comedian1_style: string;
+  comedian2_style: string;
+  lang: string;
+  mode: string;
+  topic: string;
+  num_rounds: number;
+  temperature?: number;
+}
+
+export interface TemperaturePreset {
+  name: string;
+  temperature: number;
+  description: string;
+}
+
+export interface LLMConfig {
+  temperature: number;
 }
 
 // Translation Types
@@ -98,4 +120,19 @@ export interface ErrorDisplayProps {
 export interface ApiError {
   message: string;
   status?: number;
+}
+
+export interface TTSRequest {
+  text: string;
+  lang: string;
+}
+
+export interface PersonasResponse {
+  personas: Record<string, Record<string, string>>;
+}
+
+export interface HealthResponse {
+  status: string;
+  version: string;
+  timestamp: string;
 } 
