@@ -4,7 +4,6 @@ from agents.comedian_agent import ComedianAgent
 from services.agent_manager import AgentManager
 from tts.tts_service import TTSService
 from tts.eleven_tts_service import ElevenTTSService
-from tts.bark_tts_service import BarkTTSService
 from utils.logger import setup_logger
 from services.api_service import ApiService
 from ui.streamlit_ui import UIService

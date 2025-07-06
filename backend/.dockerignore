@@ -79,4 +79,7 @@ Dockerfile*
 # Development files
 .flake8
 .black
-.isort.cfg 
+.isort.cfg
+
+# Bark TTS (not used in production)
+tts/bark_tts_service.py 
