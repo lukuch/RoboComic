@@ -55,6 +55,9 @@ Thumbs.db
 htmlcov/
 .tox/
 .nox/
+tests/
+*.test.py
+test_*.py
 
 # Logs
 *.log
@@ -67,10 +70,13 @@ logs/
 # Documentation
 README.md
 docs/
+*.md
 
 # Docker
-Dockerfile
+Dockerfile*
 .dockerignore
 
-# Poetry
-poetry.lock 
+# Development files
+.flake8
+.black
+.isort.cfg 
