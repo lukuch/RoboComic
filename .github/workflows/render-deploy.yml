@@ -1,0 +1,49 @@
+name: Deploy to Render (with status)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render Deploy Hook
+        id: trigger
+        run: |
+          response=$(curl -s -X POST "$RENDER_DEPLOY_HOOK_URL")
+          echo "Deploy hook triggered. Response: $response"
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+
+      - name: Wait for Render Deploy to Complete
+        id: wait
+        run: |
+          SERVICE_ID="${{ secrets.RENDER_SERVICE_ID }}"
+          API_KEY="${{ secrets.RENDER_API_KEY }}"
+          echo "Waiting for deploy to complete for service $SERVICE_ID"
+          for i in {1..30}; do
+            status=$(curl -s -H "Authorization: Bearer $API_KEY" "https://api.render.com/v1/services/$SERVICE_ID/deploys?limit=1" | jq -r '.deploys[0].status')
+            echo "Current deploy status: $status"
+            if [[ "$status" == "live" ]]; then
+              echo "✅ Deploy succeeded!"
+              exit 0
+            elif [[ "$status" == "build_failed" || "$status" == "update_failed" || "$status" == "canceled" ]]; then
+              echo "❌ Deploy failed with status: $status"
+              exit 1
+            fi
+            sleep 10
+          done
+          echo "❌ Timed out waiting for deploy to complete."
+          exit 1
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
+        shell: bash
+
+      - name: Show Render Deploy URL
+        if: always()
+        run: |
+          echo "Check your deploy at: https://dashboard.render.com/web/srv-${{ secrets.RENDER_SERVICE_ID }}" 
