@@ -82,4 +82,7 @@ Dockerfile*
 .isort.cfg
 
 # Bark TTS (not used in production)
-tts/bark_tts_service.py 
+tts/bark_tts_service.py
+
+# Streamlit UI (not needed for API deployment)
+ui/ 

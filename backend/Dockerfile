@@ -7,7 +7,8 @@ RUN apt-get update && apt-get install -y \
     g++ \
     git \
     curl \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 WORKDIR /app
 
@@ -24,7 +25,8 @@ FROM python:3.11-slim as production
 # Install only runtime dependencies
 RUN apt-get update && apt-get install -y \
     curl \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 WORKDIR /app
 
@@ -46,6 +48,7 @@ USER app
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PORT=8000
+ENV ENVIRONMENT=production
 
 EXPOSE 8000
 

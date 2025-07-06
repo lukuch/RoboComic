@@ -1,19 +1,19 @@
 from container import container
-from services.agent_manager import AgentManager
-from tts.tts_service import TTSService
-from ui.streamlit_ui import UIService
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import StreamingResponse
 from fastapi.exceptions import RequestValidationError
-import io
 from fastapi.middleware.cors import CORSMiddleware
+import io
+import time
+import os
+import sys
+import uvicorn
 from config.personas import COMEDIAN_PERSONAS
 from models import (
     GenerateShowRequest,
     GenerateShowResponse,
     TTSRequest,
     PersonasResponse,
-    ChatMessage,
     HealthResponse,
     LLMConfig,
     TemperaturePresetConfig
@@ -28,14 +28,17 @@ from utils.exceptions import TTSServiceException
 from services.api_service import ApiService
 from datetime import datetime, UTC
 from config.settings import DEFAULT_TEMPERATURE, TEMPERATURE_PRESETS
+from config import settings, validate_config
 
+# Production settings
+IS_PRODUCTION = os.getenv("ENVIRONMENT", "development") == "production"
 
 app = FastAPI(
     title="RoboComic API",
     description="AI Standup Comedy App - RoboComic",
     version="1.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc"
+    docs_url="/docs" if not IS_PRODUCTION else None,
+    redoc_url="/redoc" if not IS_PRODUCTION else None
 )
 
 # Add exception handlers
@@ -43,13 +46,27 @@ app.add_exception_handler(RequestValidationError, validation_exception_handler)
 app.add_exception_handler(TTSServiceException, robocomic_exception_handler)
 app.add_exception_handler(Exception, general_exception_handler)
 
+# CORS middleware with production settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"] if not IS_PRODUCTION else [
+        "https://robocomic.vercel.app",
+        "https://robocomic-frontend.vercel.app",
+        "http://localhost:3000"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Request timing middleware
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    response.headers["X-Process-Time"] = str(process_time)
+    return response
 
 api_service = container.get(ApiService)
 
@@ -99,14 +116,15 @@ def get_temperature_presets():
     ]
 
 if __name__ == "__main__":
-    import sys
-    import uvicorn
-    from config import settings, validate_config
-    
     # Validate configuration on startup
     validate_config()
     
     if len(sys.argv) > 1 and sys.argv[1] == "api":
         uvicorn.run("main:app", host=settings.API_HOST, port=settings.API_PORT, reload=True)
     else:
-        container.get(UIService).run_ui()
+        # Only run UI if streamlit is available
+        try:
+            from ui.streamlit_ui import UIService
+            container.get(UIService).run_ui()
+        except ImportError:
+            print("Streamlit not available. ")
