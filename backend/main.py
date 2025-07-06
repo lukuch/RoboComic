@@ -49,9 +49,8 @@ app.add_exception_handler(Exception, general_exception_handler)
 # CORS middleware with production settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"] if not IS_PRODUCTION else [
-        "https://robocomic.vercel.app",
-        "https://robocomic-frontend.vercel.app",
+    allow_origins=[
+        "https://robo-comic.vercel.app",
         "http://localhost:3000"
     ],
     allow_credentials=True,
