@@ -1,0 +1,213 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Backend Testing & Quality
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: backend/.venv
+        key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+    - name: Install dependencies
+      run: poetry install --only main,dev
+
+    - name: Run code formatting check
+      run: poetry run black --check --diff .
+
+    - name: Run import sorting check
+      run: poetry run isort --check-only --diff .
+
+    - name: Run linting
+      run: poetry run flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+    - name: Run tests with coverage
+      run: poetry run pytest --cov=. --cov-report=xml --cov-report=term-missing
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./backend/coverage.xml
+        flags: backend
+        name: backend-coverage
+
+    - name: Test Docker build
+      run: docker build -t robocomic-backend:test .
+
+  # Frontend Testing & Quality
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run linting
+      run: npm run lint
+
+    - name: Type check
+      run: npx tsc --noEmit
+
+    - name: Build application
+      run: npm run build
+
+    - name: Analyze bundle size
+      run: |
+        npm install -g @next/bundle-analyzer
+        ANALYZE=true npm run build
+
+  # Security Scanning
+  security:
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        severity: 'HIGH,CRITICAL'
+
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+    - name: Run Snyk to check for vulnerabilities
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --severity-threshold=high
+
+    - name: Run Snyk for Python
+      uses: snyk/actions/python@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --severity-threshold=high
+
+  # API Health Check
+  api-health:
+    runs-on: ubuntu-latest
+    needs: [backend]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: latest
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+
+    - name: Install dependencies
+      run: cd backend && poetry install --only main
+
+    - name: Start backend server
+      run: |
+        cd backend
+        poetry run python -m uvicorn main:app --host 0.0.0.0 --port 8000 &
+        sleep 10
+
+    - name: Test API endpoints
+      run: |
+        cd backend
+        poetry run python -c "
+        import requests
+        import time
+        
+        # Wait for server to be ready
+        time.sleep(5)
+        
+        # Test health endpoint
+        response = requests.get('http://localhost:8000/health')
+        assert response.status_code == 200, f'Health check failed: {response.status_code}'
+        
+        # Test personas endpoint
+        response = requests.get('http://localhost:8000/personas')
+        assert response.status_code == 200, f'Personas endpoint failed: {response.status_code}'
+        
+        # Test LLM config endpoint
+        response = requests.get('http://localhost:8000/llm-config')
+        assert response.status_code == 200, f'LLM config endpoint failed: {response.status_code}'
+        
+        print('All API endpoints are working correctly!')
+        "
+
+  # Quality Gate
+  quality-gate:
+    runs-on: ubuntu-latest
+    needs: [backend, frontend, security, api-health]
+    if: always()
+    
+    steps:
+    - name: Check all jobs passed
+      run: |
+        if [ "${{ needs.backend.result }}" != "success" ]; then
+          echo "Backend job failed"
+          exit 1
+        fi
+        if [ "${{ needs.frontend.result }}" != "success" ]; then
+          echo "Frontend job failed"
+          exit 1
+        fi
+        if [ "${{ needs.security.result }}" != "success" ]; then
+          echo "Security job failed"
+          exit 1
+        fi
+        echo "All quality checks passed! ✅" 

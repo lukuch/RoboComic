@@ -9,9 +9,34 @@ from .logger import get_logger
 
 logger = get_logger(__name__)
 
+def _clean_validation_errors(errors):
+    """Clean validation errors to make them JSON serializable."""
+    cleaned_errors = []
+    for error in errors:
+        cleaned_error = {
+            'type': error.get('type'),
+            'loc': error.get('loc'),
+            'msg': error.get('msg'),
+            'input': error.get('input')
+        }
+        # Clean the context if it exists
+        if 'ctx' in error:
+            cleaned_ctx = {}
+            for key, value in error['ctx'].items():
+                if isinstance(value, Exception):
+                    cleaned_ctx[key] = str(value)
+                else:
+                    cleaned_ctx[key] = value
+            cleaned_error['ctx'] = cleaned_ctx
+        cleaned_errors.append(cleaned_error)
+    return cleaned_errors
+
 async def validation_exception_handler(request: Request, exc: Union[RequestValidationError, ValidationError]):
     """Handle Pydantic validation errors."""
     logger.warning(f"Validation error: {exc.errors()}")
+    
+    # Clean the errors to make them JSON serializable
+    cleaned_errors = _clean_validation_errors(exc.errors())
     
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -19,7 +44,7 @@ async def validation_exception_handler(request: Request, exc: Union[RequestValid
             "success": False,
             "error": "Validation error",
             "error_code": "VALIDATION_ERROR",
-            "details": exc.errors()
+            "details": cleaned_errors
         }
     )
 

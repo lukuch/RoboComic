@@ -21,8 +21,10 @@ from models import (
 from typing import List
 from utils import (
     validation_exception_handler,
+    robocomic_exception_handler,
     general_exception_handler
 )
+from utils.exceptions import TTSServiceException
 from services.api_service import ApiService
 from datetime import datetime, UTC
 from config.settings import DEFAULT_TEMPERATURE, TEMPERATURE_PRESETS
@@ -38,6 +40,7 @@ app = FastAPI(
 
 # Add exception handlers
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
+app.add_exception_handler(TTSServiceException, robocomic_exception_handler)
 app.add_exception_handler(Exception, general_exception_handler)
 
 app.add_middleware(
