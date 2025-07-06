@@ -85,43 +85,68 @@ RoboComic is an AI-powered standup comedy duel app where virtual comedians battl
 - Click the install icon in the address bar or use "Add to Home Screen" on mobile.
 - Enjoy RoboComic as a native-like app!
 
-## Project Structure
+## Troubleshooting
+
+### TTS Issues
+**Text-to-Speech not working:**
+- Verify ElevenLabs API key is valid
+- Check voice IDs exist in your ElevenLabs account
+- Ensure internet connection for API calls
+- **Free plan users**: You may have run out of monthly credits - check your ElevenLabs dashboard
+
+## Project Structure (and crucial files)
 ```
 RoboComic/
   backend/                        # FastAPI backend, TTS services, AutoGen orchestration
     main.py                       # Entry point for API/Streamlit
     container.py                  # Dependency injection setup (injector)
-    pyproject.toml                # Poetry project config
     config/
-      settings.py                 # Loads environment variables
       personas.py                 # Comedian persona definitions
-      translations.py             # UI and API translations
-    agents/                       # AI agent logic (AutoGen, etc.)
-    services/                     # LLM and prompt utilities
-    tts/                          # TTS service implementations (ElevenLabs, Bark, etc.)
-    tts_output/                   # (Optional) Directory for generated TTS files
+      settings.py                 # Environment variables and config
+    agents/
+      comedian_agent.py           # Comedian agent implementation
+    services/
+      agent_manager.py            # Agent orchestration management
+      api_service.py              # API service layer
+    models/
+      api_models.py               # API request/response models
+    tts/
+      eleven_tts_service.py       # ElevenLabs TTS service
+      bark_tts_service.py         # Bark TTS service
+    utils/                        # Error handling, logging, exceptions
     ui/
       streamlit_ui.py             # Streamlit app (optional)
-      style.css                   # Streamlit UI styles
-    tests/                        # Backend tests
-    .env.example                  # Example environment variables
+    tests/
+      test_api.py                 # API tests
 
   frontend/                       # Next.js frontend, PWA config, UI
     app/
       layout.tsx                  # Root layout and metadata
       page.tsx                    # Main page
-      globals.css                 # Global styles
-    components/                   # React components (ShowForm, ShowHistory, Api, etc.)
+      Home/                       # Home page components
+        index.tsx                 # Home page main component
+    components/
+      ShowForm/                   # Show generation form
+        index.tsx                 # Show form main component
+      ShowHistory/                # Show history display
+        index.tsx                 # Show history main component
+      shared/                     # Shared components
+    hooks/
+      useShowGeneration.ts        # Show generation hook
+      useLanguage.ts              # Language management hook
+    services/
+      apiService.ts               # API service layer
+    types/
+      index.ts                    # TypeScript type definitions
     public/
       manifest.json               # PWA manifest
-      icon-192x192.png            # PWA icon
-      icon-512x512.png            # PWA icon
-      favicon.ico                 # Browser tab icon
-    next.config.js                # Next.js and next-pwa config
-    package.json                  # Frontend dependencies
-    tailwind.config.js            # Tailwind CSS config
-    tsconfig.json                 # TypeScript config
+      icon-192x192.png            # PWA icons
+      sw.js                       # Service worker
 ```
+
+## License
+
+This project is licensed under the MIT License. You are free to use, modify, and distribute it.
 
 ## Author
 Created by lukuch (Łukasz Ucher)
@@ -129,6 +154,3 @@ Created by lukuch (Łukasz Ucher)
 ---
 Enjoy the show! 🤖🎤
 
-## License
-
-This project is licensed under the MIT License. You are free to use, modify, and distribute it.

@@ -4,6 +4,16 @@ COMEDIAN_PERSONAS = {
         "description": "Delivers sharp, dry humor with a heavy dose of irony. Nothing is sacred.",
         "description_pl": "Serwuje ostry, suchy humor z dużą dawką ironii. Nic nie jest święte."
     },
+    "intellectual": {
+        "style": "intellectual",
+        "description": "Loves wordplay, clever references, and highbrow humor. Think puns, philosophy, and niche historical jokes.",
+        "description_pl": "Uwielbia grę słów, błyskotliwe odniesienia i wyrafinowany humor. Pojawiają się kalambury, filozofia i niszowe żarty historyczne."
+    },
+    "cringe": {
+        "style": "cringe",
+        "description": "Deliberately awkward, uncomfortable, or overly earnest to get laughs from secondhand embarrassment.",
+        "description_pl": "Celowo niezręczny, krępujący lub przesadnie szczery, by wywołać śmiech z zażenowania."
+    },
     "absurd": {
         "style": "absurd",
         "description": "Thrives on surreal logic, bizarre setups, and wild, unexpected punchlines.",
@@ -59,17 +69,32 @@ COMEDIAN_PERSONAS = {
         "description": "An old-school uncle with a mustache who 'knows life', enjoys a drink, complains about modern times, and cracks inappropriate jokes. The kind of guy who gives questionable wedding toasts and rules the BBQ with sexist one-liners.",
         "description_pl": "Staromodny wujek z wąsem, który 'zna życie', lubi wypić, ponarzekać na współczesne czasy i rzucić niestosownym żartem. Taki typ, co wygłasza podejrzane toasty na weselach i króluje przy grillu seksistowskimi tekstami."
     },
-    "intellectual": {
-        "style": "intellectual",
-        "description": "Loves wordplay, clever references, and highbrow humor. Think puns, philosophy, and niche historical jokes.",
-        "description_pl": "Uwielbia grę słów, błyskotliwe odniesienia i wyrafinowany humor. Pojawiają się kalambury, filozofia i niszowe żarty historyczne."
+    "anetka_hr": {
+        "style": "anetka_hr",
+        "description": "Overuses corporate buzzwords, passive-aggressive emails, and loves Excel. Says “we’re like a family here” right before layoffs.",
+        "description_pl": "Korpo-laska z HR-u. Uwielbia Excele, pasywno-agresywne maile i mówi „u nas to jak w rodzinie”, tuż przed zwolnieniem."
     },
-    "cringe": {
-        "style": "cringe",
-        "description": "Deliberately awkward, uncomfortable, or overly earnest to get laughs from secondhand embarrassment.",
-        "description_pl": "Celowo niezręczny, krępujący lub przesadnie szczery, by wywołać śmiech z zażenowania."
-    }
-    # Add more personas as needed
+    "bozenka": {
+        "style": "bozenka",
+        "description": "Passive-aggressive, knows everyone's salary, and guards the printer like Cerberus. A human sigh.",
+        "description_pl": "Pasywno-agresywna księgowa, zna wypłatę każdego i pilnuje drukarki jak cerber. Człowiek-wzdychnięcie."
+    },
+    "mietek": {
+        "style": "mietek",
+        "description": "Smells of WD-40 and Marlboros. Can fix anything with duct tape and a hammer. Drops gold advice like 'buddy, this ain't a factory!'.",
+        "description_pl": "Pachnie WD-40 i fajkami. Naprawi wszystko taśmą i młotkiem. Rzuca złotymi tekstami typu „paanie, tu nie NASA!”."
+    },
+    "wiesiek_mechanik": {
+        "style": "wiesiek_mechanik",
+        "description": "Old-school mechanic who fixes cars, curses technology, and worships his garage pin-up calendar. Trusts duct tape more than diagnostics. His motto 'drive it and observe'.",
+        "description_pl": "Staroszkolny mechanik, który naprawia auta, klątwami odpędza elektronikę i czci kalendarz z gołymi babami z 2003. Bardziej ufa taśmie niż diagnostyce. Jego motto 'jeździć, obserwować'."
+    },
+    "janusz_budowlaniec": {
+        "style": "janusz_budowlaniec",
+        "description": "Construction veteran with a beer belly, unmatched confidence, and a talent for spotting disasters in other people's work. Starts every job with 'ło panie, kto to panu tak spie***ił?' and ends with 'zrobione, ale się nie przyzwyczajaj'.",
+        "description_pl": "Weteran budowy z brzuchem piwnym, niepodważalną pewnością siebie i talentem do wytykania fuszerek. Każdą robotę zaczyna od 'ło panie, kto to panu tak spie**lił?', a kończy słowami 'zrobione, ale się nie przyzwyczajaj'."
+}
+
 }
 
 def get_valid_comedian_styles() -> list[str]:

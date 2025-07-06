@@ -9,6 +9,7 @@ import { AppHeader } from './AppHeader';
 import { ErrorDisplay } from './ErrorDisplay';
 import { useShowGeneration } from '../../hooks/useShowGeneration';
 import { useLanguage } from '../../hooks/useLanguage';
+import { useKeepAlive } from '../../hooks/useKeepAlive';
 import { DEFAULTS } from '../../constants';
 import { useState, useEffect } from 'react';
 import { fetchPersonas } from '../../services/apiService';
@@ -26,6 +27,9 @@ export default function Home() {
     generateShow: handleGenerateShow,
     clearError,
   } = useShowGeneration();
+
+  // Keep backend alive on Render.com free tier
+  useKeepAlive();
 
   const t = TRANSLATIONS[lang as 'en' | 'pl'];
 
