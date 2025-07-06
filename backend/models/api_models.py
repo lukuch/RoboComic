@@ -31,6 +31,7 @@ class GenerateShowRequest(BaseModel):
     mode: Mode = Field(default=Mode.TOPICAL, description="Mode of the comedy duel")
     topic: str = Field(default="", description="Topic for the comedy duel")
     num_rounds: int = Field(default=1, ge=1, le=10, description="Number of rounds (1-10)")
+    build_context: bool = Field(default=False, description="Whether to build context for the topic")
     temperature: Optional[float] = Field(None, ge=0.0, le=1.0, description="LLM temperature (0.0-1.0)")
 
     @field_validator('topic')

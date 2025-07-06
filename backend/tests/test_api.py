@@ -1,6 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 from main import app
+from models import Mode, Language
 
 client = TestClient(app)
 
@@ -10,8 +11,8 @@ def test_generate_show():
         json={
             "comedian1_style": "relatable",
             "comedian2_style": "absurd",
-            "lang": "en",
-            "mode": "topical",
+            "lang": Language.ENGLISH,
+            "mode": Mode.TOPICAL,
             "topic": "airplanes",
             "num_rounds": 1
         }
@@ -27,7 +28,7 @@ def test_tts():
         "/tts",
         json={
             "text": "This is a test of the RoboComic TTS system.",
-            "lang": "en"
+            "lang": Language.ENGLISH
         }
     )
     assert response.status_code == 200

@@ -7,6 +7,7 @@ from config.translations import TRANSLATIONS
 from services.agent_manager import AgentManager
 from tts.tts_service import TTSService
 from services.llm_utils import generate_topic_context_llm
+from models import Mode, Language
 import re
 
 class UIService:
@@ -51,7 +52,7 @@ class UIService:
             if k.startswith("audio_"):
                 del st.session_state[k]
         with st.spinner(TRANSLATIONS[lang].get("please_wait", "Generating show, please wait...")):
-            context = generate_topic_context_llm(topic, lang) if mode == "topical" else ""
+            context = generate_topic_context_llm(topic, lang) if mode == Mode.TOPICAL else ""
             history = self.agent_manager.run_duel(mode, topic, max_rounds=num_rounds, lang=lang, context=context)
         for msg in history:
             msg["content"] = self.clean_response(msg["role"], msg["content"])
@@ -93,7 +94,7 @@ class UIService:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
         """Main entry point for the Streamlit UI."""
-        lang = st.selectbox("Language / Język", ["en", "pl"], index=1)
+        lang = st.selectbox("Language / Język", [Language.ENGLISH, Language.POLISH], index=1)
         t = TRANSLATIONS[lang]
         st.markdown(
             f"""
@@ -110,7 +111,7 @@ class UIService:
         comedian1_style, comedian2_style, topic, num_rounds, roast_mode, voice_mode = self.render_inputs(t, persona_options)
 
         if st.button(t["start_show"]):
-            mode = "roast" if roast_mode else "topical"
+            mode = Mode.ROAST if roast_mode else Mode.TOPICAL
             self.generate_show(comedian1_style, comedian2_style, lang, mode, topic, num_rounds)
 
         history = st.session_state.get("history", [])

@@ -3,15 +3,16 @@
 import openai
 from config import settings
 from utils.logger import get_logger
+from models import Language
 import re
 
 logger = get_logger(__name__)
 
-def generate_topic_context_llm(topic: str, lang: str = "en") -> str:
+def generate_topic_context_llm(topic: str, lang: str = Language.ENGLISH) -> str:
     """Generate a list of anecdotes or facts about the topic using LLM."""
     if not topic:
         return ""
-    if lang == "pl":
+    if lang == Language.POLISH:
         prompt = (
             f"Wypisz dokładnie 10 najsłynniejszych, powszechnie znanych, prawdziwych anegdot, ciekawostek lub śmiesznych momentów związanych z tematem: '{topic}'. "
             "Podaj wyłącznie listę, bez żadnych wstępnych ani końcowych zdań. Każdy punkt powinien być krótki i konkretny. Opieraj się wyłącznie na faktach, wydarzeniach i sytuacjach, które naprawdę miały miejsce lub są powszechnie znane. Nie wymyślaj informacji. Odpowiedź po polsku."
@@ -37,11 +38,11 @@ def generate_topic_context_llm(topic: str, lang: str = "en") -> str:
         return ""
 
 
-def comedianify_text_llm(text: str, gender: str = "MAN", lang: str = "en") -> str:
+def comedianify_text_llm(text: str, gender: str = "MAN", lang: str = Language.ENGLISH) -> str:
     """Use OpenAI LLM to rewrite text as a standup comedian performance with Bark-compatible stage effects, in the specified language."""
     if not text:
         return ""
-    if lang == "pl":
+    if lang == Language.POLISH:
         prompt = (
             f"Przepisz poniższy tekst tak, jakby był wykonywany przez stand-upowego komika na scenie. "
             f"Dodaj didaskalia i efekty sceniczne używając tych tagów: [laughs], [laughter], [sighs], [gasps], [clears throat], —, ..., DUŻE LITERY dla podkreślenia oraz [{gender}] na początku. "

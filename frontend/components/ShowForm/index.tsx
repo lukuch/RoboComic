@@ -17,6 +17,7 @@ interface ShowFormProps {
     num_rounds: number;
     roast_mode: boolean;
     tts_mode: boolean;
+    build_context: boolean;
     temperature?: number;
   }) => void;
   loading: boolean;
@@ -37,6 +38,8 @@ interface ShowFormProps {
     ttsModeTooltip: string;
     numRoundsTooltip: string;
     roastModeTopicDisabledExplanation: string;
+    buildContext: string;
+    buildContextTooltip: string;
   };
 }
 
@@ -47,6 +50,7 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
   const [numRounds, setNumRounds] = useState<number>(DEFAULTS.NUM_ROUNDS);
   const [roastMode, setRoastMode] = useState<boolean>(DEFAULTS.ROAST_MODE);
   const [ttsMode, setTtsMode] = useState<boolean>(DEFAULTS.TTS_MODE);
+  const [buildContext, setBuildContext] = useState<boolean>(false);
   const [temperature, setTemperature] = useState<number>(0.9);
   const [showAdvanced, setShowAdvanced] = useState<boolean>(false);
   const [personas, setPersonas] = useState<{[key: string]: {description: string; description_pl: string}} | null>(null);
@@ -73,6 +77,7 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
             num_rounds: numRounds,
             roast_mode: roastMode,
             tts_mode: ttsMode,
+            build_context: buildContext,
             temperature: temperature,
           });
         }}
@@ -105,6 +110,16 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
         />
         {roastMode && (
           <div className="text-xs text-gray-400 -mt-4 mb-2">{t.roastModeTopicDisabledExplanation}</div>
+        )}
+        {!roastMode && (
+          <div className="flex gap-6 -mt-4">
+            <CheckboxWithTooltip
+              checked={buildContext}
+              onChange={setBuildContext}
+              label={t.buildContext}
+              tooltip={t.buildContextTooltip}
+            />
+          </div>
         )}
         <NumberInput
           value={numRounds}

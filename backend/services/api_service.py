@@ -22,7 +22,7 @@ class ApiService:
         try:
             self.agent_manager.set_personas(request.comedian1_style, request.comedian2_style, lang=request.lang)
             context = ""
-            if request.mode == "topical":
+            if request.build_context and request.topic.strip():
                 self.logger.info(f"Generating topic context for: {request.topic}")
                 context = generate_topic_context_llm(request.topic, request.lang)
             self.logger.info(f"Starting comedy duel with {request.num_rounds} rounds")

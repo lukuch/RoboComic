@@ -22,6 +22,18 @@ export const UI = {
   LOADING_SPINNER_SIZE: 64,
 } as const;
 
+// Mode Constants
+export const MODES = {
+  TOPICAL: 'topical',
+  ROAST: 'roast',
+} as const;
+
+// Language Constants
+export const LANGUAGES = {
+  ENGLISH: 'en',
+  POLISH: 'pl',
+} as const;
+
 // Error Messages
 export const ERROR_MESSAGES = {
   NETWORK_ERROR: 'Network error: Unable to connect to server',

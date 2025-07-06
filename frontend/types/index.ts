@@ -6,6 +6,7 @@ export interface GenerateShowParams {
   mode: string;
   topic: string;
   num_rounds: number;
+  build_context: boolean;
   temperature?: number;
 }
 
@@ -40,6 +41,7 @@ export interface ShowFormParams {
   num_rounds: number;
   roast_mode: boolean;
   tts_mode: boolean;
+  build_context: boolean;
   temperature?: number;
 }
 

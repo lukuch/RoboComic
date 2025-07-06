@@ -32,6 +32,8 @@ export const TRANSLATIONS = {
     creativeDesc: 'More creative and varied responses',
     experimentalDesc: 'Highly creative, unexpected responses',
     roastModeTopicDisabledExplanation: 'Topic selection is disabled in roast mode because the comedians will roast each other.',
+    buildContext: 'Build Context',
+    buildContextTooltip: 'When enabled, the AI will research and build background context about the selected topic to create more informed and relevant jokes.',
   },
   pl: {
     customize: 'Dostosuj pojedynek komików',
@@ -66,6 +68,8 @@ export const TRANSLATIONS = {
     creativeDesc: 'Bardziej kreatywne i zróżnicowane odpowiedzi',
     experimentalDesc: 'Wysoce kreatywne, nieoczekiwane odpowiedzi',
     roastModeTopicDisabledExplanation: 'W trybie roast wybór tematu jest wyłączony, ponieważ komicy będą roastować siebie nawzajem.',
+    buildContext: 'Buduj kontekst',
+    buildContextTooltip: 'Gdy włączone, AI będzie badać i budować tło kontekstowe dla wybranego tematu, aby tworzyć bardziej świadome i trafne żarty.',
   },
 } as const;
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { generateShow } from '../services/apiService';
 import { ChatMessage, ShowFormParams, ApiError } from '../types';
-import { DEFAULTS, ERROR_MESSAGES } from '../constants';
+import { DEFAULTS, ERROR_MESSAGES, MODES } from '../constants';
 
 export function useShowGeneration() {
   const [history, setHistory] = useState<ChatMessage[]>([]);
@@ -24,9 +24,10 @@ export function useShowGeneration() {
         comedian1_style: params.comedian1_style,
         comedian2_style: params.comedian2_style,
         lang: params.lang,
-        mode: params.roast_mode ? 'roast' : 'topical',
+        mode: params.roast_mode ? MODES.ROAST : MODES.TOPICAL,
         topic: params.topic,
         num_rounds: params.num_rounds,
+        build_context: params.build_context,
         temperature: params.temperature,
       });
       setHistory(data.history);

@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
 from typing import Union, Tuple
 import numpy as np
+from models import Language
 
 class TTSService(ABC):
     @abstractmethod
-    def speak(self, text: str, lang: str = "en") -> Union[bytes, Tuple[np.ndarray, int]]:
+    def speak(self, text: str, lang: str = Language.ENGLISH) -> Union[bytes, Tuple[np.ndarray, int]]:
         """Convert text to speech audio.
         
         Args:

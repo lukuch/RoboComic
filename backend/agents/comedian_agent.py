@@ -4,6 +4,7 @@ import injector
 import structlog
 from config.personas import COMEDIAN_PERSONAS
 from config import settings
+from models import Language
 from autogen import ConversableAgent
 
 class ComedianAgent:
@@ -15,13 +16,13 @@ class ComedianAgent:
         self.style = None
         self.agent = None
     
-    def _setup_agent(self, persona_key: str, display_name: str, lang: str = "en", temperature: float = None) -> None:
+    def _setup_agent(self, persona_key: str, display_name: str, lang: str = Language.ENGLISH, temperature: float = None) -> None:
         """Setup the agent with specific persona and language"""
         self.name = display_name
         self.persona = COMEDIAN_PERSONAS[persona_key]
         self.style = self.persona["style"]
         
-        if lang == "pl":
+        if lang == Language.POLISH:
             description = self.persona.get("description_pl", self.persona["description"])
         else:
             description = self.persona["description"]

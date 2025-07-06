@@ -11,6 +11,7 @@ os.environ["SUNO_USE_SMALL_MODELS"] = "True"
 from .tts_service import TTSService
 from bark import SAMPLE_RATE, generate_audio
 from services.llm_utils import comedianify_text_llm
+from models import Language
 
 
 class BarkTTSService(TTSService):
@@ -21,7 +22,7 @@ class BarkTTSService(TTSService):
         os.makedirs(self.output_dir, exist_ok=True)
         self.prompt_index = 0
 
-    def speak(self, text: str, lang: str = "en") -> Tuple[np.ndarray, int]:
+    def speak(self, text: str, lang: str = Language.ENGLISH) -> Tuple[np.ndarray, int]:
         # Alternate gender for each call
         gender = "MAN" if self.prompt_index == 0 else "WOMAN"
         self.prompt_index = (self.prompt_index + 1) % 2

@@ -6,6 +6,7 @@ from agents.comedian_agent import ComedianAgent
 from services.prompt_templates import COMEDIAN_PROMPT_TEMPLATE
 from autogen import GroupChat, GroupChatManager
 from config import settings
+from models import Mode, Language
 
 class AgentManager:
     @injector.inject
@@ -40,13 +41,18 @@ class AgentManager:
             self.comedian1.agent,
             self.comedian2.agent,
         ]
-        if mode == "topical":
-            initial_prompt = COMEDIAN_PROMPT_TEMPLATE[lang][mode].format(
-                name=self.comedian1.name, style=self.comedian1.style, topic=topic or ("anything" if lang == "en" else "cokolwiek"), context=context or ""
-            )
+        if mode == Mode.TOPICAL:
+            if context and context.strip():
+                initial_prompt = COMEDIAN_PROMPT_TEMPLATE[lang]["topical_with_context"].format(
+                    name=self.comedian1.name, style=self.comedian1.style, topic=topic or ("anything" if lang == Language.ENGLISH else "cokolwiek"), context=context
+                )
+            else:
+                initial_prompt = COMEDIAN_PROMPT_TEMPLATE[lang]["topical_without_context"].format(
+                    name=self.comedian1.name, style=self.comedian1.style, topic=topic or ("anything" if lang == Language.ENGLISH else "cokolwiek")
+                )
         else:
             initial_prompt = COMEDIAN_PROMPT_TEMPLATE[lang][mode].format(
-                name=self.comedian1.name, style=self.comedian1.style, topic=topic or ("anything" if lang == "en" else "cokolwiek")
+                name=self.comedian1.name, style=self.comedian1.style, topic=topic or ("anything" if lang == Language.ENGLISH else "cokolwiek")
             )
         group_chat = GroupChat(
             agents=agents,
