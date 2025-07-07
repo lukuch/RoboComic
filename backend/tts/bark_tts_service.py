@@ -26,6 +26,7 @@ class BarkTTSService(TTSService):
 
     def speak(self, text: str, lang: str = Language.ENGLISH) -> Tuple[np.ndarray, int]:
         from bark import SAMPLE_RATE, generate_audio  # moved import here to avoid test dependency
+
         # Alternate gender for each call
         gender = "MAN" if self.prompt_index == 0 else "WOMAN"
         self.prompt_index = (self.prompt_index + 1) % 2
