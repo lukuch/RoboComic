@@ -8,6 +8,7 @@ import re
 
 logger = get_logger(__name__)
 
+
 def generate_topic_context_llm(topic: str, lang: str = Language.ENGLISH) -> str:
     """Generate a list of anecdotes or facts about the topic using LLM."""
     if not topic:
@@ -31,7 +32,7 @@ def generate_topic_context_llm(topic: str, lang: str = Language.ENGLISH) -> str:
             temperature=settings.DEFAULT_TEMPERATURE,
         )
         context = response.choices[0].message.content.strip()
-        context = re.sub(r'(?<!\d)\. ', '.\n', context)
+        context = re.sub(r"(?<!\d)\. ", ".\n", context)
         return f"\n{context}\n"
     except Exception as e:
         logger.error(f"Error generating topic context: {e}")
@@ -69,4 +70,4 @@ def comedianify_text_llm(text: str, gender: str = "MAN", lang: str = Language.EN
         return response.choices[0].message.content.strip()
     except Exception as e:
         logger.error(f"Error comedianifying text: {e}")
-        return text 
+        return text

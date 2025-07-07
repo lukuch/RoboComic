@@ -7,12 +7,16 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 # Use absolute path to ensure .env is found regardless of where the script is run from
 import pathlib
-env_path = pathlib.Path(__file__).parent.parent / '.env'
+
+env_path = pathlib.Path(__file__).parent.parent / ".env"
 load_dotenv(env_path)
+
 
 class ConfigError(Exception):
     """Raised when required configuration is missing or invalid."""
+
     pass
+
 
 def get_required_env(key: str, description: str) -> str:
     """Get a required environment variable or raise ConfigError."""
@@ -21,10 +25,10 @@ def get_required_env(key: str, description: str) -> str:
         raise ConfigError(f"Missing required environment variable: {key} ({description})")
     return value
 
+
 def get_optional_env(key: str, default: str, description: str) -> str:
     """Get an optional environment variable with a default value."""
     return os.getenv(key, default)
-
 
 
 # Required settings (will raise ConfigError if missing)
@@ -53,7 +57,7 @@ TEMPERATURE_PRESETS = {
     "conservative": {"temperature": 0.3},
     "balanced": {"temperature": 0.7},
     "creative": {"temperature": 0.9},
-    "experimental": {"temperature": 1.0}
+    "experimental": {"temperature": 1.0},
 }
 
 # Validate optional settings
@@ -62,6 +66,7 @@ if LOG_FORMAT not in ["json", "human"]:
 
 if not (1 <= API_PORT <= 65535):
     raise ConfigError(f"Invalid API_PORT: {API_PORT}. Must be between 1 and 65535")
+
 
 # Configuration validation function
 def validate_config() -> None:

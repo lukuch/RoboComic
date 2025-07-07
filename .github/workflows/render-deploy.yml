@@ -1,4 +1,4 @@
-name: Deploy to Render (with status)
+name: ☁️ Render deployment
 
 on:
   push:

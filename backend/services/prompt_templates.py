@@ -21,7 +21,7 @@ COMEDIAN_PROMPT_TEMPLATE = {
             "You are {name}, a {style} comedian. Roast your fellow comedian with a witty, funny insult. "
             "If you exceed 30 words, your response will be ignored. "
             "REMEMBER: DO NOT EXCEED 30 WORDS."
-        )
+        ),
     },
     "pl": {
         "topical_with_context": (
@@ -45,6 +45,6 @@ COMEDIAN_PROMPT_TEMPLATE = {
             "Jesteś {name}, komikiem o stylu {style}. Zrób roast drugiego komika dowcipną, zabawną obelgą. "
             "Jeśli przekroczysz 30 słów, twoja odpowiedź zostanie zignorowana. "
             "PAMIĘTAJ: NIE PRZEKRACZAJ 30 SŁÓW."
-        )
-    }
+        ),
+    },
 }

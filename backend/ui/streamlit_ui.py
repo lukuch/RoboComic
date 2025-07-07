@@ -10,6 +10,7 @@ from services.llm_utils import generate_topic_context_llm
 from models import Mode, Language
 import re
 
+
 class UIService:
     """Service class for Streamlit UI with dependency injection."""
 
@@ -25,10 +26,10 @@ class UIService:
         and strip leading/trailing quotes from the main message text.
         """
         # Remove everything up to and including the first colon, dash, or similar separator
-        cleaned = re.sub(r'^(?:[A-Za-zĄĆĘŁŃÓŚŹŻa-ząćęłńóśźż0-9 _-]{2,20})[:\-–—]\s*', '', content)
+        cleaned = re.sub(r"^(?:[A-Za-zĄĆĘŁŃÓŚŹŻa-ząćęłńóśźż0-9 _-]{2,20})[:\-–—]\s*", "", content)
         cleaned = cleaned.lstrip()
         # Remove leading and trailing straight or curly quotes
-        cleaned = re.sub(r'^[\"""„]+|[\"""„]+$', '', cleaned)
+        cleaned = re.sub(r'^[\"""„]+|[\"""„]+$', "", cleaned)
         return cleaned.strip()
 
     def remove_bracketed_actions(self, text):
@@ -89,7 +90,8 @@ class UIService:
 
     def run_ui(self):
         import os
-        css_path = os.path.join(os.path.dirname(__file__), 'style.css')
+
+        css_path = os.path.join(os.path.dirname(__file__), "style.css")
         with open(css_path) as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
@@ -105,7 +107,7 @@ class UIService:
                 </span>
             </h1>
             """,
-            unsafe_allow_html=True
+            unsafe_allow_html=True,
         )
         persona_options = list(COMEDIAN_PERSONAS.keys())
         comedian1_style, comedian2_style, topic, num_rounds, roast_mode, voice_mode = self.render_inputs(t, persona_options)
@@ -123,14 +125,12 @@ class UIService:
 
 
 # Main execution for Streamlit
-if __name__ == "__main__" or getattr(st, '_is_running_with_streamlit', False):
+if __name__ == "__main__" or getattr(st, "_is_running_with_streamlit", False):
     # Import container here to avoid circular imports
     from container import container
-    
+
     # Get the UI service from the container
     ui_service = container.get(UIService)
-    
+
     # Run the UI
     ui_service.run_ui()
-
-

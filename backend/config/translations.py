@@ -10,7 +10,7 @@ TRANSLATIONS = {
         "start_show": "Start the Show",
         "play_tts": "Play TTS",
         "comedian1": "Comedian 1",
-        "comedian2": "Comedian 2"
+        "comedian2": "Comedian 2",
     },
     "pl": {
         "title": "RoboComic",
@@ -23,6 +23,6 @@ TRANSLATIONS = {
         "start_show": "Rozpocznij Show",
         "play_tts": "Odtwórz TTS",
         "comedian1": "Komik 1",
-        "comedian2": "Komik 2"
-    }
-} 
+        "comedian2": "Komik 2",
+    },
+}

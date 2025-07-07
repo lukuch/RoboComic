@@ -39,7 +39,9 @@ jobs:
       run: poetry install --only main,dev
 
     - name: Run tests
-      run: poetry run pytest tests/ -v
+      run: |
+        export PYTHONPATH=$PYTHONPATH:$(pwd)
+        poetry run pytest tests/ -v
 
     - name: Test Docker build
       run: docker build -t robocomic-backend:test .

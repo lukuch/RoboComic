@@ -8,6 +8,7 @@ from autogen import GroupChat, GroupChatManager
 from config import settings
 from models import Mode, Language
 
+
 class AgentManager:
     @injector.inject
     def __init__(self, logger: structlog.BoundLogger, comedian1_key="sarcastic", comedian2_key="absurd", lang="en"):
@@ -34,8 +35,12 @@ class AgentManager:
             self.lang = lang
         self.reset_agents()
 
-    def run_duel(self, mode: str, topic: str = None, max_rounds: int = 2, lang: str = "en", context: str = "", temperature: float = None) -> list:
-        self.logger.info(f"Starting duel: mode={mode}, topic={topic}, max_rounds={max_rounds}, lang={lang}, temperature={temperature}")
+    def run_duel(
+        self, mode: str, topic: str = None, max_rounds: int = 2, lang: str = "en", context: str = "", temperature: float = None
+    ) -> list:
+        self.logger.info(
+            f"Starting duel: mode={mode}, topic={topic}, max_rounds={max_rounds}, lang={lang}, temperature={temperature}"
+        )
         self.reset_agents(temperature)
         agents = [
             self.comedian1.agent,
@@ -44,38 +49,30 @@ class AgentManager:
         if mode == Mode.TOPICAL:
             if context and context.strip():
                 initial_prompt = COMEDIAN_PROMPT_TEMPLATE[lang]["topical_with_context"].format(
-                    name=self.comedian1.name, style=self.comedian1.style, topic=topic or ("anything" if lang == Language.ENGLISH else "cokolwiek"), context=context
+                    name=self.comedian1.name,
+                    style=self.comedian1.style,
+                    topic=topic or ("anything" if lang == Language.ENGLISH else "cokolwiek"),
+                    context=context,
                 )
             else:
                 initial_prompt = COMEDIAN_PROMPT_TEMPLATE[lang]["topical_without_context"].format(
-                    name=self.comedian1.name, style=self.comedian1.style, topic=topic or ("anything" if lang == Language.ENGLISH else "cokolwiek")
+                    name=self.comedian1.name,
+                    style=self.comedian1.style,
+                    topic=topic or ("anything" if lang == Language.ENGLISH else "cokolwiek"),
                 )
         else:
             initial_prompt = COMEDIAN_PROMPT_TEMPLATE[lang][mode].format(
-                name=self.comedian1.name, style=self.comedian1.style, topic=topic or ("anything" if lang == Language.ENGLISH else "cokolwiek")
+                name=self.comedian1.name,
+                style=self.comedian1.style,
+                topic=topic or ("anything" if lang == Language.ENGLISH else "cokolwiek"),
             )
-        group_chat = GroupChat(
-            agents=agents,
-            messages=[],
-            max_round=max_rounds * 4,
-            speaker_selection_method="round_robin"
-        )
+        group_chat = GroupChat(agents=agents, messages=[], max_round=max_rounds * 4, speaker_selection_method="round_robin")
         manager = GroupChatManager(
             groupchat=group_chat,
-            llm_config={
-                "config_list": [
-                    {
-                        "model": settings.LLM_MODEL,
-                        "api_key": settings.OPENAI_API_KEY
-                    }
-                ]
-            }
+            llm_config={"config_list": [{"model": settings.LLM_MODEL, "api_key": settings.OPENAI_API_KEY}]},
         )
         chat_result = manager.initiate_chat(
-            self.comedian1.agent,
-            message=initial_prompt,
-            max_turns=max_rounds * 4,
-            summary_method="last_msg"
+            self.comedian1.agent, message=initial_prompt, max_turns=max_rounds * 4, summary_method="last_msg"
         )
         duel_history = []
         for msg in chat_result.chat_history:

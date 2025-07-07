@@ -5,6 +5,7 @@ import injector
 import structlog
 from typing import Tuple
 import numpy as np
+
 # Enable small models for 8GB VRAM GPUs, but do not disable CUDA or offload to CPU
 os.environ["SUNO_USE_SMALL_MODELS"] = "True"
 
@@ -30,4 +31,4 @@ class BarkTTSService(TTSService):
         comedianified_text = comedianify_text_llm(text, gender=gender, lang=lang)
         self.logger.debug(f"Comedianified text: {comedianified_text}")
         audio_array = generate_audio(comedianified_text)
-        return audio_array, SAMPLE_RATE 
+        return audio_array, SAMPLE_RATE
