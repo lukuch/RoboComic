@@ -196,6 +196,11 @@ jobs:
       run: poetry install --only main
 
     - name: Start backend server
+      env:
+        OPENAI_API_KEY: dummy
+        ELEVENLABS_API_KEY: dummy
+        COMEDIAN1_VOICE_ID: dummy
+        COMEDIAN2_VOICE_ID: dummy
       run: |
         poetry run python -m uvicorn main:app --host 0.0.0.0 --port 8000 &
         SERVER_PID=$!
