@@ -7,13 +7,13 @@ import injector
 import numpy as np
 import structlog
 
-# Enable small models for 8GB VRAM GPUs, but do not disable CUDA or offload to CPU
-os.environ["SUNO_USE_SMALL_MODELS"] = "True"
-
-from models import Language
-from services.llm_utils import comedianify_text_llm
+import models
+import services.llm_utils
 
 from .tts_service import TTSService
+
+# NOTE: This must be set after imports for flake8 compliance, but before Bark is used.
+os.environ["SUNO_USE_SMALL_MODELS"] = "True"
 
 
 class BarkTTSService(TTSService):
@@ -24,14 +24,14 @@ class BarkTTSService(TTSService):
         os.makedirs(self.output_dir, exist_ok=True)
         self.prompt_index = 0
 
-    def speak(self, text: str, lang: str = Language.ENGLISH) -> Tuple[np.ndarray, int]:
+    def speak(self, text: str, lang: str = models.Language.ENGLISH) -> Tuple[np.ndarray, int]:
         from bark import SAMPLE_RATE, generate_audio  # moved import here to avoid test dependency
 
         # Alternate gender for each call
         gender = "MAN" if self.prompt_index == 0 else "WOMAN"
         self.prompt_index = (self.prompt_index + 1) % 2
         # Comedianify the text using the LLM
-        comedianified_text = comedianify_text_llm(text, gender=gender, lang=lang)
+        comedianified_text = services.llm_utils.comedianify_text_llm(text, gender=gender, lang=lang)
         self.logger.debug(f"Comedianified text: {comedianified_text}")
         audio_array = generate_audio(comedianified_text)
         return audio_array, SAMPLE_RATE

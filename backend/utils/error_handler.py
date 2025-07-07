@@ -6,7 +6,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 
-from .exceptions import APIException, RoboComicException
+from .exceptions import RoboComicException
 from .logger import get_logger
 
 logger = get_logger(__name__)

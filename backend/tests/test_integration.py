@@ -2,7 +2,6 @@ import json
 import time
 from unittest.mock import Mock, patch
 
-import pytest
 from fastapi.testclient import TestClient
 
 from main import app
@@ -118,7 +117,6 @@ class TestPerformanceIntegration:
     def test_concurrent_requests(self):
         """Test handling of concurrent requests"""
         import concurrent.futures
-        import threading
 
         def make_request():
             response = client.get("/health")

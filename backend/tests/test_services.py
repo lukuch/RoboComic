@@ -6,7 +6,6 @@ from config.personas import COMEDIAN_PERSONAS
 from models.api_models import GenerateShowRequest, TTSRequest
 from services.agent_manager import AgentManager
 from services.api_service import ApiService
-from utils.logger import get_logger
 
 
 class TestAgentManager:
@@ -149,7 +148,7 @@ class TestErrorHandling:
         """Test handling of invalid requests"""
         # Test with invalid comedian IDs - this should raise validation error
         with pytest.raises(Exception):
-            request = GenerateShowRequest(
+            GenerateShowRequest(
                 comedian1_style="invalid_comedian",
                 comedian2_style="another_invalid",
                 lang="en",
@@ -164,4 +163,4 @@ class TestErrorHandling:
         """Test TTS error handling"""
         # Test with empty text - this should raise validation error
         with pytest.raises(Exception):
-            request = TTSRequest(text="", lang="en")  # Empty text
+            TTSRequest(text="", lang="en")  # Empty text

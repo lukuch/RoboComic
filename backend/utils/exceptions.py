@@ -11,25 +11,17 @@ class RoboComicException(Exception):
 class AgentException(RoboComicException):
     """Exception raised when there's an issue with AI agents."""
 
-    pass
-
 
 class TTSServiceException(RoboComicException):
     """Exception raised when there's an issue with TTS services."""
-
-    pass
 
 
 class ConfigurationException(RoboComicException):
     """Exception raised when there's a configuration issue."""
 
-    pass
-
 
 class ValidationException(RoboComicException):
     """Exception raised when input validation fails."""
-
-    pass
 
 
 class APIException(RoboComicException):

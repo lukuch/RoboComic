@@ -18,4 +18,3 @@ class TTSService(ABC):
         Returns:
             Audio data as bytes (ElevenLabs) or tuple of (audio_array, sample_rate) (Bark)
         """
-        pass

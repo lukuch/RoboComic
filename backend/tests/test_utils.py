@@ -1,9 +1,5 @@
-import logging
-
-import pytest
-
 from utils.exceptions import RoboComicException, TTSServiceException, ValidationException
-from utils.logger import get_logger, setup_logger
+from utils.logger import setup_logger
 
 
 class TestExceptions:

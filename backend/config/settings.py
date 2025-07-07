@@ -5,7 +5,6 @@ import os
 # Load environment variables from .env file
 # Use absolute path to ensure .env is found regardless of where the script is run from
 import pathlib
-from typing import Optional
 
 from dotenv import load_dotenv
 
@@ -15,8 +14,6 @@ load_dotenv(env_path)
 
 class ConfigError(Exception):
     """Raised when required configuration is missing or invalid."""
-
-    pass
 
 
 def get_required_env(key: str, description: str) -> str:
