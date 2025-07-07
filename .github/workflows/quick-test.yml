@@ -39,6 +39,8 @@ jobs:
       run: poetry install --only main,dev
 
     - name: Run tests
+      env:
+        OPENAI_API_KEY: dummy
       run: |
         export PYTHONPATH=$PYTHONPATH:$(pwd)
         poetry run pytest tests/ -v
