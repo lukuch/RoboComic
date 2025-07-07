@@ -1,12 +1,10 @@
 """ElevenTTSService for RoboComic backend."""
 
-import time
-
 import injector
 import requests
 import structlog
 
-from config.settings import COMEDIAN1_VOICE_ID, COMEDIAN2_VOICE_ID, ELEVENLABS_API_KEY
+from config.settings import COMEDIAN1_VOICE_ID, ELEVENLABS_API_KEY
 
 from .tts_service import TTSService
 
@@ -17,22 +15,8 @@ class ElevenTTSService(TTSService):
         self.logger = logger
         self.api_key = ELEVENLABS_API_KEY
         self.base_url = "https://api.elevenlabs.io/v1/text-to-speech/"
-        self.voice_ids = [COMEDIAN1_VOICE_ID, COMEDIAN2_VOICE_ID]
-        self.voice_index = 0
-        self.last_request_time = time.time()
 
-    def _reset_voice_index_if_needed(self, timeout_minutes=5):
-        now = time.time()
-        timeout_seconds = timeout_minutes * 60
-        if now - self.last_request_time > timeout_seconds:
-            self.voice_index = 0
-        self.last_request_time = now
-
-    def speak(self, text: str, lang: str = None) -> bytes:
-        self._reset_voice_index_if_needed()  # temporary race condition fix until more robust voice switching related with user and his comedian personas
-        voice_id = self.voice_ids[self.voice_index]
-        self.voice_index = (self.voice_index + 1) % len(self.voice_ids)
-
+    def speak(self, text: str, lang: str = None, voice_id: str = COMEDIAN1_VOICE_ID) -> bytes:
         self.logger.info(f"TTS request to ElevenLabs: voice_id={voice_id}, text_length={len(text)}")
 
         url = f"{self.base_url}{voice_id}"

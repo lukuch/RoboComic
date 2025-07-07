@@ -11,6 +11,7 @@ from .api_models import (
     TemperaturePreset,
     TemperaturePresetConfig,
     TTSRequest,
+    VoiceIdsResponse,
 )
 
 __all__ = [
@@ -26,4 +27,5 @@ __all__ = [
     "LLMConfig",
     "TemperaturePresetConfig",
     "TemperaturePreset",
+    "VoiceIdsResponse",
 ]

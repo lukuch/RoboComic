@@ -99,6 +99,16 @@ class TestAPIEndpoints:
         # but the endpoint should still return a 422 status
         assert response.status_code == 422  # Validation error
 
+    def test_voice_ids_endpoint(self):
+        """Test voice IDs endpoint"""
+        response = client.get("/voice-ids")
+        assert response.status_code == 200
+        data = response.json()
+        assert "comedian1_voice_id" in data
+        assert "comedian2_voice_id" in data
+        assert isinstance(data["comedian1_voice_id"], str)
+        assert isinstance(data["comedian2_voice_id"], str)
+
     def test_cors_headers(self):
         """Test CORS headers are present for GET and OPTIONS requests"""
         # For GET request

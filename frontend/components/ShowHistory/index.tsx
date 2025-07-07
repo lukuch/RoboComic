@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { tts } from "../../services/apiService";
+import { useState, useEffect } from "react";
+import { tts, fetchVoiceIds } from "../../services/apiService";
 import { ChatBubble } from "./ChatBubble";
 import { ManagerBubble } from "./ManagerBubble";
 import { ErrorDisplay } from "../../app/Home/ErrorDisplay";
@@ -37,13 +37,18 @@ export default function ShowHistory({
   const [loadingIdx, setLoadingIdx] = useState<number | null>(null);
   const [ttsCache, setTtsCache] = useState<{ [key: string]: string }>({});
   const [ttsError, setTtsError] = useState<string | null>(null); // Add error state
+  const [voiceIds, setVoiceIds] = useState<{ comedian1_voice_id: string; comedian2_voice_id: string } | null>(null);
 
-  async function handlePlay(text: string, idx: number) {
+  useEffect(() => {
+    fetchVoiceIds().then(setVoiceIds);
+  }, []);
+
+  async function handlePlay(text: string, idx: number, voiceId: string) {
     setLoadingIdx(idx);
     setPlayingIdx(null);
     setAudioUrl(null);
     setTtsError(null); // Reset error on new play
-    const cacheKey = text + "|" + lang;
+    const cacheKey = text + "|" + lang + "|" + voiceId;
     if (ttsCache[cacheKey]) {
       setAudioUrl(ttsCache[cacheKey]);
       setPlayingIdx(idx);
@@ -51,7 +56,7 @@ export default function ShowHistory({
       return;
     }
     try {
-      const url = await tts(text, lang);
+      const url = await tts(text, lang, voiceId);
       setTtsCache((prev) => ({ ...prev, [cacheKey]: url }));
       setAudioUrl(url);
       setPlayingIdx(idx);
@@ -64,7 +69,7 @@ export default function ShowHistory({
     }
   }
 
-  if (!history.length) {
+  if (!history.length || !voiceIds) {
     return null;
   }
 
@@ -115,6 +120,10 @@ export default function ShowHistory({
                   (roundIdx * bubblesPerRound + i) % 2 === 0
                     ? comedian1Persona
                     : comedian2Persona;
+                const voiceId =
+                  (roundIdx * bubblesPerRound + i) % 2 === 0
+                    ? voiceIds.comedian1_voice_id
+                    : voiceIds.comedian2_voice_id;
                 return (
                   <ChatBubble
                     key={i}
@@ -126,7 +135,7 @@ export default function ShowHistory({
                     bubbleColor={bubbleColor}
                     align={align}
                     ttsMode={ttsMode}
-                    onPlayTTS={handlePlay}
+                    onPlayTTS={(text, idx) => handlePlay(text, idx, voiceId)}
                     playingIdx={playingIdx}
                     loadingIdx={loadingIdx}
                     audioUrl={audioUrl}

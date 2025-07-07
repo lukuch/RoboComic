@@ -51,9 +51,9 @@ class ApiService:
             )
 
     def tts(self, request: TTSRequest) -> Union[bytes, Tuple[np.ndarray, int]]:
-        self.logger.info(f"TTS request: {len(request.text)} characters, lang={request.lang}")
+        self.logger.info(f"TTS request: {len(request.text)} characters, lang={request.lang}, voice_id={request.voice_id}")
         try:
-            audio_result = self.tts_service.speak(request.text, lang=request.lang)
+            audio_result = self.tts_service.speak(request.text, lang=request.lang, voice_id=request.voice_id)
             return audio_result
         except requests.exceptions.HTTPError as e:
             if e.response is not None and e.response.status_code == 401:

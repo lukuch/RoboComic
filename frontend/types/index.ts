@@ -138,3 +138,8 @@ export interface HealthResponse {
   version: string;
   timestamp: string;
 }
+
+export type VoiceIdsResponse = {
+  comedian1_voice_id: string;
+  comedian2_voice_id: string;
+};

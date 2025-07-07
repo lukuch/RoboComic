@@ -61,6 +61,7 @@ class GenerateShowRequest(BaseModel):
 class TTSRequest(BaseModel):
     text: str = Field(..., description="Text to convert to speech")
     lang: Language = Field(default=Language.ENGLISH, description="Language for TTS")
+    voice_id: Optional[str] = Field(default=None, description="Voice ID to use for TTS")
 
     @field_validator("text")
     @classmethod
@@ -97,3 +98,8 @@ class HealthResponse(BaseModel):
     status: str = Field(..., description="Health status")
     version: str = Field(..., description="API version")
     timestamp: str = Field(..., description="Current timestamp")
+
+
+class VoiceIdsResponse(BaseModel):
+    comedian1_voice_id: str = Field(..., description="Voice ID for the first comedian")
+    comedian2_voice_id: str = Field(..., description="Voice ID for the second comedian")

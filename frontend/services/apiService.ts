@@ -6,6 +6,7 @@ import {
   ApiError,
   TemperaturePreset,
   LLMConfig,
+  VoiceIdsResponse,
 } from "../types";
 import { API_CONFIG, ERROR_MESSAGES } from "../constants";
 
@@ -56,11 +57,11 @@ export async function generateShow(
   }
 }
 
-export async function tts(text: string, lang: string): Promise<string> {
+export async function tts(text: string, lang: string, voiceId?: string): Promise<string> {
   try {
     const response = await api.post<Blob>(
       "/tts",
-      { text, lang },
+      { text, lang, voice_id: voiceId },
       {
         responseType: "blob",
         timeout: API_CONFIG.TTS_TIMEOUT,
@@ -76,6 +77,15 @@ export async function fetchPersonas(): Promise<Personas> {
   try {
     const { data } = await api.get<{ personas: Personas }>("/personas");
     return data.personas;
+  } catch (error) {
+    throw handleApiError(error as AxiosError);
+  }
+}
+
+export async function fetchVoiceIds(): Promise<VoiceIdsResponse> {
+  try {
+    const { data } = await api.get<VoiceIdsResponse>("/voice-ids");
+    return data;
   } catch (error) {
     throw handleApiError(error as AxiosError);
   }

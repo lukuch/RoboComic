@@ -220,6 +220,7 @@ jobs:
           "health"
           "personas"
           "llm-config"
+          "voice-ids"
         )
         for ep in "${endpoints[@]}"; do
           echo "Testing /$ep endpoint..."

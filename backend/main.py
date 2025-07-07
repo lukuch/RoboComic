@@ -13,7 +13,7 @@ from fastapi.responses import StreamingResponse
 
 from config import settings, validate_config
 from config.personas import COMEDIAN_PERSONAS
-from config.settings import DEFAULT_TEMPERATURE, TEMPERATURE_PRESETS
+from config.settings import COMEDIAN1_VOICE_ID, COMEDIAN2_VOICE_ID, DEFAULT_TEMPERATURE, TEMPERATURE_PRESETS
 from container import container
 from models import (
     GenerateShowRequest,
@@ -23,6 +23,7 @@ from models import (
     PersonasResponse,
     TemperaturePresetConfig,
     TTSRequest,
+    VoiceIdsResponse,
 )
 from services.api_service import ApiService
 from utils import general_exception_handler, robocomic_exception_handler, validation_exception_handler
@@ -112,6 +113,15 @@ def get_temperature_presets():
     return [
         TemperaturePresetConfig(name=name, temperature=preset["temperature"]) for name, preset in TEMPERATURE_PRESETS.items()
     ]
+
+
+@app.get("/voice-ids", response_model=VoiceIdsResponse)
+def get_voice_ids():
+    """Get current voice IDs for comedians."""
+    return VoiceIdsResponse(
+        comedian1_voice_id=COMEDIAN1_VOICE_ID,
+        comedian2_voice_id=COMEDIAN2_VOICE_ID,
+    )
 
 
 if __name__ == "__main__":
