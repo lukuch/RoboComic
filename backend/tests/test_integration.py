@@ -1,9 +1,11 @@
-import pytest
-from unittest.mock import Mock, patch
-from fastapi.testclient import TestClient
-from main import app
 import json
 import time
+from unittest.mock import Mock, patch
+
+import pytest
+from fastapi.testclient import TestClient
+
+from main import app
 
 client = TestClient(app)
 
@@ -115,8 +117,8 @@ class TestPerformanceIntegration:
 
     def test_concurrent_requests(self):
         """Test handling of concurrent requests"""
-        import threading
         import concurrent.futures
+        import threading
 
         def make_request():
             response = client.get("/health")
@@ -155,7 +157,7 @@ class TestConfigurationIntegration:
 
     def test_environment_configuration(self):
         """Test environment configuration loading"""
-        from config.settings import OPENAI_API_KEY, ELEVENLABS_API_KEY, LLM_MODEL, DEFAULT_TEMPERATURE
+        from config.settings import DEFAULT_TEMPERATURE, ELEVENLABS_API_KEY, LLM_MODEL, OPENAI_API_KEY
 
         # Test that settings can be loaded
         assert hasattr(OPENAI_API_KEY, "__class__")  # Check it exists

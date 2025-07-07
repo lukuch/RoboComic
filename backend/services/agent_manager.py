@@ -2,11 +2,12 @@
 
 import injector
 import structlog
-from agents.comedian_agent import ComedianAgent
-from services.prompt_templates import COMEDIAN_PROMPT_TEMPLATE
 from autogen import GroupChat, GroupChatManager
+
+from agents.comedian_agent import ComedianAgent
 from config import settings
-from models import Mode, Language
+from models import Language, Mode
+from services.prompt_templates import COMEDIAN_PROMPT_TEMPLATE
 
 
 class AgentManager:

@@ -1,9 +1,11 @@
 """ElevenTTSService for RoboComic backend."""
 
-import requests
 import injector
+import requests
 import structlog
-from config.settings import ELEVENLABS_API_KEY, COMEDIAN1_VOICE_ID, COMEDIAN2_VOICE_ID
+
+from config.settings import COMEDIAN1_VOICE_ID, COMEDIAN2_VOICE_ID, ELEVENLABS_API_KEY
+
 from .tts_service import TTSService
 
 

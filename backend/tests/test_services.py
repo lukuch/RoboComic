@@ -1,9 +1,11 @@
-import pytest
 from unittest.mock import Mock, patch
+
+import pytest
+
+from config.personas import COMEDIAN_PERSONAS
+from models.api_models import GenerateShowRequest, TTSRequest
 from services.agent_manager import AgentManager
 from services.api_service import ApiService
-from models.api_models import GenerateShowRequest, TTSRequest
-from config.personas import COMEDIAN_PERSONAS
 from utils.logger import get_logger
 
 

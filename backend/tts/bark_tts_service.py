@@ -1,18 +1,21 @@
 """BarkTTSService for RoboComic backend."""
 
 import os
-import injector
-import structlog
 from typing import Tuple
+
+import injector
 import numpy as np
+import structlog
 
 # Enable small models for 8GB VRAM GPUs, but do not disable CUDA or offload to CPU
 os.environ["SUNO_USE_SMALL_MODELS"] = "True"
 
-from .tts_service import TTSService
 from bark import SAMPLE_RATE, generate_audio
-from services.llm_utils import comedianify_text_llm
+
 from models import Language
+from services.llm_utils import comedianify_text_llm
+
+from .tts_service import TTSService
 
 
 class BarkTTSService(TTSService):

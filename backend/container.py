@@ -1,11 +1,12 @@
 import injector
 import structlog
+
 from agents.comedian_agent import ComedianAgent
 from services.agent_manager import AgentManager
-from tts.tts_service import TTSService
-from tts.eleven_tts_service import ElevenTTSService
-from utils.logger import setup_logger
 from services.api_service import ApiService
+from tts.eleven_tts_service import ElevenTTSService
+from tts.tts_service import TTSService
+from utils.logger import setup_logger
 
 
 class AppContainer(injector.Module):

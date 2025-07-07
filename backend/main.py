@@ -1,30 +1,32 @@
-from container import container
-from fastapi import FastAPI, Request
-from fastapi.responses import StreamingResponse
-from fastapi.exceptions import RequestValidationError
-from fastapi.middleware.cors import CORSMiddleware
 import io
-import time
 import os
 import sys
+import time
+from datetime import UTC, datetime
+from typing import List
+
 import uvicorn
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
+
+from config import settings, validate_config
 from config.personas import COMEDIAN_PERSONAS
+from config.settings import DEFAULT_TEMPERATURE, TEMPERATURE_PRESETS
+from container import container
 from models import (
     GenerateShowRequest,
     GenerateShowResponse,
-    TTSRequest,
-    PersonasResponse,
     HealthResponse,
     LLMConfig,
+    PersonasResponse,
     TemperaturePresetConfig,
+    TTSRequest,
 )
-from typing import List
-from utils import validation_exception_handler, robocomic_exception_handler, general_exception_handler
-from utils.exceptions import TTSServiceException
 from services.api_service import ApiService
-from datetime import datetime, UTC
-from config.settings import DEFAULT_TEMPERATURE, TEMPERATURE_PRESETS
-from config import settings, validate_config
+from utils import general_exception_handler, robocomic_exception_handler, validation_exception_handler
+from utils.exceptions import TTSServiceException
 
 # Production settings
 IS_PRODUCTION = os.getenv("ENVIRONMENT", "development") == "production"

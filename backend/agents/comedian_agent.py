@@ -2,10 +2,11 @@
 
 import injector
 import structlog
-from config.personas import COMEDIAN_PERSONAS
-from config import settings
-from models import Language
 from autogen import ConversableAgent
+
+from config import settings
+from config.personas import COMEDIAN_PERSONAS
+from models import Language
 
 
 class ComedianAgent:

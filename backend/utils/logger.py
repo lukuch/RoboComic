@@ -1,8 +1,9 @@
-import structlog
 import logging
 import sys
-from typing import Optional
 from pathlib import Path
+from typing import Optional
+
+import structlog
 
 
 def setup_logger(

@@ -1,10 +1,12 @@
-from fastapi import Request, status
-from fastapi.responses import JSONResponse
-from fastapi.exceptions import RequestValidationError
-from pydantic import ValidationError
 import traceback
 from typing import Union
-from .exceptions import RoboComicException, APIException
+
+from fastapi import Request, status
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+from pydantic import ValidationError
+
+from .exceptions import APIException, RoboComicException
 from .logger import get_logger
 
 logger = get_logger(__name__)

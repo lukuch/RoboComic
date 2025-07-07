@@ -1,14 +1,16 @@
-import streamlit as st
-import injector
-import structlog
-from config.personas import COMEDIAN_PERSONAS
-from config import settings
-from config.translations import TRANSLATIONS
-from services.agent_manager import AgentManager
-from tts.tts_service import TTSService
-from services.llm_utils import generate_topic_context_llm
-from models import Mode, Language
 import re
+
+import injector
+import streamlit as st
+import structlog
+
+from config import settings
+from config.personas import COMEDIAN_PERSONAS
+from config.translations import TRANSLATIONS
+from models import Language, Mode
+from services.agent_manager import AgentManager
+from services.llm_utils import generate_topic_context_llm
+from tts.tts_service import TTSService
 
 
 class UIService:

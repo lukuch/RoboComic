@@ -1,14 +1,16 @@
-import injector
-import structlog
-from typing import Union, Tuple
-import numpy as np
-from services.agent_manager import AgentManager
-from tts.tts_service import TTSService
-from services.llm_utils import generate_topic_context_llm
-from models import GenerateShowRequest, GenerateShowResponse, ChatMessage, TTSRequest
-from utils import APIException, TTSServiceException
 import io
+from typing import Tuple, Union
+
+import injector
+import numpy as np
 import requests
+import structlog
+
+from models import ChatMessage, GenerateShowRequest, GenerateShowResponse, TTSRequest
+from services.agent_manager import AgentManager
+from services.llm_utils import generate_topic_context_llm
+from tts.tts_service import TTSService
+from utils import APIException, TTSServiceException
 
 
 class ApiService:
