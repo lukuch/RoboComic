@@ -57,7 +57,11 @@ export async function generateShow(
   }
 }
 
-export async function tts(text: string, lang: string, voiceId?: string): Promise<string> {
+export async function tts(
+  text: string,
+  lang: string,
+  voiceId?: string,
+): Promise<string> {
   try {
     const response = await api.post<Blob>(
       "/tts",

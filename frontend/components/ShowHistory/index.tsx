@@ -37,7 +37,10 @@ export default function ShowHistory({
   const [loadingIdx, setLoadingIdx] = useState<number | null>(null);
   const [ttsCache, setTtsCache] = useState<{ [key: string]: string }>({});
   const [ttsError, setTtsError] = useState<string | null>(null); // Add error state
-  const [voiceIds, setVoiceIds] = useState<{ comedian1_voice_id: string; comedian2_voice_id: string } | null>(null);
+  const [voiceIds, setVoiceIds] = useState<{
+    comedian1_voice_id: string;
+    comedian2_voice_id: string;
+  } | null>(null);
 
   useEffect(() => {
     fetchVoiceIds().then(setVoiceIds);

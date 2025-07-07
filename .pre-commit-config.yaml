@@ -25,3 +25,21 @@ repos:
         entry: powershell -Command "cd backend; poetry export --without-hashes --format=requirements.txt -o requirements.txt; if ($LASTEXITCODE -ne 0) { Write-Host 'Poetry export failed. Aborting commit.'; exit 1 }; git add requirements.txt"
         language: system
         pass_filenames: false
+
+      - id: frontend-lint
+        name: Frontend Lint
+        entry: powershell -Command "cd frontend; npm run lint"
+        language: system
+        pass_filenames: false
+
+      - id: frontend-prettier
+        name: Frontend Prettier
+        entry: powershell -Command "cd frontend; npm run format:write"
+        language: system
+        pass_filenames: false
+
+      - id: frontend-typecheck
+        name: Frontend TypeScript Check
+        entry: powershell -Command "cd frontend; npx tsc --noEmit --strict"
+        language: system
+        pass_filenames: false

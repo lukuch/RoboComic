@@ -111,9 +111,6 @@ jobs:
     - name: TypeScript strict check
       run: npx tsc --noEmit --strict
 
-    - name: Type check
-      run: npx tsc --noEmit
-
     - name: Build application
       run: npm run build
 
