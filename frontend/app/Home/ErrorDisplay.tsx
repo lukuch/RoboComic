@@ -28,7 +28,7 @@ export function ErrorDisplay({ error, onDismiss }: ErrorDisplayProps) {
     }, 300);
   };
 
-  if (!isVisible) return null;
+  if (!isVisible) { return null; }
 
   if (error) {
     return (

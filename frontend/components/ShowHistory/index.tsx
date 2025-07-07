@@ -46,14 +46,14 @@ export default function ShowHistory({ history, lang, ttsMode, comedian1Persona, 
       setTtsCache(prev => ({ ...prev, [cacheKey]: url }));
       setAudioUrl(url);
       setPlayingIdx(idx);
-    } catch (error: any) {
+    } catch {
       setTtsError('Text-to-speech is temporarily unavailable (likely out of credits). Please try again later or contact support.');
     } finally {
       setLoadingIdx(null);
     }
   }
 
-  if (!history.length) return null;
+  if (!history.length) { return null; }
 
   // Find the first chat manager message and the rest
   const managerIdx = history.findIndex(msg => msg.role.toLowerCase().includes('manager'));

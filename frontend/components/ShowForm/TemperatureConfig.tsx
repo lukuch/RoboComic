@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { TemperaturePreset, LLMConfig } from '../../types';
+import { TemperaturePreset } from '../../types';
 import { getDefaultLLMConfig, getTemperaturePresets } from '../../services/apiService';
 import { toSentenceCase } from '../../utils/toTitleCase';
 
@@ -21,7 +21,6 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
   t,
 }) => {
   const [presets, setPresets] = useState<TemperaturePreset[]>([]);
-  const [defaultConfig, setDefaultConfig] = useState<LLMConfig | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,16 +33,14 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
           getDefaultLLMConfig(),
         ]);
         setPresets(presetsData);
-        setDefaultConfig(defaultConfigData);
         
         // Set default temperature if not already set
         if (temperature === 0.9) { // Assuming 0.9 is the hardcoded default
           onTemperatureChange(defaultConfigData.temperature);
         }
-      } catch (error) {
+      } catch {
         setPresets([]);
         setError('Failed to load AI presets. Please try again later.');
-        console.error('Failed to fetch temperature configuration:', error);
       } finally {
         setLoading(false);
       }
@@ -57,16 +54,16 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
   };
 
   const getTemperatureLabel = (temp: number) => {
-    if (temp <= 0.3) return t.conservative;
-    if (temp <= 0.7) return t.balanced;
-    if (temp <= 0.9) return t.creative;
+    if (temp <= 0.3) { return t.conservative; }
+    if (temp <= 0.7) { return t.balanced; }
+    if (temp <= 0.9) { return t.creative; }
     return t.experimental;
   };
 
   const getTemperatureColor = (temp: number) => {
-    if (temp <= 0.3) return 'text-blue-600';
-    if (temp <= 0.7) return 'text-green-600';
-    if (temp <= 0.9) return 'text-orange-600';
+    if (temp <= 0.3) { return 'text-blue-600'; }
+    if (temp <= 0.7) { return 'text-green-600'; }
+    if (temp <= 0.9) { return 'text-orange-600'; }
     return 'text-red-600';
   };
 
