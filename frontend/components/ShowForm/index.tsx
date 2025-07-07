@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { fetchPersonas } from '../../services/apiService';
-import { ComedianSelector } from './ComedianSelector';
-import { FormInput } from './FormInput';
-import { NumberInput } from './NumberInput';
-import { CheckboxWithTooltip } from './CheckboxWithTooltip';
-import { SubmitButton } from './SubmitButton';
-import TemperatureConfig from './TemperatureConfig';
-import { UI, DEFAULTS } from '../../constants';
+import { useState, useEffect } from "react";
+import { fetchPersonas } from "../../services/apiService";
+import { ComedianSelector } from "./ComedianSelector";
+import { FormInput } from "./FormInput";
+import { NumberInput } from "./NumberInput";
+import { CheckboxWithTooltip } from "./CheckboxWithTooltip";
+import { SubmitButton } from "./SubmitButton";
+import TemperatureConfig from "./TemperatureConfig";
+import { UI, DEFAULTS } from "../../constants";
 
 interface ShowFormProps {
   onSubmit: (params: {
@@ -43,17 +43,24 @@ interface ShowFormProps {
   };
 }
 
-export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) {
+export default function ShowForm({
+  onSubmit,
+  loading,
+  lang,
+  t,
+}: ShowFormProps) {
   const [comedian1, setComedian1] = useState<string>(DEFAULTS.COMEDIAN1);
   const [comedian2, setComedian2] = useState<string>(DEFAULTS.COMEDIAN2);
-  const [topic, setTopic] = useState('');
+  const [topic, setTopic] = useState("");
   const [numRounds, setNumRounds] = useState<number>(DEFAULTS.NUM_ROUNDS);
   const [roastMode, setRoastMode] = useState<boolean>(DEFAULTS.ROAST_MODE);
   const [ttsMode, setTtsMode] = useState<boolean>(DEFAULTS.TTS_MODE);
   const [buildContext, setBuildContext] = useState<boolean>(false);
   const [temperature, setTemperature] = useState<number>(0.9);
   const [showAdvanced, setShowAdvanced] = useState<boolean>(false);
-  const [personas, setPersonas] = useState<{[key: string]: {description: string; description_pl: string}} | null>(null);
+  const [personas, setPersonas] = useState<{
+    [key: string]: { description: string; description_pl: string };
+  } | null>(null);
 
   useEffect(() => {
     fetchPersonas()
@@ -67,7 +74,7 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
     <section className="w-full flex flex-col items-center mb-10">
       <form
         className="flex flex-col gap-6 p-8 bg-white/90 dark:bg-gray-900/90 rounded-2xl shadow-2xl max-w-2xl w-full border border-gray-200 dark:border-gray-800 backdrop-blur-lg mt-4"
-        onSubmit={e => {
+        onSubmit={(e) => {
           e.preventDefault();
           onSubmit({
             comedian1_style: comedian1,
@@ -82,7 +89,9 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
           });
         }}
       >
-        <h2 className="text-2xl font-bold text-center mb-2 text-gray-800 dark:text-gray-100 tracking-tight">{t.customize}</h2>
+        <h2 className="text-2xl font-bold text-center mb-2 text-gray-800 dark:text-gray-100 tracking-tight">
+          {t.customize}
+        </h2>
         <div className="flex flex-col md:flex-row gap-4">
           <ComedianSelector
             label={t.comedian1}
@@ -110,7 +119,9 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
         />
         <div className="h-8 -mt-4 flex items-center">
           {roastMode ? (
-            <div className="text-xs text-gray-400 leading-relaxed">{t.roastModeTopicDisabledExplanation}</div>
+            <div className="text-xs text-gray-400 leading-relaxed">
+              {t.roastModeTopicDisabledExplanation}
+            </div>
           ) : (
             <div className="flex gap-6">
               <CheckboxWithTooltip
@@ -144,7 +155,7 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
             tooltip={t.ttsModeTooltip}
           />
         </div>
-        
+
         <TemperatureConfig
           temperature={temperature}
           onTemperatureChange={setTemperature}
@@ -152,7 +163,7 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
           onToggle={() => setShowAdvanced(!showAdvanced)}
           t={t}
         />
-        
+
         <SubmitButton
           loading={loading}
           loadingText={t.generating}
@@ -161,4 +172,4 @@ export default function ShowForm({ onSubmit, loading, lang, t }: ShowFormProps) 
       </form>
     </section>
   );
-} 
+}

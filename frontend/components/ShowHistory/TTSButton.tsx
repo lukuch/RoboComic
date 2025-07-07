@@ -29,4 +29,4 @@ export function TTSButton({ onClick, disabled, loading }: TTSButtonProps) {
       )}
     </button>
   );
-} 
+}

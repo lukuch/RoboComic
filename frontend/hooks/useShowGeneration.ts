@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { generateShow } from '../services/apiService';
-import { ChatMessage, ShowFormParams, ApiError } from '../types';
-import { DEFAULTS, ERROR_MESSAGES, MODES } from '../constants';
+import { useState } from "react";
+import { generateShow } from "../services/apiService";
+import { ChatMessage, ShowFormParams, ApiError } from "../types";
+import { DEFAULTS, ERROR_MESSAGES, MODES } from "../constants";
 
 export function useShowGeneration() {
   const [history, setHistory] = useState<ChatMessage[]>([]);
@@ -54,4 +54,4 @@ export function useShowGeneration() {
     clearError,
     clearHistory,
   };
-} 
+}

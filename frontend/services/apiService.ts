@@ -1,20 +1,20 @@
-import axios, { AxiosError } from 'axios';
-import { 
-  GenerateShowParams, 
-  GenerateShowResponse, 
-  Personas, 
+import axios, { AxiosError } from "axios";
+import {
+  GenerateShowParams,
+  GenerateShowResponse,
+  Personas,
   ApiError,
   TemperaturePreset,
-  LLMConfig
-} from '../types';
-import { API_CONFIG, ERROR_MESSAGES } from '../constants';
+  LLMConfig,
+} from "../types";
+import { API_CONFIG, ERROR_MESSAGES } from "../constants";
 
 // Create axios instance with default config
 const api = axios.create({
   baseURL: API_CONFIG.BASE_URL,
   timeout: API_CONFIG.TIMEOUT,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -24,7 +24,9 @@ function handleApiError(error: AxiosError): ApiError {
     // Server responded with error status
     const responseData = error.response.data as any;
     return {
-      message: responseData?.message || `HTTP ${error.response.status}: ${error.response.statusText}`,
+      message:
+        responseData?.message ||
+        `HTTP ${error.response.status}: ${error.response.statusText}`,
       status: error.response.status,
     };
   } else if (error.request) {
@@ -40,9 +42,14 @@ function handleApiError(error: AxiosError): ApiError {
   }
 }
 
-export async function generateShow(params: GenerateShowParams): Promise<GenerateShowResponse> {
+export async function generateShow(
+  params: GenerateShowParams,
+): Promise<GenerateShowResponse> {
   try {
-    const { data } = await api.post<GenerateShowResponse>('/generate-show', params);
+    const { data } = await api.post<GenerateShowResponse>(
+      "/generate-show",
+      params,
+    );
     return data;
   } catch (error) {
     throw handleApiError(error as AxiosError);
@@ -51,10 +58,14 @@ export async function generateShow(params: GenerateShowParams): Promise<Generate
 
 export async function tts(text: string, lang: string): Promise<string> {
   try {
-    const response = await api.post<Blob>('/tts', { text, lang }, { 
-      responseType: 'blob',
-      timeout: API_CONFIG.TTS_TIMEOUT,
-    });
+    const response = await api.post<Blob>(
+      "/tts",
+      { text, lang },
+      {
+        responseType: "blob",
+        timeout: API_CONFIG.TTS_TIMEOUT,
+      },
+    );
     return URL.createObjectURL(response.data);
   } catch (error) {
     throw handleApiError(error as AxiosError);
@@ -63,7 +74,7 @@ export async function tts(text: string, lang: string): Promise<string> {
 
 export async function fetchPersonas(): Promise<Personas> {
   try {
-    const { data } = await api.get<{ personas: Personas }>('/personas');
+    const { data } = await api.get<{ personas: Personas }>("/personas");
     return data.personas;
   } catch (error) {
     throw handleApiError(error as AxiosError);
@@ -73,7 +84,7 @@ export async function fetchPersonas(): Promise<Personas> {
 // Health check function
 export async function healthCheck(): Promise<boolean> {
   try {
-    await api.get('/health');
+    await api.get("/health");
     return true;
   } catch (error) {
     return false;
@@ -83,7 +94,7 @@ export async function healthCheck(): Promise<boolean> {
 // Temperature configuration functions
 export async function getDefaultLLMConfig(): Promise<LLMConfig> {
   try {
-    const { data } = await api.get<LLMConfig>('/llm-config');
+    const { data } = await api.get<LLMConfig>("/llm-config");
     return data;
   } catch (error) {
     throw handleApiError(error as AxiosError);
@@ -92,9 +103,9 @@ export async function getDefaultLLMConfig(): Promise<LLMConfig> {
 
 export async function getTemperaturePresets(): Promise<TemperaturePreset[]> {
   try {
-    const { data } = await api.get<TemperaturePreset[]>('/temperature-presets');
+    const { data } = await api.get<TemperaturePreset[]>("/temperature-presets");
     return data;
   } catch (error) {
     throw handleApiError(error as AxiosError);
   }
-} 
+}

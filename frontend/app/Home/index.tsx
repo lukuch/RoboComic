@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import ShowForm from '../../components/ShowForm/index';
-import ShowHistory from '../../components/ShowHistory/index';
-import { TRANSLATIONS } from './translations';
-import { LanguageSelector } from './LanguageSelector';
-import { LoadingOverlay } from './LoadingOverlay';
-import { AppHeader } from './AppHeader';
-import { ErrorDisplay } from './ErrorDisplay';
-import { useShowGeneration } from '../../hooks/useShowGeneration';
-import { useLanguage } from '../../hooks/useLanguage';
-import { useKeepAlive } from '../../hooks/useKeepAlive';
-import { DEFAULTS } from '../../constants';
-import { useState, useEffect } from 'react';
-import { fetchPersonas } from '../../services/apiService';
-import { Personas } from '../../types';
+import ShowForm from "../../components/ShowForm/index";
+import ShowHistory from "../../components/ShowHistory/index";
+import { TRANSLATIONS } from "./translations";
+import { LanguageSelector } from "./LanguageSelector";
+import { LoadingOverlay } from "./LoadingOverlay";
+import { AppHeader } from "./AppHeader";
+import { ErrorDisplay } from "./ErrorDisplay";
+import { useShowGeneration } from "../../hooks/useShowGeneration";
+import { useLanguage } from "../../hooks/useLanguage";
+import { useKeepAlive } from "../../hooks/useKeepAlive";
+import { DEFAULTS } from "../../constants";
+import { useState, useEffect } from "react";
+import { fetchPersonas } from "../../services/apiService";
+import { Personas } from "../../types";
 
 export default function Home() {
   const { lang, setLang } = useLanguage(DEFAULTS.LANGUAGE);
@@ -31,11 +31,13 @@ export default function Home() {
   // Keep backend alive on Render.com free tier
   useKeepAlive();
 
-  const t = TRANSLATIONS[lang as 'en' | 'pl'];
+  const t = TRANSLATIONS[lang as "en" | "pl"];
 
   const [personas, setPersonas] = useState<Personas | null>(null);
   useEffect(() => {
-    fetchPersonas().then(setPersonas).catch(() => setPersonas(null));
+    fetchPersonas()
+      .then(setPersonas)
+      .catch(() => setPersonas(null));
   }, []);
 
   return (
@@ -43,9 +45,21 @@ export default function Home() {
       <LoadingOverlay isLoading={loading} />
       <LanguageSelector currentLang={lang} onLanguageChange={setLang} />
       <AppHeader />
-      <ShowForm onSubmit={handleGenerateShow} loading={loading} lang={lang} t={t} />
+      <ShowForm
+        onSubmit={handleGenerateShow}
+        loading={loading}
+        lang={lang}
+        t={t}
+      />
       <ErrorDisplay error={error} onDismiss={clearError} />
-      <ShowHistory history={history} lang={lang} ttsMode={ttsMode} comedian1Persona={comedian1} comedian2Persona={comedian2} personas={personas} />
+      <ShowHistory
+        history={history}
+        lang={lang}
+        ttsMode={ttsMode}
+        comedian1Persona={comedian1}
+        comedian2Persona={comedian2}
+        personas={personas}
+      />
     </div>
   );
-} 
+}

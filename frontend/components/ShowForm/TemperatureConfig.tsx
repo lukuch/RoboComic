@@ -1,9 +1,12 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { TemperaturePreset } from '../../types';
-import { getDefaultLLMConfig, getTemperaturePresets } from '../../services/apiService';
-import { toSentenceCase } from '../../utils/toTitleCase';
+import React, { useState, useEffect } from "react";
+import { TemperaturePreset } from "../../types";
+import {
+  getDefaultLLMConfig,
+  getTemperaturePresets,
+} from "../../services/apiService";
+import { toSentenceCase } from "../../utils/toTitleCase";
 
 interface TemperatureConfigProps {
   temperature: number;
@@ -33,14 +36,15 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
           getDefaultLLMConfig(),
         ]);
         setPresets(presetsData);
-        
+
         // Set default temperature if not already set
-        if (temperature === 0.9) { // Assuming 0.9 is the hardcoded default
+        if (temperature === 0.9) {
+          // Assuming 0.9 is the hardcoded default
           onTemperatureChange(defaultConfigData.temperature);
         }
       } catch {
         setPresets([]);
-        setError('Failed to load AI presets. Please try again later.');
+        setError("Failed to load AI presets. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -54,17 +58,29 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
   };
 
   const getTemperatureLabel = (temp: number) => {
-    if (temp <= 0.3) { return t.conservative; }
-    if (temp <= 0.7) { return t.balanced; }
-    if (temp <= 0.9) { return t.creative; }
+    if (temp <= 0.3) {
+      return t.conservative;
+    }
+    if (temp <= 0.7) {
+      return t.balanced;
+    }
+    if (temp <= 0.9) {
+      return t.creative;
+    }
     return t.experimental;
   };
 
   const getTemperatureColor = (temp: number) => {
-    if (temp <= 0.3) { return 'text-blue-600'; }
-    if (temp <= 0.7) { return 'text-green-600'; }
-    if (temp <= 0.9) { return 'text-orange-600'; }
-    return 'text-red-600';
+    if (temp <= 0.3) {
+      return "text-blue-600";
+    }
+    if (temp <= 0.7) {
+      return "text-green-600";
+    }
+    if (temp <= 0.9) {
+      return "text-orange-600";
+    }
+    return "text-red-600";
   };
 
   if (loading) {
@@ -91,12 +107,17 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
       >
         <span>{t.aiCreativitySettings}</span>
         <svg
-          className={`w-5 h-5 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-5 h-5 transition-transform ${isOpen ? "rotate-180" : ""}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
         </svg>
       </button>
 
@@ -104,8 +125,14 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
         <div className="mt-4 space-y-6">
           {/* Current Temperature Display */}
           <div className="text-center">
-            <div className="text-2xl font-bold text-indigo-400">{temperature}</div>
-            <div className={`text-sm font-medium ${getTemperatureColor(temperature)}`}>{getTemperatureLabel(temperature)}</div>
+            <div className="text-2xl font-bold text-indigo-400">
+              {temperature}
+            </div>
+            <div
+              className={`text-sm font-medium ${getTemperatureColor(temperature)}`}
+            >
+              {getTemperatureLabel(temperature)}
+            </div>
           </div>
 
           {/* Temperature Slider */}
@@ -145,13 +172,19 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
                   }}
                   className={`min-w-0 p-2 sm:p-3 text-left rounded-lg border transition-colors font-medium text-gray-100 whitespace-normal text-sm sm:text-base ${
                     Math.abs(temperature - preset.temperature) < 0.05
-                      ? 'border-blue-500 bg-blue-900/60 text-blue-400'
-                      : 'border-gray-700 bg-gray-800 hover:border-gray-600 hover:bg-gray-700'
+                      ? "border-blue-500 bg-blue-900/60 text-blue-400"
+                      : "border-gray-700 bg-gray-800 hover:border-gray-600 hover:bg-gray-700"
                   }`}
                 >
-                  <div className="whitespace-normal text-sm sm:text-base font-bold">{t[preset.name]}</div>
-                  <div className="text-xs sm:text-sm text-gray-400 whitespace-normal">{preset.temperature}</div>
-                  <div className="text-xs text-gray-500 mt-1 whitespace-normal normal-case">{toSentenceCase(t[`${preset.name}Desc`]?.trim())}</div>
+                  <div className="whitespace-normal text-sm sm:text-base font-bold">
+                    {t[preset.name]}
+                  </div>
+                  <div className="text-xs sm:text-sm text-gray-400 whitespace-normal">
+                    {preset.temperature}
+                  </div>
+                  <div className="text-xs text-gray-500 mt-1 whitespace-normal normal-case">
+                    {toSentenceCase(t[`${preset.name}Desc`]?.trim())}
+                  </div>
                 </button>
               ))}
             </div>
@@ -162,9 +195,7 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
             {t.temperatureHelp}
           </div>
           {!loading && error && (
-            <div className="text-sm text-red-400 mt-2">
-              {error}
-            </div>
+            <div className="text-sm text-red-400 mt-2">{error}</div>
           )}
           {!loading && !error && presets.length === 0 && (
             <div className="text-sm text-yellow-400 mt-2">
@@ -177,4 +208,4 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
   );
 };
 
-export default TemperatureConfig; 
+export default TemperatureConfig;

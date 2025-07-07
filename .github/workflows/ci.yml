@@ -101,6 +101,9 @@ jobs:
     - name: Run linting
       run: npm run lint
 
+    - name: Run Prettier formatting check
+      run: npm run format
+
     - name: TypeScript strict check
       run: npx tsc --noEmit --strict
 
