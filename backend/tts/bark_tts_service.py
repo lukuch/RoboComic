@@ -10,8 +10,6 @@ import structlog
 # Enable small models for 8GB VRAM GPUs, but do not disable CUDA or offload to CPU
 os.environ["SUNO_USE_SMALL_MODELS"] = "True"
 
-from bark import SAMPLE_RATE, generate_audio
-
 from models import Language
 from services.llm_utils import comedianify_text_llm
 
@@ -27,6 +25,7 @@ class BarkTTSService(TTSService):
         self.prompt_index = 0
 
     def speak(self, text: str, lang: str = Language.ENGLISH) -> Tuple[np.ndarray, int]:
+        from bark import SAMPLE_RATE, generate_audio  # moved import here to avoid test dependency
         # Alternate gender for each call
         gender = "MAN" if self.prompt_index == 0 else "WOMAN"
         self.prompt_index = (self.prompt_index + 1) % 2
