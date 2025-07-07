@@ -21,6 +21,11 @@ openai = "^1.93.0"
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"
 pytest-cov = "^6.2.1"
+black = "^25.1.0"
+pytest-mock = "^3.14.1"
+httpx = "^0.28.1"
+flake8 = "^7.3.0"
+isort = "^6.0.1"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

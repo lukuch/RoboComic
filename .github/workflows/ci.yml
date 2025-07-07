@@ -134,12 +134,13 @@ jobs:
     - name: Install backend dependencies
       run: pip install -r ./backend/requirements.txt
 
+    # Replace the Snyk action with a run step that sets the working directory
     - name: Run Snyk for Python
       uses: snyk/actions/python@master
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
-        args: --severity-threshold=high --file=./backend/requirements.txt --package-manager=pip --project-name=robocomic-backend ./backend
+        args: --severity-threshold=high --file=backend/requirements.txt --package-manager=pip --project-name=robocomic-backend backend
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
