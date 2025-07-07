@@ -43,6 +43,11 @@ jobs:
     - name: Install dependencies
       run: poetry install --only main,dev
 
+    - name: Secret scan with Gitleaks
+      uses: gitleaks/gitleaks-action@v2
+      with:
+        args: "--path=./backend"
+
     - name: Run code formatting check
       run: poetry run black --check --diff .
 
@@ -96,6 +101,9 @@ jobs:
     - name: Run linting
       run: npm run lint
 
+    - name: TypeScript strict check
+      run: npx tsc --noEmit --strict
+
     - name: Type check
       run: npx tsc --noEmit
 
@@ -136,14 +144,14 @@ jobs:
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
-        args: --severity-threshold=high
+        args: --severity-threshold=high ./frontend
 
     - name: Run Snyk for Python
       uses: snyk/actions/python@master
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
-        args: --severity-threshold=high
+        args: --severity-threshold=high ./backend
 
   # API Health Check
   api-health:
