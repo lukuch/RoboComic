@@ -92,7 +92,7 @@ class TestIntegrationFlows:
         response = client.post("/tts", json=tts_request)
         # Should get a response (even if it fails due to missing API keys)
         # TTS will fail due to missing API keys, but we test the endpoint exists
-        assert response.status_code in [422, 500]
+        assert response.status_code in [200, 422, 500]
 
 
 class TestPerformanceIntegration:

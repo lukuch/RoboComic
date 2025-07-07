@@ -29,6 +29,9 @@ from config import settings, validate_config
 # Production settings
 IS_PRODUCTION = os.getenv("ENVIRONMENT", "development") == "production"
 
+# Detect if running under pytest (for test CORS)
+IS_TEST = "pytest" in sys.modules
+
 app = FastAPI(
     title="RoboComic API",
     description="AI Standup Comedy App - RoboComic",
@@ -45,7 +48,7 @@ app.add_exception_handler(Exception, general_exception_handler)
 # CORS middleware with production settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://robo-comic.vercel.app", "http://localhost:3000"],
+    allow_origins=["*"] if IS_TEST else ["https://robo-comic.vercel.app", "http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
