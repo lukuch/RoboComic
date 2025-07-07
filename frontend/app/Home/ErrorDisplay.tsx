@@ -32,14 +32,6 @@ export function ErrorDisplay({ error, onDismiss }: ErrorDisplayProps) {
     return null;
   }
 
-  if (error) {
-    return (
-      <div className="error-display">
-        <p>{error}</p>
-      </div>
-    );
-  }
-
   return (
     <div
       className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full mx-4 transition-all duration-300 ease-in-out ${
