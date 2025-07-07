@@ -12,6 +12,13 @@ const avatars: Record<string, string> = {
   boomer: "👴",
   gen_z: "🤙",
   janusz: "🧔",
+  intellectual: "🧐",
+  cringe: "😬",
+  anetka_hr: "👩‍💼",
+  bozenka: "🧓",
+  mietek: "🛠️",
+  wiesiek_mechanik: "🚗",
+  janusz_budowlaniec: "👷",
 
   // System roles
   chat_manager: "🤖",

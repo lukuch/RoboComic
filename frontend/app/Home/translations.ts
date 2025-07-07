@@ -51,7 +51,7 @@ export const TRANSLATIONS = {
     numRounds: "Liczba rund",
     roastMode: "Tryb roast",
     ttsMode: "Tryb TTS",
-    generate: "Rozpocznij pojedynek",
+    generate: "Rozpocznij show",
     generating: "Generowanie...",
     placeholder: "Wpisz temat...",
     roastModeTooltip:
