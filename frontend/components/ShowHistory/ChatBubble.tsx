@@ -43,7 +43,6 @@ export function ChatBubble({
 
   useEffect(() => {
     if (showPopup && popupRef.current && avatarRef.current) {
-      const popupRect = popupRef.current.getBoundingClientRect();
       const avatarRect = avatarRef.current.getBoundingClientRect();
       const viewportWidth = window.innerWidth;
       

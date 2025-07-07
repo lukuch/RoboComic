@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { TemperaturePreset, LLMConfig } from '../../types';
 import { getDefaultLLMConfig, getTemperaturePresets } from '../../services/apiService';
-import { toTitleCase, toSentenceCase } from '../../utils/toTitleCase';
+import { toSentenceCase } from '../../utils/toTitleCase';
 
 interface TemperatureConfigProps {
   temperature: number;
@@ -50,7 +50,7 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
     };
 
     fetchConfig();
-  }, []);
+  }, [onTemperatureChange, temperature]);
 
   const handlePresetSelect = (preset: TemperaturePreset) => {
     onTemperatureChange(preset.temperature);
