@@ -17,3 +17,11 @@ repos:
       - id: flake8
         language_version: python3.11
         args: [--config=backend/.flake8] 
+
+  - repo: local
+    hooks:
+      - id: poetry-export-requirements
+        name: Poetry Export Requirements
+        entry: powershell -Command "cd backend; poetry export --without-hashes --format=requirements.txt -o requirements.txt; if ($LASTEXITCODE -ne 0) { Write-Host 'Poetry export failed. Aborting commit.'; exit 1 }; git add requirements.txt"
+        language: system
+        pass_filenames: false

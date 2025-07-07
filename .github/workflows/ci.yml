@@ -198,31 +198,35 @@ jobs:
     - name: Start backend server
       run: |
         poetry run python -m uvicorn main:app --host 0.0.0.0 --port 8000 &
-        sleep 10
+        SERVER_PID=$!
+        for i in {1..10}; do
+          if curl -s http://localhost:8000/health | grep -q "ok"; then
+            echo "Server is up!"
+            break
+          fi
+          echo "Waiting for server..."
+          sleep 2
+        done
 
     - name: Test API endpoints
       run: |
-        poetry run python -c "
-        import requests
-        import time
-        
-        # Wait for server to be ready
-        time.sleep(5)
-        
-        # Test health endpoint
-        response = requests.get('http://localhost:8000/health')
-        assert response.status_code == 200, f'Health check failed: {response.status_code}'
-        
-        # Test personas endpoint
-        response = requests.get('http://localhost:8000/personas')
-        assert response.status_code == 200, f'Personas endpoint failed: {response.status_code}'
-        
-        # Test LLM config endpoint
-        response = requests.get('http://localhost:8000/llm-config')
-        assert response.status_code == 200, f'LLM config endpoint failed: {response.status_code}'
-        
-        print('All API endpoints are working correctly!')
-        "
+        set -e
+        endpoints=(
+          "health"
+          "personas"
+          "llm-config"
+        )
+        for ep in "${endpoints[@]}"; do
+          echo "Testing /$ep endpoint..."
+          status=$(curl -s -o response.txt -w "%{http_code}" http://localhost:8000/$ep)
+          cat response.txt
+          if [ "$status" -ne 200 ]; then
+            echo "❌ /$ep failed with status $status"
+            exit 1
+          fi
+          echo "✅ /$ep OK"
+        done
+        echo "All API endpoints are working correctly!"
 
   # Quality Gate
   quality-gate:
