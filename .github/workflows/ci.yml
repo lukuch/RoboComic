@@ -147,7 +147,7 @@ jobs:
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
-        args: --severity-threshold=high --file=pyproject.toml --package-manager=poetry --project-name=robocomic-backend ./backend
+        args: --severity-threshold=high --file=./backend/pyproject.toml --package-manager=poetry --project-name=robocomic-backend ./backend
 
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
