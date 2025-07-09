@@ -218,6 +218,7 @@ jobs:
           "personas"
           "llm-config"
           "voice-ids"
+          "judge-show"
         )
         for ep in "${endpoints[@]}"; do
           echo "Testing /$ep endpoint..."

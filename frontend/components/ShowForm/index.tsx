@@ -7,6 +7,7 @@ import { CheckboxWithTooltip } from "./CheckboxWithTooltip";
 import { SubmitButton } from "./SubmitButton";
 import TemperatureConfig from "./TemperatureConfig";
 import { UI, DEFAULTS } from "../../constants";
+import type { TranslationStrings } from "../../types";
 
 interface ShowFormProps {
   onSubmit: (params: {
@@ -22,25 +23,7 @@ interface ShowFormProps {
   }) => void;
   loading: boolean;
   lang: string;
-  t: {
-    customize: string;
-    comedian1: string;
-    comedian2: string;
-    language: string;
-    topic: string;
-    numRounds: string;
-    roastMode: string;
-    ttsMode: string;
-    generate: string;
-    generating: string;
-    placeholder: string;
-    roastModeTooltip: string;
-    ttsModeTooltip: string;
-    numRoundsTooltip: string;
-    roastModeTopicDisabledExplanation: string;
-    buildContext: string;
-    buildContextTooltip: string;
-  };
+  t: TranslationStrings;
 }
 
 export default function ShowForm({
@@ -140,6 +123,7 @@ export default function ShowForm({
           max={UI.MAX_ROUNDS}
           label={t.numRounds}
           tooltip={t.numRoundsTooltip}
+          t={t}
         />
         <div className="flex gap-6">
           <CheckboxWithTooltip

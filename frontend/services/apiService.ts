@@ -7,6 +7,8 @@ import {
   TemperaturePreset,
   LLMConfig,
   VoiceIdsResponse,
+  JudgeShowRequest,
+  JudgeShowResponse,
 } from "../types";
 import { API_CONFIG, ERROR_MESSAGES } from "../constants";
 
@@ -89,6 +91,17 @@ export async function fetchPersonas(): Promise<Personas> {
 export async function fetchVoiceIds(): Promise<VoiceIdsResponse> {
   try {
     const { data } = await api.get<VoiceIdsResponse>("/voice-ids");
+    return data;
+  } catch (error) {
+    throw handleApiError(error as AxiosError);
+  }
+}
+
+export async function judgeShow(
+  params: JudgeShowRequest,
+): Promise<JudgeShowResponse> {
+  try {
+    const { data } = await api.post<JudgeShowResponse>("/judge-show", params);
     return data;
   } catch (error) {
     throw handleApiError(error as AxiosError);

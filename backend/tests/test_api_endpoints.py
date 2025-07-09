@@ -109,6 +109,25 @@ class TestAPIEndpoints:
         assert isinstance(data["comedian1_voice_id"], str)
         assert isinstance(data["comedian2_voice_id"], str)
 
+    def test_judge_show_endpoint(self):
+        """Test judge show endpoint"""
+        request_data = {
+            "comedian1_name": "ComedianA",
+            "comedian2_name": "ComedianB",
+            "history": [
+                {"role": "ComedianA", "content": "Why did the chicken cross the road?"},
+                {"role": "ComedianB", "content": "To get to the other side!"},
+            ],
+            "lang": "en",
+        }
+        response = client.post("/judge-show", json=request_data)
+        assert response.status_code == 200
+        data = response.json()
+        assert "winner" in data
+        assert "summary" in data
+        assert isinstance(data["winner"], str)
+        assert isinstance(data["summary"], str)
+
     def test_cors_headers(self):
         """Test CORS headers are present for GET and OPTIONS requests"""
         # For GET request

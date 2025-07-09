@@ -81,6 +81,8 @@ export interface Translations {
   roastModeTooltip: string;
   ttsModeTooltip: string;
   numRoundsTooltip: string;
+  judgingDuel: string;
+  roundsLabel: string;
 }
 
 export interface Language {
@@ -143,3 +145,19 @@ export type VoiceIdsResponse = {
   comedian1_voice_id: string;
   comedian2_voice_id: string;
 };
+
+export interface JudgeShowRequest {
+  comedian1_name: string;
+  comedian2_name: string;
+  history: ChatMessage[];
+  lang: string;
+}
+
+export interface JudgeShowResponse {
+  winner: string;
+  summary: string;
+}
+
+export type TranslationStrings =
+  | (typeof import("../app/Home/translations").TRANSLATIONS)["en"]
+  | (typeof import("../app/Home/translations").TRANSLATIONS)["pl"];

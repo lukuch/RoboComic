@@ -17,6 +17,9 @@ elevenlabs = "^2.6.0"
 autogen = {version = "^0.9.5", python = ">=3.9,<3.14"}
 numpy = "^2.3.1"
 openai = "^1.93.0"
+langchain = "^0.3.26"
+langchain-community = "^0.3.27"
+langchain-openai = "^0.3.27"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"

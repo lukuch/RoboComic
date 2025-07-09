@@ -8,7 +8,7 @@ import numpy as np
 import structlog
 
 import models
-import services.llm_utils
+from services.llm_service import LLMService
 
 from .tts_service import TTSService
 
@@ -18,10 +18,9 @@ os.environ["SUNO_USE_SMALL_MODELS"] = "True"
 
 class BarkTTSService(TTSService):
     @injector.inject
-    def __init__(self, logger: structlog.BoundLogger, output_dir="tts_output"):
+    def __init__(self, logger: structlog.BoundLogger, llm_service: LLMService):
         self.logger = logger
-        self.output_dir = output_dir
-        os.makedirs(self.output_dir, exist_ok=True)
+        self.llm_service = llm_service
         self.prompt_index = 0
 
     def speak(self, text: str, lang: str = models.Language.ENGLISH) -> Tuple[np.ndarray, int]:
@@ -31,7 +30,7 @@ class BarkTTSService(TTSService):
         gender = "MAN" if self.prompt_index == 0 else "WOMAN"
         self.prompt_index = (self.prompt_index + 1) % 2
         # Comedianify the text using the LLM
-        comedianified_text = services.llm_utils.comedianify_text_llm(text, gender=gender, lang=lang)
+        comedianified_text = self.llm_service.comedianify_text(text, gender=gender, lang=lang)
         self.logger.debug(f"Comedianified text: {comedianified_text}")
         audio_array = generate_audio(comedianified_text)
         return audio_array, SAMPLE_RATE

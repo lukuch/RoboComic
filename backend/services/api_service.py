@@ -7,17 +7,20 @@ import structlog
 
 from models import ChatMessage, GenerateShowRequest, GenerateShowResponse, TTSRequest
 from services.agent_manager import AgentManager
-from services.llm_utils import generate_topic_context_llm
+from services.llm_service import LLMService
 from tts.tts_service import TTSService
 from utils import APIException, TTSServiceException
 
 
 class ApiService:
     @injector.inject
-    def __init__(self, agent_manager: AgentManager, tts_service: TTSService, logger: structlog.BoundLogger):
+    def __init__(
+        self, agent_manager: AgentManager, tts_service: TTSService, logger: structlog.BoundLogger, llm_service: "LLMService"
+    ):
         self.agent_manager = agent_manager
         self.tts_service = tts_service
         self.logger = logger
+        self.llm_service = llm_service
 
     def generate_show(self, request: GenerateShowRequest) -> GenerateShowResponse:
         self.logger.info(
@@ -28,7 +31,7 @@ class ApiService:
             context = ""
             if request.build_context and request.topic.strip():
                 self.logger.info(f"Generating topic context for: {request.topic}")
-                context = generate_topic_context_llm(request.topic, request.lang)
+                context = self.llm_service.generate_topic_context(request.topic, request.lang)
             self.logger.info(f"Starting comedy duel with {request.num_rounds} rounds")
             history = self.agent_manager.run_duel(
                 request.mode,

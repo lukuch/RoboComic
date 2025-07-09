@@ -7,7 +7,7 @@ import {
   ListboxOption,
 } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
-import { toTitleCase } from "../../utils/toTitleCase";
+import { toTitleCase } from "../../utils/stringUtils";
 import { FormLabel } from "./FormLabel";
 
 interface ComedianSelectorProps {

@@ -1,6 +1,14 @@
 # <img src="frontend/public/icon-192x192.png" alt="RoboComic Icon" width="32" style="vertical-align:middle;"/> RoboComic
 
-RoboComic is an AI-powered standup comedy duel app where virtual comedians battle it out with jokes, roasts, and text-to-speech performances. Users can generate comedy duels and listen to jokes.
+RoboComic is an AI-powered standup comedy duel app where virtual comedians battle it out with jokes, roasts, and text-to-speech performances. Users can generate comedy duels and listen to jokes.<br><br>
+![Live](https://img.shields.io/badge/Live-Demo-green?link=https://robo-comic.vercel.app)
+![Build Status](https://img.shields.io/github/actions/workflow/status/lukuch/RoboComic/ci.yml?branch=main)
+![Last Commit](https://img.shields.io/github/last-commit/lukuch/RoboComic)
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)  
+**Frontend:**  
+[![Snyk](https://snyk.io/test/github/lukuch/RoboComic/badge.svg?targetFile=frontend/package.json)](https://snyk.io/test/github/lukuch/RoboComic?targetFile=frontend/package.json)  
+**Backend:**  
+[![Snyk](https://snyk.io/test/github/lukuch/RoboComic/badge.svg?targetFile=backend/requirements.txt)](https://snyk.io/test/github/lukuch/RoboComic?targetFile=backend/requirements.txt)
 
 ## Features
 - AI-generated standup comedy duels powered by agent orchestration (AutoGen)
@@ -28,7 +36,7 @@ RoboComic is an AI-powered standup comedy duel app where virtual comedians battl
 
 ## Technologies Used
 - **Frontend:** Next.js 15, React 19, Tailwind CSS 3.4+, next-pwa
-- **Backend:** FastAPI (Python 3.11+), AutoGen for agent orchestration, TTS services (ElevenLabs, Bark)
+- **Backend:** FastAPI (Python 3.11+), AutoGen for agent orchestration, TTS services (ElevenLabs, Bark), LangChain for LLM orchestration, prompt management, and output parsing
 - **Other:** TypeScript, Service Workers, PWA Manifest, Docker, GitHub Actions, Dependabot
 
 ## Getting Started
@@ -128,7 +136,7 @@ RoboComic/
     services/
       agent_manager.py            # Agent orchestration management
       api_service.py              # API service layer
-      llm_utils.py                # LLM utility functions
+      llm_service.py              # LLM service (LangChain, prompt orchestration)
       prompt_templates.py         # Prompt templates for LLMs
     models/
       api_models.py               # API request/response models
@@ -191,7 +199,7 @@ RoboComic/
       index.ts                    # TypeScript type definitions
       next-pwa.d.ts               # PWA type definitions
     utils/
-      toTitleCase.ts              # Utility function
+      stringUtils.ts              # String case utility functions
     public/
       manifest.json               # PWA manifest
       icon-192x192.png            # PWA icons

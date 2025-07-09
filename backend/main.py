@@ -19,6 +19,8 @@ from models import (
     GenerateShowRequest,
     GenerateShowResponse,
     HealthResponse,
+    JudgeShowRequest,
+    JudgeShowResponse,
     LLMConfig,
     PersonasResponse,
     TemperaturePresetConfig,
@@ -26,6 +28,7 @@ from models import (
     VoiceIdsResponse,
 )
 from services.api_service import ApiService
+from services.llm_service import LLMService
 from utils import general_exception_handler, robocomic_exception_handler, validation_exception_handler
 from utils.exceptions import TTSServiceException
 
@@ -69,6 +72,7 @@ async def add_process_time_header(request: Request, call_next):
 
 
 api_service = container.get(ApiService)
+llm_service = container.get(LLMService)
 
 
 @app.post("/generate-show", response_model=GenerateShowResponse)
@@ -122,6 +126,18 @@ def get_voice_ids():
         comedian1_voice_id=COMEDIAN1_VOICE_ID,
         comedian2_voice_id=COMEDIAN2_VOICE_ID,
     )
+
+
+@app.post("/judge-show", response_model=JudgeShowResponse)
+def judge_show(request: JudgeShowRequest):
+    """Judge a comedy duel and return the winner and a summary using LLM."""
+    winner, summary = llm_service.judge_show(
+        comedian1_name=request.comedian1_name,
+        comedian2_name=request.comedian2_name,
+        history=[msg.model_dump() for msg in request.history],
+        lang=request.lang,
+    )
+    return JudgeShowResponse(winner=winner, summary=summary)
 
 
 if __name__ == "__main__":

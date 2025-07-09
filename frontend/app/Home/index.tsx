@@ -3,6 +3,7 @@
 import ShowForm from "../../components/ShowForm/index";
 import ShowHistory from "../../components/ShowHistory/index";
 import { TRANSLATIONS } from "./translations";
+import type { TranslationStrings } from "../../types";
 import { LanguageSelector } from "./LanguageSelector";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { AppHeader } from "./AppHeader";
@@ -31,7 +32,7 @@ export default function Home() {
   // Keep backend alive on Render.com free tier
   useKeepAlive();
 
-  const t = TRANSLATIONS[lang as "en" | "pl"];
+  const t: TranslationStrings = TRANSLATIONS[lang as "en" | "pl"];
 
   const [personas, setPersonas] = useState<Personas | null>(null);
   useEffect(() => {
@@ -59,6 +60,7 @@ export default function Home() {
         comedian1Persona={comedian1}
         comedian2Persona={comedian2}
         personas={personas}
+        t={t}
       />
     </div>
   );

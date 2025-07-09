@@ -4,6 +4,8 @@ from .api_models import (
     GenerateShowRequest,
     GenerateShowResponse,
     HealthResponse,
+    JudgeShowRequest,
+    JudgeShowResponse,
     Language,
     LLMConfig,
     Mode,
@@ -28,4 +30,6 @@ __all__ = [
     "TemperaturePresetConfig",
     "TemperaturePreset",
     "VoiceIdsResponse",
+    "JudgeShowRequest",
+    "JudgeShowResponse",
 ]

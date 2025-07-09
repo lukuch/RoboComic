@@ -6,7 +6,7 @@ import {
   getDefaultLLMConfig,
   getTemperaturePresets,
 } from "../../services/apiService";
-import { toSentenceCase } from "../../utils/toTitleCase";
+import { toSentenceCase } from "../../utils/stringUtils";
 
 interface TemperatureConfigProps {
   temperature: number;

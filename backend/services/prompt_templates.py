@@ -48,3 +48,58 @@ COMEDIAN_PROMPT_TEMPLATE = {
         ),
     },
 }
+
+TOPIC_CONTEXT_PROMPT = {
+    "en": (
+        "List exactly 10 best-known, widely recognized, true anecdotes, interesting facts, or funny moments about the topic: '{topic}'. "
+        "Return only the list, with no introductory or closing sentences. Each item should be short and specific. Base your answer only on facts, events, and situations that really happened or are widely known. Do not invent or make up information. Answer in English."
+    ),
+    "pl": (
+        "Wypisz dokładnie 10 najsłynniejszych, powszechnie znanych, prawdziwych anegdot, ciekawostek lub śmiesznych momentów związanych z tematem: '{topic}'. "
+        "Podaj wyłącznie listę, bez żadnych wstępnych ani końcowych zdań. Każdy punkt powinien być krótki i konkretny. Opieraj się wyłącznie na faktach, wydarzeniach i sytuacjach, które naprawdę miały miejsce lub są powszechnie znane. Nie wymyślaj informacji. Odpowiedź po polsku."
+    ),
+}
+
+COMEDIANIFY_PROMPT = {
+    "en": (
+        "Rewrite the following text as if performed by a standup comedian on stage. "
+        "Add stage directions and effects using these tags: [laughs], [laughter], [sighs], [gasps], [clears throat], —, ..., CAPITALIZATION for emphasis, and [{gender}] at the start. "
+        "Only use the tags and effects listed above. Do not invent or add any other stage directions, tags, or effects. "
+        "Make it sound lively and natural for a comedy club audience. "
+        "Text: {text}"
+    ),
+    "pl": (
+        "Przepisz poniższy tekst tak, jakby był wykonywany przez stand-upowego komika na scenie. "
+        "Dodaj didaskalia i efekty sceniczne używając tych tagów: [laughs], [laughter], [sighs], [gasps], [clears throat], —, ..., DUŻE LITERY dla podkreślenia oraz [{gender}] na początku. "
+        "Używaj wyłącznie powyższych tagów i efektów. Nie wymyślaj ani nie dodawaj innych didaskaliów, tagów ani efektów. "
+        "Spraw, aby brzmiał żywo i naturalnie dla publiczności klubu komediowego. "
+        "Tekst: {text}"
+    ),
+}
+
+JUDGING_PROMPT = {
+    "en": (
+        "Given the following comedy duel between {comedian1_name} and {comedian2_name}, who was the funnier comedian?\n"
+        "Respond in this format:\n"
+        "{format_instructions}\n"
+        "Chat history:\n{history_text}"
+    ),
+    "pl": (
+        "Oceń pojedynek komików pomiędzy {comedian1_name} i {comedian2_name}.\n"
+        "Kto był zabawniejszy? Odpowiedz w tym formacie:\n"
+        "{format_instructions}\n"
+        "Historia czatu:\n{history_text}\n"
+        "Odpowiadaj wyłącznie po polsku."
+    ),
+}
+
+RESPONSE_SCHEMA_DESCRIPTIONS = {
+    "en": {
+        "winner": "Name of the winning comedian",
+        "summary": "One-sentence summary or justification for the winner",
+    },
+    "pl": {
+        "winner": "Imię zwycięskiego komika",
+        "summary": "Jednozdaniowe podsumowanie lub uzasadnienie wyboru zwycięzcy",
+    },
+}

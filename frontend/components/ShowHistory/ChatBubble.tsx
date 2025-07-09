@@ -1,6 +1,6 @@
 import { Avatar } from "./Avatar";
 import { TTSButton } from "./TTSButton";
-import { toTitleCase } from "../../utils/toTitleCase";
+import { toTitleCase } from "../../utils/stringUtils";
 import { useState, useRef, useEffect } from "react";
 
 interface ChatBubbleProps {

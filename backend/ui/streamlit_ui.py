@@ -9,7 +9,7 @@ from config.personas import COMEDIAN_PERSONAS
 from config.translations import TRANSLATIONS
 from models import Language, Mode
 from services.agent_manager import AgentManager
-from services.llm_utils import generate_topic_context_llm
+from services.llm_service import LLMService
 from tts.tts_service import TTSService
 
 
@@ -17,10 +17,13 @@ class UIService:
     """Service class for Streamlit UI with dependency injection."""
 
     @injector.inject
-    def __init__(self, agent_manager: AgentManager, tts_service: TTSService, logger: structlog.BoundLogger):
+    def __init__(
+        self, agent_manager: AgentManager, tts_service: TTSService, logger: structlog.BoundLogger, llm_service: LLMService
+    ):
         self.agent_manager = agent_manager
         self.tts_service = tts_service
         self.logger = logger
+        self.llm_service = llm_service
 
     def clean_response(self, _, content):
         """
@@ -55,7 +58,7 @@ class UIService:
             if k.startswith("audio_"):
                 del st.session_state[k]
         with st.spinner(TRANSLATIONS[lang].get("please_wait", "Generating show, please wait...")):
-            context = generate_topic_context_llm(topic, lang) if mode == Mode.TOPICAL else ""
+            context = self.llm_service.generate_topic_context(topic, lang) if mode == Mode.TOPICAL else ""
             history = self.agent_manager.run_duel(mode, topic, max_rounds=num_rounds, lang=lang, context=context)
         for msg in history:
             msg["content"] = self.clean_response(msg["role"], msg["content"])

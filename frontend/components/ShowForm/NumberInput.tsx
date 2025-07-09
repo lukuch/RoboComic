@@ -7,6 +7,7 @@ interface NumberInputProps {
   max: number;
   label: string;
   tooltip?: string;
+  t: { roundsLabel: string };
 }
 
 const COMMON_CLASSES = {
@@ -21,6 +22,7 @@ export function NumberInput({
   max,
   label,
   tooltip,
+  t,
 }: NumberInputProps) {
   return (
     <div>
@@ -53,7 +55,7 @@ export function NumberInput({
                 {value}
               </span>
               <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 tracking-wide">
-                ROUNDS
+                {t.roundsLabel}
               </div>
             </div>
           </div>

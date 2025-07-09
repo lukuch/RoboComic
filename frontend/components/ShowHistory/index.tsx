@@ -3,6 +3,8 @@ import { tts, fetchVoiceIds } from "../../services/apiService";
 import { ChatBubble } from "./ChatBubble";
 import { ManagerBubble } from "./ManagerBubble";
 import { ErrorDisplay } from "../../app/Home/ErrorDisplay";
+import JudgingSection from "./JudgingSection";
+import type { TranslationStrings } from "../../types";
 
 interface ShowHistoryProps {
   history: { role: string; content: string }[];
@@ -13,6 +15,7 @@ interface ShowHistoryProps {
   personas: {
     [key: string]: { description: string; description_pl: string };
   } | null;
+  t: TranslationStrings;
 }
 
 const bubbleColors = [
@@ -31,6 +34,7 @@ export default function ShowHistory({
   comedian1Persona,
   comedian2Persona,
   personas,
+  t,
 }: ShowHistoryProps) {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [playingIdx, setPlayingIdx] = useState<number | null>(null);
@@ -41,10 +45,19 @@ export default function ShowHistory({
     comedian1_voice_id: string;
     comedian2_voice_id: string;
   } | null>(null);
+  const [judged, setJudged] = useState(false);
+  const [winner, setWinner] = useState<string | null>(null);
+  const [summary, setSummary] = useState<string | null>(null);
 
   useEffect(() => {
     fetchVoiceIds().then(setVoiceIds);
   }, []);
+
+  useEffect(() => {
+    setJudged(false);
+    setWinner(null);
+    setSummary(null);
+  }, [history]);
 
   async function handlePlay(text: string, idx: number, voiceId: string) {
     setLoadingIdx(idx);
@@ -105,7 +118,7 @@ export default function ShowHistory({
             <div className="flex items-center w-full mb-7 -mt-1">
               <div className="flex-grow border-t border-gray-700 opacity-50"></div>
               <span className="mx-4 px-4 py-1 rounded-full bg-gradient-to-r from-blue-800/80 to-purple-800/80 text-blue-100 text-xs font-bold shadow border border-blue-700 tracking-wide">
-                🥊 Round {roundIdx + 1}
+                🥊 {t.round} {roundIdx + 1}
               </span>
               <div className="flex-grow border-t border-gray-700 opacity-50"></div>
             </div>
@@ -149,6 +162,20 @@ export default function ShowHistory({
             </div>
           </div>
         ))}
+        {/* Winner & Summary Section */}
+        <JudgingSection
+          comedian1Name={comedian1Persona}
+          comedian2Name={comedian2Persona}
+          history={rest}
+          judged={judged}
+          setJudged={setJudged}
+          winner={winner}
+          setWinner={setWinner}
+          summary={summary}
+          setSummary={setSummary}
+          lang={lang}
+          t={t}
+        />
       </div>
     </section>
   );

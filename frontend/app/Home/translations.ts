@@ -17,7 +17,6 @@ export const TRANSLATIONS = {
       "TTS Mode enables text-to-speech playback for each joke, letting you listen to the comedians.",
     numRoundsTooltip:
       "Each round consists of 2 jokes from each comedian. More rounds mean a longer, more detailed comedy duel.",
-    // AI Creativity Settings
     aiCreativitySettings: "AI Creativity Settings",
     adjustCreativity: "Adjust Creativity Level",
     quickPresets: "Quick Presets",
@@ -41,6 +40,11 @@ export const TRANSLATIONS = {
     buildContext: "Build Context",
     buildContextTooltip:
       "When enabled, the AI will research and build background context about the selected topic to create more informed and relevant jokes.",
+    round: "Round",
+    judgeDuel: "Judge the Duel!",
+    congratulations: "Congratulations!",
+    judgingDuel: "Judging the duel...",
+    roundsLabel: "ROUNDS",
   },
   pl: {
     customize: "Dostosuj pojedynek komików",
@@ -60,7 +64,6 @@ export const TRANSLATIONS = {
       "Tryb TTS umożliwia odtwarzanie tekstu na mowę dla każdego żartu, pozwalając słuchać komików.",
     numRoundsTooltip:
       "Każda runda składa się z 2 żartów od każdego komika. Więcej rund oznacza dłuższy, bardziej szczegółowy pojedynek komików.",
-    // AI Creativity Settings
     aiCreativitySettings: "Ustawienia kreatywności AI",
     adjustCreativity: "Dostosuj poziom kreatywności",
     quickPresets: "Szybkie ustawienia",
@@ -85,6 +88,11 @@ export const TRANSLATIONS = {
     buildContext: "Buduj kontekst",
     buildContextTooltip:
       "Gdy włączone, AI będzie badać i budować tło kontekstowe dla wybranego tematu, aby tworzyć bardziej świadome i trafne żarty.",
+    round: "Runda",
+    judgeDuel: "Oceń pojedynek!",
+    congratulations: "Gratulacje!",
+    judgingDuel: "Trwa ocenianie pojedynku...",
+    roundsLabel: "ILOŚĆ RUND",
   },
 } as const;
 

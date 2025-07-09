@@ -103,3 +103,15 @@ class HealthResponse(BaseModel):
 class VoiceIdsResponse(BaseModel):
     comedian1_voice_id: str = Field(..., description="Voice ID for the first comedian")
     comedian2_voice_id: str = Field(..., description="Voice ID for the second comedian")
+
+
+class JudgeShowRequest(BaseModel):
+    comedian1_name: str = Field(..., description="Name of the first comedian")
+    comedian2_name: str = Field(..., description="Name of the second comedian")
+    history: List[ChatMessage] = Field(..., description="Chat history of the comedy duel")
+    lang: Language = Field(..., description="Language for the comedy duel")
+
+
+class JudgeShowResponse(BaseModel):
+    winner: str = Field(..., description="Name of the winning comedian")
+    summary: str = Field(..., description="One-sentence summary or justification for the winner")

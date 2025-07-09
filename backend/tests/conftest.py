@@ -7,7 +7,7 @@ import pytest
 @pytest.fixture(autouse=True)
 def mock_llm(monkeypatch):
     monkeypatch.setattr(
-        "services.llm_utils.generate_topic_context_llm", lambda *args, **kwargs: "This is a mock topic context."
+        "services.llm_service.LLMService.generate_topic_context", lambda *args, **kwargs: "This is a mock topic context."
     )
     # Patch GroupChatManager.initiate_chat to return a mock chat result
     from autogen import GroupChatManager
