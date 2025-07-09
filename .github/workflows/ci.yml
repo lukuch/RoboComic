@@ -213,14 +213,13 @@ jobs:
     - name: Test API endpoints
       run: |
         set -e
-        endpoints=(
+        get_endpoints=(
           "health"
           "personas"
           "llm-config"
           "voice-ids"
-          "judge-show"
         )
-        for ep in "${endpoints[@]}"; do
+        for ep in "${get_endpoints[@]}"; do
           echo "Testing /$ep endpoint..."
           status=$(curl -s -o response.txt -w "%{http_code}" http://localhost:8000/$ep)
           cat response.txt
