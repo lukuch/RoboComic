@@ -36,6 +36,28 @@ class AgentManager:
             self.lang = lang
         self.reset_agents()
 
+    def _format_initial_prompt(self, mode, topic, lang, context):
+        if mode == Mode.TOPICAL:
+            if context and context.strip():
+                return COMEDIAN_PROMPT_TEMPLATE[lang]["topical_with_context"].format(
+                    name=self.comedian1.name,
+                    style=self.comedian1.style,
+                    topic=topic or ("anything" if lang == Language.ENGLISH else "cokolwiek"),
+                    context=context,
+                )
+            else:
+                return COMEDIAN_PROMPT_TEMPLATE[lang]["topical_without_context"].format(
+                    name=self.comedian1.name,
+                    style=self.comedian1.style,
+                    topic=topic or ("anything" if lang == Language.ENGLISH else "cokolwiek"),
+                )
+        else:
+            return COMEDIAN_PROMPT_TEMPLATE[lang][mode].format(
+                name=self.comedian1.name,
+                style=self.comedian1.style,
+                topic=topic or ("anything" if lang == Language.ENGLISH else "cokolwiek"),
+            )
+
     def run_duel(
         self, mode: str, topic: str = None, max_rounds: int = 2, lang: str = "en", context: str = "", temperature: float = None
     ) -> list:
@@ -47,26 +69,7 @@ class AgentManager:
             self.comedian1.agent,
             self.comedian2.agent,
         ]
-        if mode == Mode.TOPICAL:
-            if context and context.strip():
-                initial_prompt = COMEDIAN_PROMPT_TEMPLATE[lang]["topical_with_context"].format(
-                    name=self.comedian1.name,
-                    style=self.comedian1.style,
-                    topic=topic or ("anything" if lang == Language.ENGLISH else "cokolwiek"),
-                    context=context,
-                )
-            else:
-                initial_prompt = COMEDIAN_PROMPT_TEMPLATE[lang]["topical_without_context"].format(
-                    name=self.comedian1.name,
-                    style=self.comedian1.style,
-                    topic=topic or ("anything" if lang == Language.ENGLISH else "cokolwiek"),
-                )
-        else:
-            initial_prompt = COMEDIAN_PROMPT_TEMPLATE[lang][mode].format(
-                name=self.comedian1.name,
-                style=self.comedian1.style,
-                topic=topic or ("anything" if lang == Language.ENGLISH else "cokolwiek"),
-            )
+        initial_prompt = self._format_initial_prompt(mode, topic, lang, context)
         group_chat = GroupChat(agents=agents, messages=[], max_round=max_rounds * 4, speaker_selection_method="round_robin")
         manager = GroupChatManager(
             groupchat=group_chat,

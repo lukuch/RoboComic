@@ -26,12 +26,8 @@ class ComedianAgent:
         self.persona = COMEDIAN_PERSONAS[persona_key]
         self.style = self.persona["style"]
 
-        if lang == Language.POLISH:
-            description = self.persona.get("description_pl", self.persona["description"])
-        else:
-            description = self.persona["description"]
+        description = self.persona["description_pl"] if lang == Language.POLISH else self.persona["description"]
 
-        # Use provided temperature or default
         temp = temperature if temperature is not None else settings.DEFAULT_TEMPERATURE
 
         self.agent = ConversableAgent(

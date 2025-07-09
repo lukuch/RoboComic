@@ -63,7 +63,9 @@ export default function JudgingSection({
     lang,
   ]);
 
-  if (judged && winner && summary) {
+  const showWinnerSummary = winner && summary;
+
+  if (judged && showWinnerSummary) {
     return <WinnerSummary winner={winner} summary={summary} t={t} />;
   }
 
@@ -89,7 +91,7 @@ export default function JudgingSection({
       </div>
     );
   }
-  if (winner && summary) {
+  if (showWinnerSummary) {
     return <WinnerSummary winner={winner} summary={summary} t={t} />;
   }
   return null;
