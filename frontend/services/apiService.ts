@@ -24,8 +24,14 @@ const api = axios.create({
 // Error handler
 function handleApiError(error: AxiosError): ApiError {
   if (error.response) {
-    // Server responded with error status
     const responseData = error.response.data as any;
+    if (error.response.status === 429) {
+      return {
+        message:
+          "You have reached the usage limit. Please wait before trying again.",
+        status: 429,
+      };
+    }
     return {
       message:
         responseData?.message ||

@@ -10,6 +10,9 @@ from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 
 from config import settings, validate_config
 from config.personas import COMEDIAN_PERSONAS
@@ -51,6 +54,10 @@ app.add_exception_handler(RequestValidationError, validation_exception_handler)
 app.add_exception_handler(TTSServiceException, robocomic_exception_handler)
 app.add_exception_handler(Exception, general_exception_handler)
 
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 # CORS middleware with production settings
 app.add_middleware(
     CORSMiddleware,
@@ -76,13 +83,28 @@ llm_service = container.get(LLMService)
 
 
 @app.post("/generate-show", response_model=GenerateShowResponse)
-async def generate_show_api(request: GenerateShowRequest):
-    return api_service.generate_show(request)
+@limiter.limit("2/minute")
+async def generate_show_api(request: Request, body: GenerateShowRequest):
+    return api_service.generate_show(body)
+
+
+@app.post("/judge-show", response_model=JudgeShowResponse)
+@limiter.limit("2/minute")
+def judge_show(request: JudgeShowRequest):
+    """Judge a comedy duel and return the winner and a summary using LLM."""
+    winner, summary = llm_service.judge_show(
+        comedian1_name=request.comedian1_name,
+        comedian2_name=request.comedian2_name,
+        history=[msg.model_dump() for msg in request.history],
+        lang=request.lang,
+    )
+    return JudgeShowResponse(winner=winner, summary=summary)
 
 
 @app.post("/tts")
-async def tts_api(request: TTSRequest):
-    audio_result = api_service.tts(request)
+@limiter.limit("4/10 minutes")
+async def tts_api(request: Request, body: TTSRequest):
+    audio_result = api_service.tts(body)
     if isinstance(audio_result, tuple) and len(audio_result) == 2:
         audio_array, sample_rate = audio_result
         import soundfile as sf
@@ -96,7 +118,8 @@ async def tts_api(request: TTSRequest):
 
 
 @app.get("/personas", response_model=PersonasResponse)
-def get_personas():
+@limiter.limit("10/minute")
+def get_personas(request: Request):
     return PersonasResponse(personas=COMEDIAN_PERSONAS)
 
 
@@ -126,18 +149,6 @@ def get_voice_ids():
         comedian1_voice_id=COMEDIAN1_VOICE_ID,
         comedian2_voice_id=COMEDIAN2_VOICE_ID,
     )
-
-
-@app.post("/judge-show", response_model=JudgeShowResponse)
-def judge_show(request: JudgeShowRequest):
-    """Judge a comedy duel and return the winner and a summary using LLM."""
-    winner, summary = llm_service.judge_show(
-        comedian1_name=request.comedian1_name,
-        comedian2_name=request.comedian2_name,
-        history=[msg.model_dump() for msg in request.history],
-        lang=request.lang,
-    )
-    return JudgeShowResponse(winner=winner, summary=summary)
 
 
 if __name__ == "__main__":

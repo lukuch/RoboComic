@@ -76,10 +76,16 @@ export default function ShowHistory({
       setTtsCache((prev) => ({ ...prev, [cacheKey]: url }));
       setAudioUrl(url);
       setPlayingIdx(idx);
-    } catch {
-      setTtsError(
-        "Text-to-speech is temporarily unavailable (likely out of credits). Please try again later or contact support.",
-      );
+    } catch (error: any) {
+      if (error?.status === 429) {
+        setTtsError(
+          "You have reached the TTS usage limit. Please wait before trying again.",
+        );
+      } else {
+        setTtsError(
+          "Text-to-speech is temporarily unavailable (likely out of credits). Please try again later or contact support.",
+        );
+      }
     } finally {
       setLoadingIdx(null);
     }

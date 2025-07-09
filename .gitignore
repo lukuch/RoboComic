@@ -91,3 +91,4 @@ $RECYCLE.BIN/
 node_modules/ 
 
 TODO_LOCAL.md 
+run-precommit.bat 

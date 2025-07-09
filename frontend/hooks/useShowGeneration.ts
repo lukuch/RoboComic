@@ -17,8 +17,6 @@ export function useShowGeneration() {
     setTtsMode(params.tts_mode);
     setComedian1(params.comedian1_style);
     setComedian2(params.comedian2_style);
-    setHistory([]);
-
     try {
       const data = await generateShow({
         comedian1_style: params.comedian1_style,
@@ -34,7 +32,10 @@ export function useShowGeneration() {
     } catch (e: unknown) {
       const error = e as ApiError;
       setError(error.message || ERROR_MESSAGES.GENERATE_SHOW_FAILED);
-      setHistory([]);
+      // Only clear history if not a rate limit error
+      if (error.status !== 429) {
+        setHistory([]);
+      }
     } finally {
       setLoading(false);
     }
