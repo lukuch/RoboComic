@@ -44,7 +44,7 @@ orjson==3.10.18 ; python_version >= "3.11" and python_version < "4.0" and platfo
 packaging==24.2 ; python_version >= "3.11" and python_version < "4.0"
 propcache==0.3.2 ; python_version >= "3.11" and python_version < "4.0"
 pycparser==2.22 ; python_version >= "3.11" and python_version < "4.0" and platform_python_implementation == "PyPy"
-pydantic-core==2.33.2 ; python_version >= "3.11" and python_version < "4.0"
+pydantic-core==2.35.2 ; python_version >= "3.11" and python_version < "4.0"
 pydantic-settings==2.10.1 ; python_version >= "3.11" and python_version < "4.0"
 pydantic==2.11.7 ; python_version >= "3.11" and python_version < "4.0"
 python-dotenv==1.1.1 ; python_version >= "3.11" and python_version < "4.0"
