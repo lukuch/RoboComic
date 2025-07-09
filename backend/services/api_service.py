@@ -15,7 +15,7 @@ from utils import APIException, TTSServiceException
 class ApiService:
     @injector.inject
     def __init__(
-        self, agent_manager: AgentManager, tts_service: TTSService, logger: structlog.BoundLogger, llm_service: "LLMService"
+        self, agent_manager: AgentManager, tts_service: TTSService, logger: structlog.BoundLogger, llm_service: LLMService
     ):
         self.agent_manager = agent_manager
         self.tts_service = tts_service

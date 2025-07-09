@@ -68,7 +68,10 @@ class TestApiService:
         mock_agent_manager = Mock()
         mock_tts_service = Mock()
         mock_logger = Mock()
-        service = ApiService(agent_manager=mock_agent_manager, tts_service=mock_tts_service, logger=mock_logger)
+        mock_llm_service = Mock()
+        service = ApiService(
+            agent_manager=mock_agent_manager, tts_service=mock_tts_service, logger=mock_logger, llm_service=mock_llm_service
+        )
         assert service is not None
         assert hasattr(service, "agent_manager")
         assert hasattr(service, "tts_service")
@@ -78,7 +81,10 @@ class TestApiService:
         mock_agent_manager = Mock()
         mock_tts_service = Mock()
         mock_logger = Mock()
-        service = ApiService(agent_manager=mock_agent_manager, tts_service=mock_tts_service, logger=mock_logger)
+        mock_llm_service = Mock()
+        service = ApiService(
+            agent_manager=mock_agent_manager, tts_service=mock_tts_service, logger=mock_logger, llm_service=mock_llm_service
+        )
         request = GenerateShowRequest(
             comedian1_style="relatable",
             comedian2_style="absurd",
@@ -102,7 +108,10 @@ class TestApiService:
         mock_agent_manager = Mock()
         mock_tts_service = Mock()
         mock_logger = Mock()
-        service = ApiService(agent_manager=mock_agent_manager, tts_service=mock_tts_service, logger=mock_logger)
+        mock_llm_service = Mock()
+        service = ApiService(
+            agent_manager=mock_agent_manager, tts_service=mock_tts_service, logger=mock_logger, llm_service=mock_llm_service
+        )
         request = TTSRequest(text="Hello, this is a test.", lang="en")
         try:
             service.tts_service.speak.return_value = (Mock(), 22050)
