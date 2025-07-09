@@ -5,6 +5,7 @@ import { ManagerBubble } from "./ManagerBubble";
 import { ErrorDisplay } from "../../app/Home/ErrorDisplay";
 import JudgingSection from "./JudgingSection";
 import type { TranslationStrings } from "../../types";
+import { SkeletonBubble } from "./SkeletonBubble";
 
 interface ShowHistoryProps {
   history: { role: string; content: string }[];
@@ -16,6 +17,7 @@ interface ShowHistoryProps {
     [key: string]: { description: string; description_pl: string };
   } | null;
   t: TranslationStrings;
+  loading?: boolean;
 }
 
 const bubbleColors = [
@@ -35,6 +37,7 @@ export default function ShowHistory({
   comedian2Persona,
   personas,
   t,
+  loading = false,
 }: ShowHistoryProps) {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [playingIdx, setPlayingIdx] = useState<number | null>(null);
@@ -89,6 +92,20 @@ export default function ShowHistory({
     } finally {
       setLoadingIdx(null);
     }
+  }
+
+  if (loading && (!history || history.length === 0)) {
+    // Hide the main spinner in LoadingOverlay when skeletons are shown
+    const skeletonAligns = ["right", "left", "right", "left"];
+    return (
+      <section className="w-full h-[60vh] flex flex-col justify-center items-center mt-20">
+        <div className="flex flex-col gap-6 items-center w-full max-w-md">
+          {skeletonAligns.map((align, idx) => (
+            <SkeletonBubble key={idx} align={align as "left" | "right"} />
+          ))}
+        </div>
+      </section>
+    );
   }
 
   if (!history.length || !voiceIds) {

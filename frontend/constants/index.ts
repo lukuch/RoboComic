@@ -42,3 +42,6 @@ export const ERROR_MESSAGES = {
   TTS_FAILED: "Failed to generate audio",
   PERSONAS_FAILED: "Failed to load comedian personas",
 } as const;
+
+// Retry timeout for personas and config fetch (ms)
+export const PERSONAS_RETRY_TIMEOUT_MS = 2000;

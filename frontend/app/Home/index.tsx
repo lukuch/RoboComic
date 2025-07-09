@@ -61,6 +61,7 @@ export default function Home() {
         comedian2Persona={comedian2}
         personas={personas}
         t={t}
+        loading={loading}
       />
     </div>
   );

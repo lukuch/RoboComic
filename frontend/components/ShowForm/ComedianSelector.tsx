@@ -29,6 +29,24 @@ export function ComedianSelector({
   personas,
   lang,
 }: ComedianSelectorProps) {
+  if (!personas) {
+    // Skeleton placeholder for loading
+    return (
+      <div className="flex-1">
+        <div className="relative">
+          <div
+            className="relative w-full cursor-pointer rounded-xl bg-white/10 dark:bg-gray-800/40 border border-gray-400 dark:border-gray-700 py-2 pl-4 pr-10 text-left shadow flex items-center animate-pulse"
+            style={{ height: "42px" }}
+          >
+            <div className="h-4 w-24 bg-gray-300 dark:bg-gray-600 rounded" />
+            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+              <div className="h-5 w-5 bg-gray-300 dark:bg-gray-600 rounded-full" />
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="flex-1">
       <FormLabel>{label}</FormLabel>

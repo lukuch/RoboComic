@@ -7,6 +7,7 @@ import {
   getTemperaturePresets,
 } from "../../services/apiService";
 import { toSentenceCase } from "../../utils/stringUtils";
+import { PERSONAS_RETRY_TIMEOUT_MS } from "../../constants";
 
 interface TemperatureConfigProps {
   temperature: number;
@@ -27,31 +28,38 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchConfig = async () => {
-      setLoading(true);
-      try {
-        const [presetsData, defaultConfigData] = await Promise.all([
-          getTemperaturePresets(),
-          getDefaultLLMConfig(),
-        ]);
-        setPresets(presetsData);
-
-        // Set default temperature if not already set
-        if (temperature === 0.9) {
-          // Assuming 0.9 is the hardcoded default
-          onTemperatureChange(defaultConfigData.temperature);
-        }
-      } catch {
-        setPresets([]);
-        setError("Failed to load AI presets. Please try again later.");
-      } finally {
-        setLoading(false);
+  const fetchConfig = async () => {
+    setLoading(true);
+    try {
+      const [presetsData, defaultConfigData] = await Promise.all([
+        getTemperaturePresets(),
+        getDefaultLLMConfig(),
+      ]);
+      setPresets(presetsData);
+      if (temperature === 0.9) {
+        onTemperatureChange(defaultConfigData.temperature);
       }
-    };
+      setError(null);
+    } catch {
+      setPresets([]);
+      setError("Failed to load AI presets. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchConfig();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onTemperatureChange, temperature]);
+
+  useEffect(() => {
+    if (error && !loading) {
+      const retry = setTimeout(fetchConfig, PERSONAS_RETRY_TIMEOUT_MS);
+      return () => clearTimeout(retry);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error, loading, onTemperatureChange, temperature]);
 
   const handlePresetSelect = (preset: TemperaturePreset) => {
     onTemperatureChange(preset.temperature);
@@ -83,15 +91,19 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
     return "text-red-600";
   };
 
-  if (loading) {
+  if ((loading || error) && !isOpen) {
     return (
-      <div className="border rounded-lg p-4 mt-4">
-        <div className="animate-pulse">
-          <div className="h-4 bg-gray-200 rounded w-1/3 mb-4"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+      <div className="rounded-2xl bg-gray-900/90 border border-gray-800 shadow-lg p-3 mt-4">
+        <div className="flex items-center justify-between w-full animate-pulse">
+          <div className="h-5 w-40 bg-gray-400 dark:bg-gray-700 rounded mb-0.5" />
+          <div className="h-5 w-5 bg-gray-400 dark:bg-gray-700 rounded ml-2" />
         </div>
       </div>
     );
+  }
+  if (loading && isOpen) {
+    // If loading and expanded, show nothing or a minimal placeholder
+    return <div className="mt-4" />;
   }
 
   return (

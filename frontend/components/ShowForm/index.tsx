@@ -6,7 +6,7 @@ import { NumberInput } from "./NumberInput";
 import { CheckboxWithTooltip } from "./CheckboxWithTooltip";
 import { SubmitButton } from "./SubmitButton";
 import TemperatureConfig from "./TemperatureConfig";
-import { UI, DEFAULTS } from "../../constants";
+import { UI, DEFAULTS, PERSONAS_RETRY_TIMEOUT_MS } from "../../constants";
 import type { TranslationStrings } from "../../types";
 
 interface ShowFormProps {
@@ -44,12 +44,38 @@ export default function ShowForm({
   const [personas, setPersonas] = useState<{
     [key: string]: { description: string; description_pl: string };
   } | null>(null);
+  const [personasLoading, setPersonasLoading] = useState(false);
+  const [personasError, setPersonasError] = useState<string | null>(null);
+
+  const fetchPersonasWithState = async () => {
+    setPersonasLoading(true);
+    try {
+      const data = await fetchPersonas();
+      setPersonas(data);
+      setPersonasError(null);
+    } catch {
+      setPersonas(null);
+      setPersonasError("Failed to load personas");
+    } finally {
+      setPersonasLoading(false);
+    }
+  };
 
   useEffect(() => {
-    fetchPersonas()
-      .then(setPersonas)
-      .catch(() => setPersonas(null));
+    fetchPersonasWithState();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (personasError && !personasLoading) {
+      const retry = setTimeout(
+        fetchPersonasWithState,
+        PERSONAS_RETRY_TIMEOUT_MS,
+      );
+      return () => clearTimeout(retry);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [personasError, personasLoading]);
 
   const personaOptions = personas ? Object.keys(personas) : [];
 

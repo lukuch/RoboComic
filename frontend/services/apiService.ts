@@ -51,18 +51,25 @@ function handleApiError(error: AxiosError): ApiError {
   }
 }
 
+// Generic API request wrapper
+async function apiRequest<T>(fn: () => Promise<T>): Promise<T> {
+  try {
+    return await fn();
+  } catch (error) {
+    throw handleApiError(error as AxiosError);
+  }
+}
+
 export async function generateShow(
   params: GenerateShowParams,
 ): Promise<GenerateShowResponse> {
-  try {
+  return apiRequest(async () => {
     const { data } = await api.post<GenerateShowResponse>(
       "/generate-show",
       params,
     );
     return data;
-  } catch (error) {
-    throw handleApiError(error as AxiosError);
-  }
+  });
 }
 
 export async function tts(
@@ -70,7 +77,7 @@ export async function tts(
   lang: string,
   voiceId?: string,
 ): Promise<string> {
-  try {
+  return apiRequest(async () => {
     const response = await api.post<Blob>(
       "/tts",
       { text, lang, voice_id: voiceId },
@@ -80,38 +87,30 @@ export async function tts(
       },
     );
     return URL.createObjectURL(response.data);
-  } catch (error) {
-    throw handleApiError(error as AxiosError);
-  }
+  });
 }
 
 export async function fetchPersonas(): Promise<Personas> {
-  try {
+  return apiRequest(async () => {
     const { data } = await api.get<{ personas: Personas }>("/personas");
     return data.personas;
-  } catch (error) {
-    throw handleApiError(error as AxiosError);
-  }
+  });
 }
 
 export async function fetchVoiceIds(): Promise<VoiceIdsResponse> {
-  try {
+  return apiRequest(async () => {
     const { data } = await api.get<VoiceIdsResponse>("/voice-ids");
     return data;
-  } catch (error) {
-    throw handleApiError(error as AxiosError);
-  }
+  });
 }
 
 export async function judgeShow(
   params: JudgeShowRequest,
 ): Promise<JudgeShowResponse> {
-  try {
+  return apiRequest(async () => {
     const { data } = await api.post<JudgeShowResponse>("/judge-show", params);
     return data;
-  } catch (error) {
-    throw handleApiError(error as AxiosError);
-  }
+  });
 }
 
 // Health check function
@@ -126,19 +125,15 @@ export async function healthCheck(): Promise<boolean> {
 
 // Temperature configuration functions
 export async function getDefaultLLMConfig(): Promise<LLMConfig> {
-  try {
+  return apiRequest(async () => {
     const { data } = await api.get<LLMConfig>("/llm-config");
     return data;
-  } catch (error) {
-    throw handleApiError(error as AxiosError);
-  }
+  });
 }
 
 export async function getTemperaturePresets(): Promise<TemperaturePreset[]> {
-  try {
+  return apiRequest(async () => {
     const { data } = await api.get<TemperaturePreset[]>("/temperature-presets");
     return data;
-  } catch (error) {
-    throw handleApiError(error as AxiosError);
-  }
+  });
 }

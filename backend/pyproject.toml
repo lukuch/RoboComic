@@ -77,6 +77,7 @@ addopts = [
     "-W ignore::DeprecationWarning:jsonschema.*"
 ]
 filterwarnings = [
+    "ignore::DeprecationWarning:pydantic.*",
     "ignore::DeprecationWarning:jsonschema.*",
     "ignore::DeprecationWarning:autogen.*"
 ]
