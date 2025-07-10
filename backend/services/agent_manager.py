@@ -3,6 +3,7 @@
 import injector
 import structlog
 from autogen import GroupChat, GroupChatManager
+from langsmith import traceable
 
 from agents.comedian_agent import ComedianAgent
 from config import settings
@@ -87,6 +88,7 @@ class AgentManager:
         )
 
         # Use resilience at conversation level with better error handling
+        @traceable
         @self.resilience_service.resilient_llm_call()
         def _run_chat():
             chat_result = manager.initiate_chat(

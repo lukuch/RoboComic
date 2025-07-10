@@ -14,6 +14,7 @@ export function SubmitButton({
   return (
     <button
       type="submit"
+      data-testid="submit-button"
       className="relative bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 text-white py-3 px-6 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center gap-3 focus:outline-none hover:scale-105 active:scale-95 overflow-hidden transition-all duration-200 group"
       disabled={loading}
     >

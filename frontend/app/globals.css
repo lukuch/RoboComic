@@ -44,3 +44,39 @@ a {
     color-scheme: dark;
   }
 }
+
+.winner-glow {
+  text-shadow:
+    0 0 0px #ffe066,
+    0 0 0px #ffd700,
+    0 0 0px #ffecb3;
+  animation: winner-glow-pulse 2s infinite alternate;
+}
+
+@keyframes winner-glow-pulse {
+  from {
+    text-shadow: none;
+  }
+  to {
+    text-shadow:
+      0 0 4px #fffbe6,
+      0 0 8px #ffe066,
+      0 0 12px #ffd700;
+  }
+}
+
+.emoji-burst {
+  animation: emoji-burst-float 2.5s ease-in-out infinite alternate;
+  display: inline-block;
+}
+
+@keyframes emoji-burst-float {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-16px) scale(1.1);
+    opacity: 0.85;
+  }
+}

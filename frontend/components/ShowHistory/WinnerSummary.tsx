@@ -61,21 +61,35 @@ export default function WinnerSummary({
         </div>
       )}
       <div className="flex flex-col items-center justify-center gap-4 animate-bounce-in">
-        <div className="text-5xl font-extrabold mb-2 flex items-center justify-center gap-3 text-yellow-400 drop-shadow-lg">
+        <div className="relative text-5xl font-extrabold mb-2 flex items-center justify-center gap-3 text-yellow-400 drop-shadow-lg">
           <span role="img" aria-label="trophy">
             🏆
           </span>
-          {formattedWinner}
+          <span className="winner-glow">{formattedWinner}</span>
           <span role="img" aria-label="trophy">
             🏆
           </span>
-        </div>
-        <div className="text-2xl font-bold text-green-600 dark:text-green-300 mb-2 animate-fade-in">
-          {t.congratulations}
         </div>
       </div>
-      <div className="bg-yellow-100 dark:bg-yellow-900 text-yellow-900 dark:text-yellow-100 rounded-2xl px-8 py-6 shadow-lg text-lg font-semibold max-w-xl mx-auto border-2 border-yellow-400 dark:border-yellow-700 mt-4 animate-fade-in">
-        {formattedSummary}
+      <div
+        className="winner-summary-card rounded-3xl px-10 py-8 shadow-2xl text-lg font-semibold max-w-2xl mx-auto border border-yellow-300 dark:border-yellow-600 mt-8 animate-fade-in backdrop-blur-md bg-gradient-to-br from-yellow-100/80 via-yellow-200/90 to-orange-200/80 dark:from-yellow-900/70 dark:via-yellow-800/80 dark:to-orange-900/70 relative"
+        style={{
+          color: "#5a3e1b",
+          boxShadow: "0 8px 32px 0 rgba(255, 167, 81, 0.25)",
+        }}
+      >
+        <div
+          className="text-3xl font-extrabold text-green-600 dark:text-green-300 mb-4 text-center tracking-wide drop-shadow-sm"
+          style={{ letterSpacing: "0.03em" }}
+        >
+          {t.congratulations}
+        </div>
+        <div
+          className="text-base md:text-xl font-medium text-brown-900 dark:text-yellow-100 text-center"
+          style={{ lineHeight: 1.6 }}
+        >
+          {formattedSummary}
+        </div>
       </div>
     </div>
   );

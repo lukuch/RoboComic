@@ -23,6 +23,7 @@ RoboComic is an AI-powered standup comedy duel app where virtual comedians battl
 - **CI/CD:** Automated testing, linting, formatting, and security checks via GitHub Actions
 - **Docker support:** Production-ready Dockerfile for backend deployment
 - **Pre-commit hooks:** Enforced code quality and requirements sync
+- **LangSmith tracing** for LLM/agent calls (optional, see environment variables)
 
 ## Customization
 
@@ -68,6 +69,12 @@ RoboComic is an AI-powered standup comedy duel app where virtual comedians battl
 
    ### LLM model (use gpt-4o for optimal performance - previous models can make mistakes even with the right prompting)
    LLM_MODEL=gpt-4o
+
+   ### If you want to enable LangSmith tracing for LLM/agent orchestration, set the following variables:
+   LANGSMITH_TRACING=true
+   LANGSMITH_ENDPOINT="https://api.smith.langchain.com"
+   LANGSMITH_API_KEY="<your-api-key>"
+   LANGSMITH_PROJECT="robo-comic"
    ```
 
    If you don't have Poetry installed, run:
@@ -100,12 +107,13 @@ RoboComic is an AI-powered standup comedy duel app where virtual comedians battl
 
 ## Automation & Quality
 - **Dependabot:** Automated dependency updates for both backend and frontend
-- **Pre-commit hooks:** Formatting (Black), import sorting (isort), linting (flake8), and requirements export
+- **Pre-commit hooks:** Formatting (Black), import sorting (isort), linting (flake8), requirements export (Poetry), frontend lint (ESLint), Prettier formatting, and TypeScript type checks
 - **CI/CD:**
   - Linting, formatting, and type checks for both backend and frontend
   - Automated tests with coverage
   - Security scanning (Snyk, Trivy)
   - Docker build validation
+  - **Render cloud deployment** via GitHub Actions
 
 ## PWA Installation
 - Visit the app in Chrome, Edge, or Safari.
@@ -147,6 +155,7 @@ RoboComic/
     utils/                        # Error handling, logging, exceptions
     ui/
       streamlit_ui.py             # Streamlit app (optional)
+      style.css                   # Streamlit UI styles
     tests/
       test_api_endpoints.py       # API endpoint tests
       test_integration.py         # Integration tests
@@ -160,6 +169,10 @@ RoboComic/
     requirements.txt              # Exported requirements
 
   frontend/                       # Next.js frontend, PWA config, UI
+    __tests__/                    # Jest/React Testing Library tests
+      Home.test.tsx
+      ShowForm.test.tsx
+      ShowHistory.test.tsx
     app/
       layout.tsx                  # Root layout and metadata
       page.tsx                    # Main page
@@ -188,6 +201,9 @@ RoboComic/
         ChatBubble.tsx
         ManagerBubble.tsx
         TTSButton.tsx
+        WinnerSummary.tsx
+        JudgingSection.tsx
+        SkeletonBubble.tsx
         index.tsx                 # Show history main component
     hooks/
       useShowGeneration.ts        # Show generation hook
@@ -200,6 +216,8 @@ RoboComic/
       next-pwa.d.ts               # PWA type definitions
     utils/
       stringUtils.ts              # String case utility functions
+    constants/
+      index.ts                    # App constants
     public/
       manifest.json               # PWA manifest
       icon-192x192.png            # PWA icons
@@ -214,10 +232,13 @@ RoboComic/
     package-lock.json
     vercel.json                   # Vercel deployment config
 
+  .pre-commit-config.yaml         # Pre-commit hooks configuration
+
 .github/
   workflows/
     ci.yml                        # Full CI/CD pipeline
     quick-test.yml                # Fast test workflow
+    render-deploy.yml             # Render cloud deployment workflow
   dependabot.yml                  # Automated dependency updates
 
 LICENSE

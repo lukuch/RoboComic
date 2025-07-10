@@ -7,6 +7,7 @@ interface TTSButtonProps {
 export function TTSButton({ onClick, disabled, loading }: TTSButtonProps) {
   return (
     <button
+      data-testid="tts-button"
       className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold p-2 rounded-full shadow transition disabled:opacity-50 flex items-center justify-center group"
       onClick={onClick}
       disabled={disabled}

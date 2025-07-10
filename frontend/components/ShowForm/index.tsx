@@ -81,6 +81,11 @@ export default function ShowForm({
 
   return (
     <section className="w-full flex flex-col items-center mb-10">
+      {personasError && (
+        <div className="text-red-600 text-sm mb-2" data-testid="personas-error">
+          {personasError}
+        </div>
+      )}
       <form
         data-testid="main-form"
         className="flex flex-col gap-6 p-8 bg-white/90 dark:bg-gray-900/90 rounded-2xl shadow-2xl max-w-2xl w-full border border-gray-200 dark:border-gray-800 backdrop-blur-lg mt-4"

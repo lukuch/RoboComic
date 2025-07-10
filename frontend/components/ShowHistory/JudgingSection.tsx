@@ -75,7 +75,10 @@ export default function JudgingSection({
 
   if (!triggered && !judged) {
     return (
-      <div className="mt-10 flex flex-col items-center">
+      <div
+        className="mt-10 flex flex-col items-center"
+        data-testid="judging-section"
+      >
         <button
           className="bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-white text-xl font-bold py-3 px-8 rounded-full shadow-lg flex items-center gap-2 transition-all duration-200"
           onClick={() => setTriggered(true)}

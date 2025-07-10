@@ -105,7 +105,7 @@ async def generate_show_api(request: Request, body: GenerateShowRequest):
 
 @app.post("/judge-show", response_model=JudgeShowResponse)
 @limiter.limit("2/minute")
-def judge_show(request: Request, body: JudgeShowRequest):
+async def judge_show(request: Request, body: JudgeShowRequest):
     """Judge a comedy duel and return the winner and a summary using LLM."""
     winner, summary = llm_service.judge_show(
         comedian1_name=body.comedian1_name,
