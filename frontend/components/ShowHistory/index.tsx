@@ -57,6 +57,8 @@ export default function ShowHistory({
     setJudged(false);
     setWinner(null);
     setSummary(null);
+    setAudioUrl(null);
+    setPlayingIdx(null);
   }, [history]);
 
   async function handlePlay(text: string, idx: number, voiceId: string) {

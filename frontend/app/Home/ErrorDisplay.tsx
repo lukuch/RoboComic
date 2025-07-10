@@ -8,17 +8,44 @@ interface ErrorDisplayProps {
 export function ErrorDisplay({ error, onDismiss }: ErrorDisplayProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [progress, setProgress] = useState(100);
+  const AUTO_CLOSE_MS = 10000;
 
   useEffect(() => {
+    let closeTimer: NodeJS.Timeout | null = null;
+    let progressTimer: NodeJS.Timeout | null = null;
     if (error) {
       setIsVisible(true);
       setIsAnimating(true);
+      setProgress(100);
+      // Animate progress bar
+      const start = Date.now();
+      progressTimer = setInterval(() => {
+        const elapsed = Date.now() - start;
+        const percent = Math.max(0, 100 - (elapsed / AUTO_CLOSE_MS) * 100);
+        setProgress(percent);
+      }, 50);
+      // Auto-close after 10s
+      closeTimer = setTimeout(() => {
+        setIsAnimating(false);
+        setTimeout(() => {
+          setIsVisible(false);
+          onDismiss?.();
+        }, 300);
+      }, AUTO_CLOSE_MS);
     } else {
       setIsAnimating(false);
-      const timer = setTimeout(() => setIsVisible(false), 300);
-      return () => clearTimeout(timer);
+      closeTimer = setTimeout(() => setIsVisible(false), 300);
     }
-  }, [error]);
+    return () => {
+      if (closeTimer) {
+        clearTimeout(closeTimer);
+      }
+      if (progressTimer) {
+        clearInterval(progressTimer);
+      }
+    };
+  }, [error, onDismiss]);
 
   const handleDismiss = () => {
     setIsAnimating(false);
@@ -38,7 +65,7 @@ export function ErrorDisplay({ error, onDismiss }: ErrorDisplayProps) {
         isAnimating ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
       }`}
     >
-      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl shadow-lg backdrop-blur-sm">
+      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl shadow-lg backdrop-blur-sm overflow-hidden">
         <div className="flex items-start p-4">
           <div className="flex-shrink-0">
             <svg
@@ -79,6 +106,13 @@ export function ErrorDisplay({ error, onDismiss }: ErrorDisplayProps) {
               </button>
             </div>
           )}
+        </div>
+        {/* Progress bar */}
+        <div className="h-1 w-full bg-red-100 dark:bg-red-800">
+          <div
+            className="h-1 bg-red-400 dark:bg-red-500 transition-all duration-100 linear"
+            style={{ width: `${progress}%` }}
+          />
         </div>
       </div>
     </div>

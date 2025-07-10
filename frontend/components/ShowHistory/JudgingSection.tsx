@@ -35,6 +35,10 @@ export default function JudgingSection({
   const [triggered, setTriggered] = useState(false);
 
   useEffect(() => {
+    setTriggered(false);
+  }, [history]);
+
+  useEffect(() => {
     if (!triggered || !history.length || judged) {
       return;
     }
