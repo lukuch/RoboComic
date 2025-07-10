@@ -20,10 +20,12 @@ class LLMService:
     def __init__(self, logger: structlog.BoundLogger, resilience_service: ResilienceService):
         self.logger = logger
         self.resilience_service = resilience_service
-        self.llm = ChatOpenAI(
+
+    def _create_llm(self, temperature=None):
+        return ChatOpenAI(
             openai_api_key=settings.OPENAI_API_KEY,
             model=settings.LLM_MODEL,
-            temperature=settings.DEFAULT_TEMPERATURE,
+            temperature=temperature if temperature is not None else settings.DEFAULT_TEMPERATURE,
         )
 
     def generate_topic_context(self, topic: str, lang: str = Language.ENGLISH) -> str:
@@ -33,7 +35,8 @@ class LLMService:
         @self.resilience_service.resilient_llm_call()
         def _generate_context():
             prompt = ChatPromptTemplate.from_template(TOPIC_CONTEXT_PROMPT[lang])
-            chain = RunnablePassthrough() | prompt | self.llm | RunnableLambda(lambda x: x.content)
+            llm = self._create_llm()
+            chain = RunnablePassthrough() | prompt | llm | RunnableLambda(lambda x: x.content)
             response = chain.invoke({"topic": topic})
             context = response.strip()
             context = re.sub(r"(?<!\d)\. ", ".\n", context)
@@ -52,7 +55,8 @@ class LLMService:
         @self.resilience_service.resilient_llm_call()
         def _comedianify():
             prompt = ChatPromptTemplate.from_template(COMEDIANIFY_PROMPT[lang])
-            chain = RunnablePassthrough() | prompt | self.llm | RunnableLambda(lambda x: x.content)
+            llm = self._create_llm()
+            chain = RunnablePassthrough() | prompt | llm | RunnableLambda(lambda x: x.content)
             response = chain.invoke({"text": text, "gender": gender})
             return response.strip()
 
@@ -76,13 +80,14 @@ class LLMService:
         output_parser = StructuredOutputParser.from_response_schemas(response_schemas)
         format_instructions = output_parser.get_format_instructions()
         prompt = ChatPromptTemplate.from_template(JUDGING_PROMPT[lang])
+        llm = self._create_llm()
         chain = (
             RunnablePassthrough.assign(
                 format_instructions=lambda _: format_instructions,
                 history_text=lambda _: history_text,
             )
             | prompt
-            | self.llm
+            | llm
             | RunnableLambda(lambda x: x.content)
             | output_parser
         )

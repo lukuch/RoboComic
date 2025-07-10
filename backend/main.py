@@ -1,7 +1,9 @@
+import asyncio
 import io
 import os
 import sys
 import time
+from concurrent.futures import ProcessPoolExecutor
 from datetime import UTC, datetime
 from typing import List
 
@@ -81,11 +83,24 @@ async def add_process_time_header(request: Request, call_next):
 api_service = container.get(ApiService)
 llm_service = container.get(LLMService)
 
+process_pool = ProcessPoolExecutor()
+
+
+def generate_show_worker(body_dict):
+    api_service = container.get(ApiService)
+    request_obj = GenerateShowRequest(**body_dict)
+    result = api_service.generate_show(request_obj)
+    return result
+
 
 @app.post("/generate-show", response_model=GenerateShowResponse)
 @limiter.limit("2/minute")
 async def generate_show_api(request: Request, body: GenerateShowRequest):
-    return api_service.generate_show(body)
+    loop = asyncio.get_running_loop()
+    # Passing only picklable data to the worker
+    body_dict = body.model_dump()
+    result = await loop.run_in_executor(process_pool, generate_show_worker, body_dict)
+    return result
 
 
 @app.post("/judge-show", response_model=JudgeShowResponse)

@@ -1,7 +1,6 @@
 import injector
 import structlog
 
-from agents.comedian_agent import ComedianAgent
 from services.agent_manager import AgentManager
 from services.api_service import ApiService
 from tts.eleven_tts_service import ElevenTTSService
@@ -17,8 +16,7 @@ class AppContainer(injector.Module):
         binder.bind(structlog.BoundLogger, to=logger, scope=injector.SingletonScope)
 
         # Bind services
-        binder.bind(ComedianAgent, to=ComedianAgent, scope=injector.SingletonScope)
-        binder.bind(AgentManager, to=AgentManager, scope=injector.SingletonScope)
+        binder.bind(AgentManager, to=AgentManager, scope=injector.NoScope)
         binder.bind(TTSService, to=ElevenTTSService, scope=injector.SingletonScope)
         binder.bind(ApiService, to=ApiService, scope=injector.SingletonScope)
         binder.bind(ResilienceService, to=ResilienceService, scope=injector.SingletonScope)
