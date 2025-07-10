@@ -123,8 +123,8 @@ def get_personas(request: Request):
     return PersonasResponse(personas=COMEDIAN_PERSONAS)
 
 
-@app.get("/health", response_model=HealthResponse)
-def health_check():
+@app.api_route("/health", methods=["GET", "HEAD", "OPTIONS"], response_model=HealthResponse)
+async def health_check():
     return HealthResponse(status="healthy", version="1.0.0", timestamp=datetime.now(UTC).isoformat())
 
 
