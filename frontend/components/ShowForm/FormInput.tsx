@@ -24,6 +24,7 @@ export function FormInput({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         disabled={disabled}
+        data-testid="topic-input"
       />
     </div>
   );

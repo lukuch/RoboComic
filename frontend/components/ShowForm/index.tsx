@@ -82,6 +82,7 @@ export default function ShowForm({
   return (
     <section className="w-full flex flex-col items-center mb-10">
       <form
+        data-testid="main-form"
         className="flex flex-col gap-6 p-8 bg-white/90 dark:bg-gray-900/90 rounded-2xl shadow-2xl max-w-2xl w-full border border-gray-200 dark:border-gray-800 backdrop-blur-lg mt-4"
         onSubmit={(e) => {
           e.preventDefault();

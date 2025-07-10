@@ -34,7 +34,10 @@ export function ManagerBubble({ message }: ManagerBubbleProps) {
   }, [showManagerMsg]);
 
   return (
-    <div className="flex flex-col items-center mb-1">
+    <div
+      className="flex flex-col items-center mb-1"
+      data-testid="manager-message"
+    >
       <div
         className="flex flex-col items-center cursor-pointer relative"
         onMouseEnter={() => setShowManagerMsg(true)}

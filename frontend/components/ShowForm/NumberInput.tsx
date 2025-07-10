@@ -51,7 +51,10 @@ export function NumberInput({
           </button>
           <div className="flex-1 flex items-center justify-center py-6 px-8">
             <div className="text-center">
-              <span className="text-4xl font-bold bg-gradient-to-r from-slate-700 via-blue-600 to-indigo-600 dark:from-slate-200 dark:via-blue-300 dark:to-indigo-300 bg-clip-text text-transparent leading-none">
+              <span
+                className="text-4xl font-bold bg-gradient-to-r from-slate-700 via-blue-600 to-indigo-600 dark:from-slate-200 dark:via-blue-300 dark:to-indigo-300 bg-clip-text text-transparent leading-none"
+                data-testid="rounds-value"
+              >
                 {value}
               </span>
               <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 tracking-wide">

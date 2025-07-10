@@ -52,7 +52,10 @@ export function ComedianSelector({
       <FormLabel>{label}</FormLabel>
       <Listbox value={value} onChange={onChange}>
         <div className="relative">
-          <ListboxButton className="relative w-full cursor-pointer rounded-xl bg-white/10 dark:bg-gray-800/40 border border-gray-400 dark:border-gray-700 py-2 pl-4 pr-10 text-left shadow focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-900 dark:text-gray-100">
+          <ListboxButton
+            className="relative w-full cursor-pointer rounded-xl bg-white/10 dark:bg-gray-800/40 border border-gray-400 dark:border-gray-700 py-2 pl-4 pr-10 text-left shadow focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-900 dark:text-gray-100"
+            data-testid={`comedian-selector-${label.replace(/\s+/g, "").toLowerCase()}`}
+          >
             <span className="block truncate">{toTitleCase(value)}</span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
               <ChevronUpDownIcon

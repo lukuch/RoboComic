@@ -51,7 +51,7 @@ export function SubmitButton({
           <span className="z-10">{submitText}</span>
         </>
       )}
-      <style jsx>{`
+      <style>{`
         @keyframes shimmer {
           0% {
             transform: translateX(-100%);
