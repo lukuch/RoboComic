@@ -42,6 +42,9 @@ class GenerateShowRequest(BaseModel):
     build_context: bool = Field(default=False, description="Whether to build context for the topic")
     temperature: Optional[float] = Field(None, ge=0.0, le=1.0, description="LLM temperature (0.0-1.0)")
 
+    class Config:
+        extra = "ignore"  # Ignore extra fields like _timestamp
+
     @field_validator("topic")
     @classmethod
     def validate_topic(cls, v):

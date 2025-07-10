@@ -116,7 +116,7 @@ export async function judgeShow(
 // Health check function
 export async function healthCheck(): Promise<boolean> {
   try {
-    await api.get("/health");
+    await api.get("/health", { timeout: 2000 }); // 2 second timeout for quick health check
     return true;
   } catch (error) {
     return false;

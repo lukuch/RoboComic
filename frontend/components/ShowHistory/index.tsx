@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { tts, fetchVoiceIds } from "../../services/apiService";
+import { tts } from "../../services/apiService";
 import { ChatBubble } from "./ChatBubble";
 import { ManagerBubble } from "./ManagerBubble";
 import { ErrorDisplay } from "../../app/Home/ErrorDisplay";
@@ -18,6 +18,10 @@ interface ShowHistoryProps {
   } | null;
   t: TranslationStrings;
   loading?: boolean;
+  voiceIds?: {
+    comedian1_voice_id: string;
+    comedian2_voice_id: string;
+  } | null;
 }
 
 const bubbleColors = [
@@ -38,23 +42,16 @@ export default function ShowHistory({
   personas,
   t,
   loading = false,
+  voiceIds,
 }: ShowHistoryProps) {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [playingIdx, setPlayingIdx] = useState<number | null>(null);
   const [loadingIdx, setLoadingIdx] = useState<number | null>(null);
   const [ttsCache, setTtsCache] = useState<{ [key: string]: string }>({});
   const [ttsError, setTtsError] = useState<string | null>(null); // Add error state
-  const [voiceIds, setVoiceIds] = useState<{
-    comedian1_voice_id: string;
-    comedian2_voice_id: string;
-  } | null>(null);
   const [judged, setJudged] = useState(false);
   const [winner, setWinner] = useState<string | null>(null);
   const [summary, setSummary] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetchVoiceIds().then(setVoiceIds);
-  }, []);
 
   useEffect(() => {
     setJudged(false);
@@ -108,7 +105,8 @@ export default function ShowHistory({
     );
   }
 
-  if (!history.length || !voiceIds) {
+  // Only require voiceIds if ttsMode is enabled
+  if (!history.length || (ttsMode && !voiceIds)) {
     return null;
   }
 
@@ -161,8 +159,8 @@ export default function ShowHistory({
                     : comedian2Persona;
                 const voiceId =
                   (roundIdx * bubblesPerRound + i) % 2 === 0
-                    ? voiceIds.comedian1_voice_id
-                    : voiceIds.comedian2_voice_id;
+                    ? voiceIds?.comedian1_voice_id
+                    : voiceIds?.comedian2_voice_id;
                 return (
                   <ChatBubble
                     key={i}
@@ -174,7 +172,9 @@ export default function ShowHistory({
                     bubbleColor={bubbleColor}
                     align={align}
                     ttsMode={ttsMode}
-                    onPlayTTS={(text, idx) => handlePlay(text, idx, voiceId)}
+                    onPlayTTS={(text, idx) =>
+                      handlePlay(text, idx, voiceId ?? "")
+                    }
                     playingIdx={playingIdx}
                     loadingIdx={loadingIdx}
                     audioUrl={audioUrl}

@@ -13,15 +13,18 @@ class TestAgentManager:
 
     def test_agent_manager_initialization(self):
         mock_logger = Mock()
-        manager = AgentManager(logger=mock_logger)
+        mock_resilience_service = Mock()
+        manager = AgentManager(logger=mock_logger, resilience_service=mock_resilience_service)
         assert manager is not None
         assert hasattr(manager, "logger")
+        assert hasattr(manager, "resilience_service")
         assert hasattr(manager, "comedian1_key")
         assert hasattr(manager, "comedian2_key")
 
     @patch("openai.OpenAI")
     def test_generate_show_basic(self, mock_openai):
         mock_logger = Mock()
+        mock_resilience_service = Mock()
         mock_client = Mock()
         mock_openai.return_value = mock_client
         mock_choice = Mock()
@@ -29,7 +32,7 @@ class TestAgentManager:
         mock_response = Mock()
         mock_response.choices = [mock_choice]
         mock_client.chat.completions.create.return_value = mock_response
-        manager = AgentManager(logger=mock_logger)
+        manager = AgentManager(logger=mock_logger, resilience_service=mock_resilience_service)
         request = GenerateShowRequest(
             comedian1_style="relatable",
             comedian2_style="absurd",
@@ -50,7 +53,8 @@ class TestAgentManager:
 
     def test_validate_comedians(self):
         mock_logger = Mock()
-        manager = AgentManager(logger=mock_logger)
+        mock_resilience_service = Mock()
+        manager = AgentManager(logger=mock_logger, resilience_service=mock_resilience_service)
         valid_comedians = list(COMEDIAN_PERSONAS.keys())[:2]
         assert len(valid_comedians) >= 2
         try:

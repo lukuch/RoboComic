@@ -10,14 +10,15 @@ import { AppHeader } from "./AppHeader";
 import { ErrorDisplay } from "./ErrorDisplay";
 import { useShowGeneration } from "../../hooks/useShowGeneration";
 import { useLanguage } from "../../hooks/useLanguage";
-import { useKeepAlive } from "../../hooks/useKeepAlive";
 import { DEFAULTS } from "../../constants";
 import { useState, useEffect } from "react";
-import { fetchPersonas } from "../../services/apiService";
-import { Personas } from "../../types";
+import { fetchVoiceIds, fetchPersonas } from "../../services/apiService";
 
 export default function Home() {
   const { lang, setLang } = useLanguage(DEFAULTS.LANGUAGE);
+  const [voiceIds, setVoiceIds] = useState<any>(null);
+  const [personas, setPersonas] = useState<any>(null);
+
   const {
     history,
     loading,
@@ -27,19 +28,18 @@ export default function Home() {
     comedian2,
     generateShow: handleGenerateShow,
     clearError,
-  } = useShowGeneration();
+  } = useShowGeneration(setPersonas, setVoiceIds);
 
-  // Keep backend alive on Render.com free tier
-  useKeepAlive();
-
-  const t: TranslationStrings = TRANSLATIONS[lang as "en" | "pl"];
-
-  const [personas, setPersonas] = useState<Personas | null>(null);
   useEffect(() => {
+    fetchVoiceIds()
+      .then(setVoiceIds)
+      .catch(() => {});
     fetchPersonas()
       .then(setPersonas)
-      .catch(() => setPersonas(null));
+      .catch(() => {});
   }, []);
+
+  const t: TranslationStrings = TRANSLATIONS[lang as "en" | "pl"];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-purple-100 dark:from-gray-950 dark:via-gray-900 dark:to-blue-950 flex flex-col items-center py-12 px-2">
@@ -62,6 +62,7 @@ export default function Home() {
         personas={personas}
         t={t}
         loading={loading}
+        voiceIds={voiceIds}
       />
     </div>
   );

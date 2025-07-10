@@ -9,6 +9,7 @@ import structlog
 
 import models
 from services.llm_service import LLMService
+from utils.resilience import ResilienceService
 
 from .tts_service import TTSService
 
@@ -18,9 +19,10 @@ os.environ["SUNO_USE_SMALL_MODELS"] = "True"
 
 class BarkTTSService(TTSService):
     @injector.inject
-    def __init__(self, logger: structlog.BoundLogger, llm_service: LLMService):
+    def __init__(self, logger: structlog.BoundLogger, llm_service: LLMService, resilience_service: ResilienceService):
         self.logger = logger
         self.llm_service = llm_service
+        self.resilience_service = resilience_service
         self.prompt_index = 0
 
     def speak(self, text: str, lang: str = models.Language.ENGLISH) -> Tuple[np.ndarray, int]:
@@ -29,8 +31,13 @@ class BarkTTSService(TTSService):
         # Alternate gender for each call
         gender = "MAN" if self.prompt_index == 0 else "WOMAN"
         self.prompt_index = (self.prompt_index + 1) % 2
-        # Comedianify the text using the LLM
-        comedianified_text = self.llm_service.comedianify_text(text, gender=gender, lang=lang)
-        self.logger.debug(f"Comedianified text: {comedianified_text}")
-        audio_array = generate_audio(comedianified_text)
-        return audio_array, SAMPLE_RATE
+
+        @self.resilience_service.resilient_llm_call()
+        def _process_text():
+            # Comedianify the text using the LLM
+            comedianified_text = self.llm_service.comedianify_text(text, gender=gender, lang=lang)
+            self.logger.debug(f"Comedianified text: {comedianified_text}")
+            audio_array = generate_audio(comedianified_text)
+            return audio_array, SAMPLE_RATE
+
+        return _process_text()

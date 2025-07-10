@@ -1,9 +1,17 @@
 import { useState } from "react";
-import { generateShow } from "../services/apiService";
+import {
+  generateShow,
+  healthCheck,
+  fetchPersonas,
+  fetchVoiceIds,
+} from "../services/apiService";
 import { ChatMessage, ShowFormParams, ApiError } from "../types";
 import { DEFAULTS, ERROR_MESSAGES, MODES } from "../constants";
 
-export function useShowGeneration() {
+export function useShowGeneration(
+  setPersonas?: (p: any) => void,
+  setVoiceIds?: (v: any) => void,
+) {
   const [history, setHistory] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -17,6 +25,29 @@ export function useShowGeneration() {
     setTtsMode(params.tts_mode);
     setComedian1(params.comedian1_style);
     setComedian2(params.comedian2_style);
+
+    // Lazy fetch personas/voiceIds if missing
+    if (setPersonas) {
+      try {
+        setPersonas(await fetchPersonas());
+      } catch {}
+    }
+    if (setVoiceIds) {
+      try {
+        setVoiceIds(await fetchVoiceIds());
+      } catch {}
+    }
+
+    // Quick health check before actual request
+    const healthy = await healthCheck();
+    if (!healthy) {
+      setError(
+        "The backend is currently unavailable. Please try again in a moment.",
+      );
+      setLoading(false);
+      return;
+    }
+
     try {
       const data = await generateShow({
         comedian1_style: params.comedian1_style,

@@ -8,12 +8,21 @@ from agents.comedian_agent import ComedianAgent
 from config import settings
 from models import Language, Mode
 from services.prompt_templates import COMEDIAN_PROMPT_TEMPLATE
+from utils.resilience import ResilienceService
 
 
 class AgentManager:
     @injector.inject
-    def __init__(self, logger: structlog.BoundLogger, comedian1_key="sarcastic", comedian2_key="absurd", lang="en"):
+    def __init__(
+        self,
+        logger: structlog.BoundLogger,
+        resilience_service: ResilienceService,
+        comedian1_key="sarcastic",
+        comedian2_key="absurd",
+        lang="en",
+    ):
         self.logger = logger
+        self.resilience_service = resilience_service
         self.comedian1_key = comedian1_key
         self.comedian2_key = comedian2_key
         self.lang = lang
@@ -71,18 +80,34 @@ class AgentManager:
         ]
         initial_prompt = self._format_initial_prompt(mode, topic, lang, context)
         group_chat = GroupChat(agents=agents, messages=[], max_round=max_rounds * 4, speaker_selection_method="round_robin")
+
         manager = GroupChatManager(
             groupchat=group_chat,
             llm_config={"config_list": [{"model": settings.LLM_MODEL, "api_key": settings.OPENAI_API_KEY}]},
         )
-        chat_result = manager.initiate_chat(
-            self.comedian1.agent, message=initial_prompt, max_turns=max_rounds * 4, summary_method="last_msg"
-        )
-        duel_history = []
-        for msg in chat_result.chat_history:
-            role = msg.get("name") or msg.get("role")
-            content = msg["content"]
-            duel_history.append({"role": role, "content": content})
-        self.history = duel_history
-        self.logger.info(f"Duel completed: {len(duel_history)} messages generated")
-        return self.history
+
+        # Use resilience at conversation level with better error handling
+        @self.resilience_service.resilient_llm_call()
+        def _run_chat():
+            chat_result = manager.initiate_chat(
+                self.comedian1.agent, message=initial_prompt, max_turns=max_rounds * 4, summary_method="last_msg"
+            )
+            duel_history = []
+            for msg in chat_result.chat_history:
+                role = msg.get("name") or msg.get("role")
+                content = msg["content"]
+                duel_history.append({"role": role, "content": content})
+            return duel_history
+
+        try:
+            self.history = _run_chat()
+            self.logger.info(f"Duel completed: {len(self.history)} messages generated")
+            return self.history
+        except Exception as e:
+            self.logger.error(f"Error running duel after retries: {e}")
+            # Return a minimal conversation to prevent frontend issues
+            return [
+                {"role": "system", "content": "Conversation failed to generate properly."},
+                {"role": "Comedian_1", "content": "Sorry, I'm having technical difficulties right now."},
+                {"role": "Comedian_2", "content": "Yeah, let's try again later!"},
+            ]

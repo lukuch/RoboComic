@@ -30,13 +30,15 @@ class ComedianAgent:
 
         temp = temperature if temperature is not None else settings.DEFAULT_TEMPERATURE
 
+        llm_config = {
+            "config_list": [{"model": settings.LLM_MODEL, "api_key": settings.OPENAI_API_KEY}],
+            "temperature": temp,
+        }
+
         self.agent = ConversableAgent(
             name=display_name,
             system_message=f"You are {display_name}, a {self.style} comedian. {description}",
-            llm_config={
-                "config_list": [{"model": settings.LLM_MODEL, "api_key": settings.OPENAI_API_KEY}],
-                "temperature": temp,
-            },
+            llm_config=llm_config,
             human_input_mode="NEVER",
         )
 

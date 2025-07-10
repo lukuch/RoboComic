@@ -7,6 +7,7 @@ from services.api_service import ApiService
 from tts.eleven_tts_service import ElevenTTSService
 from tts.tts_service import TTSService
 from utils.logger import setup_logger
+from utils.resilience import ResilienceService
 
 
 class AppContainer(injector.Module):
@@ -20,6 +21,7 @@ class AppContainer(injector.Module):
         binder.bind(AgentManager, to=AgentManager, scope=injector.SingletonScope)
         binder.bind(TTSService, to=ElevenTTSService, scope=injector.SingletonScope)
         binder.bind(ApiService, to=ApiService, scope=injector.SingletonScope)
+        binder.bind(ResilienceService, to=ResilienceService, scope=injector.SingletonScope)
 
         # Only bind UIService if streamlit is available (for local development)
         try:

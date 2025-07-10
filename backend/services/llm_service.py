@@ -2,6 +2,8 @@
 
 import re
 
+import injector
+import structlog
 from langchain.output_parsers import ResponseSchema, StructuredOutputParser
 from langchain.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableLambda, RunnablePassthrough
@@ -10,13 +12,14 @@ from langchain_openai import ChatOpenAI
 from config import settings
 from models import Language
 from services.prompt_templates import COMEDIANIFY_PROMPT, JUDGING_PROMPT, RESPONSE_SCHEMA_DESCRIPTIONS, TOPIC_CONTEXT_PROMPT
-from utils.logger import get_logger
-
-logger = get_logger(__name__)
+from utils.resilience import ResilienceService
 
 
 class LLMService:
-    def __init__(self):
+    @injector.inject
+    def __init__(self, logger: structlog.BoundLogger, resilience_service: ResilienceService):
+        self.logger = logger
+        self.resilience_service = resilience_service
         self.llm = ChatOpenAI(
             openai_api_key=settings.OPENAI_API_KEY,
             model=settings.LLM_MODEL,
@@ -26,27 +29,37 @@ class LLMService:
     def generate_topic_context(self, topic: str, lang: str = Language.ENGLISH) -> str:
         if not topic:
             return ""
-        prompt = ChatPromptTemplate.from_template(TOPIC_CONTEXT_PROMPT[lang])
-        chain = RunnablePassthrough() | prompt | self.llm | RunnableLambda(lambda x: x.content)
-        try:
+
+        @self.resilience_service.resilient_llm_call()
+        def _generate_context():
+            prompt = ChatPromptTemplate.from_template(TOPIC_CONTEXT_PROMPT[lang])
+            chain = RunnablePassthrough() | prompt | self.llm | RunnableLambda(lambda x: x.content)
             response = chain.invoke({"topic": topic})
             context = response.strip()
             context = re.sub(r"(?<!\d)\. ", ".\n", context)
             return f"\n{context}\n"
+
+        try:
+            return _generate_context()
         except Exception as e:
-            logger.error(f"Error generating topic context: {e}")
+            self.logger.error(f"Error generating topic context: {e}")
             return ""
 
     def comedianify_text(self, text: str, gender: str = "MAN", lang: str = Language.ENGLISH) -> str:
         if not text:
             return ""
-        prompt = ChatPromptTemplate.from_template(COMEDIANIFY_PROMPT[lang])
-        chain = RunnablePassthrough() | prompt | self.llm | RunnableLambda(lambda x: x.content)
-        try:
+
+        @self.resilience_service.resilient_llm_call()
+        def _comedianify():
+            prompt = ChatPromptTemplate.from_template(COMEDIANIFY_PROMPT[lang])
+            chain = RunnablePassthrough() | prompt | self.llm | RunnableLambda(lambda x: x.content)
             response = chain.invoke({"text": text, "gender": gender})
             return response.strip()
+
+        try:
+            return _comedianify()
         except Exception as e:
-            logger.error(f"Error comedianifying text: {e}")
+            self.logger.error(f"Error comedianifying text: {e}")
             return text
 
     def judge_show(
@@ -73,7 +86,9 @@ class LLMService:
             | RunnableLambda(lambda x: x.content)
             | output_parser
         )
-        try:
+
+        @self.resilience_service.resilient_llm_call()
+        def _judge():
             result = chain.invoke(
                 {
                     "comedian1_name": comedian1_name,
@@ -81,6 +96,9 @@ class LLMService:
                 }
             )
             return result["winner"], result["summary"]
+
+        try:
+            return _judge()
         except Exception as e:
-            logger.error(f"Error judging show: {e}")
+            self.logger.error(f"Error judging show: {e}")
             return comedian1_name, f"{comedian1_name} wins by default (LLM error)."

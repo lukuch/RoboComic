@@ -8,6 +8,7 @@ from .exceptions import (
     ValidationException,
 )
 from .logger import get_logger, setup_logger
+from .resilience import ResilienceService
 
 __all__ = [
     "setup_logger",
@@ -21,4 +22,5 @@ __all__ = [
     "validation_exception_handler",
     "robocomic_exception_handler",
     "general_exception_handler",
+    "ResilienceService",
 ]
