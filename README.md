@@ -1,7 +1,7 @@
 # <img src="frontend/public/icon-192x192.png" alt="RoboComic Icon" width="32" style="vertical-align:middle;"/> RoboComic
 
 RoboComic is an AI-powered standup comedy duel app where virtual comedians battle it out with jokes, roasts, and text-to-speech performances. Users can generate comedy duels and listen to jokes.<br><br>
-![Live](https://img.shields.io/badge/Live-Demo-green?link=https://robo-comic.vercel.app)
+[![Click Here](https://img.shields.io/badge/Click%20Here-Live%20Demo-green?style=for-the-badge)](https://robo-comic.vercel.app)<br><br>
 ![Build Status](https://img.shields.io/github/actions/workflow/status/lukuch/RoboComic/ci.yml?branch=main)
 ![Last Commit](https://img.shields.io/github/last-commit/lukuch/RoboComic)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)  
