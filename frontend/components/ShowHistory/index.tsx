@@ -48,7 +48,7 @@ export default function ShowHistory({
   const [playingIdx, setPlayingIdx] = useState<number | null>(null);
   const [loadingIdx, setLoadingIdx] = useState<number | null>(null);
   const [ttsCache, setTtsCache] = useState<{ [key: string]: string }>({});
-  const [ttsError, setTtsError] = useState<string | null>(null); // Add error state
+  const [ttsError, setTtsError] = useState<string | null>(null);
   const [judged, setJudged] = useState(false);
   const [winner, setWinner] = useState<string | null>(null);
   const [summary, setSummary] = useState<string | null>(null);
@@ -78,8 +78,8 @@ export default function ShowHistory({
       setTtsCache((prev) => ({ ...prev, [cacheKey]: url }));
       setAudioUrl(url);
       setPlayingIdx(idx);
-    } catch (error: any) {
-      if (error?.status === 429) {
+    } catch (error: unknown) {
+      if ((error as { status?: number }).status === 429) {
         setTtsError(
           "You have reached the TTS usage limit. Please wait before trying again.",
         );

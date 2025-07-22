@@ -7,12 +7,17 @@ interface WinnerSummaryProps {
   winner: string;
   summary: string;
   t: TranslationStrings;
+  personas?: Record<
+    string,
+    { description: string; description_pl: string }
+  > | null;
 }
 
 export default function WinnerSummary({
   winner,
   summary,
   t,
+  personas,
 }: WinnerSummaryProps) {
   const [showConfetti, setShowConfetti] = useState(true);
   const [windowSize, setWindowSize] = useState<{
@@ -22,16 +27,19 @@ export default function WinnerSummary({
 
   useEffect(() => {
     setShowConfetti(true);
-    const timer = setTimeout(() => setShowConfetti(false), 7000); // 7 seconds
+    const timer = setTimeout(() => setShowConfetti(false), 7000);
     if (typeof window !== "undefined") {
       setWindowSize({ width: window.innerWidth, height: window.innerHeight });
     }
     return () => clearTimeout(timer);
   }, [winner]);
 
-  const formattedWinner = toTitleCase(winner.replace(/_/g, " "));
+  const displayWinner =
+    personas && personas[winner]?.description
+      ? personas[winner].description
+      : toTitleCase(winner.replace(/_/g, " "));
   const winnerRegex = new RegExp(winner.replace(/_/g, "[_ ]"), "gi");
-  const formattedSummary = summary.replace(winnerRegex, formattedWinner);
+  const formattedSummary = summary.replace(winnerRegex, displayWinner);
 
   return (
     <div
@@ -65,7 +73,7 @@ export default function WinnerSummary({
           <span role="img" aria-label="trophy">
             🏆
           </span>
-          <span className="winner-glow">{formattedWinner}</span>
+          <span className="winner-glow">{displayWinner}</span>
           <span role="img" aria-label="trophy">
             🏆
           </span>

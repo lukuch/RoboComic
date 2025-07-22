@@ -3,7 +3,7 @@
 import ShowForm from "../../components/ShowForm/index";
 import ShowHistory from "../../components/ShowHistory/index";
 import { TRANSLATIONS } from "./translations";
-import type { TranslationStrings } from "../../types";
+import type { TranslationStrings, Personas } from "../../types";
 import { LanguageSelector } from "./LanguageSelector";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { AppHeader } from "./AppHeader";
@@ -16,8 +16,11 @@ import { fetchVoiceIds, fetchPersonas } from "../../services/apiService";
 
 export default function Home() {
   const { lang, setLang } = useLanguage(DEFAULTS.LANGUAGE);
-  const [voiceIds, setVoiceIds] = useState<any>(null);
-  const [personas, setPersonas] = useState<any>(null);
+  const [voiceIds, setVoiceIds] = useState<{
+    comedian1_voice_id: string;
+    comedian2_voice_id: string;
+  } | null>(null);
+  const [personas, setPersonas] = useState<Personas | null>(null);
 
   const {
     history,

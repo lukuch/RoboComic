@@ -16,6 +16,10 @@ interface JudgingSectionProps {
   setSummary: (v: string) => void;
   lang: string;
   t: TranslationStrings;
+  personas?: Record<
+    string,
+    { description: string; description_pl: string }
+  > | null;
 }
 
 export default function JudgingSection({
@@ -30,6 +34,7 @@ export default function JudgingSection({
   setSummary,
   lang,
   t,
+  personas,
 }: JudgingSectionProps) {
   const [judging, setJudging] = useState(false);
   const [triggered, setTriggered] = useState(false);
@@ -70,7 +75,14 @@ export default function JudgingSection({
   const showWinnerSummary = winner && summary;
 
   if (judged && showWinnerSummary) {
-    return <WinnerSummary winner={winner} summary={summary} t={t} />;
+    return (
+      <WinnerSummary
+        winner={winner}
+        summary={summary}
+        t={t}
+        personas={personas}
+      />
+    );
   }
 
   if (!triggered && !judged) {
@@ -99,7 +111,14 @@ export default function JudgingSection({
     );
   }
   if (showWinnerSummary) {
-    return <WinnerSummary winner={winner} summary={summary} t={t} />;
+    return (
+      <WinnerSummary
+        winner={winner}
+        summary={summary}
+        t={t}
+        personas={personas}
+      />
+    );
   }
   return null;
 }

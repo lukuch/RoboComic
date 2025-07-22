@@ -15,11 +15,10 @@ export function SubmitButton({
     <button
       type="submit"
       data-testid="submit-button"
-      className="relative bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 text-white py-3 px-6 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center gap-3 focus:outline-none hover:scale-105 active:scale-95 overflow-hidden transition-all duration-200 group"
+      className="relative bg-gradient-to-r from-blue-800 via-blue-700 to-blue-600 text-white py-3 px-6 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center gap-3 focus:outline-none hover:scale-105 active:scale-95 overflow-hidden transition-all duration-200 group"
       disabled={loading}
     >
-      {/* Animated shimmer gradient overlay */}
-      <span className="absolute inset-0 rounded-xl pointer-events-none group-hover:before:opacity-100 before:opacity-0 before:transition-opacity before:duration-500 before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:blur-sm before:animate-shimmer" />
+      <span className="absolute inset-0 rounded-xl pointer-events-none before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:blur before:animate-shimmer-mid" />
       {loading ? (
         <span className="flex items-center gap-2 z-10">
           <svg
@@ -53,16 +52,21 @@ export function SubmitButton({
         </>
       )}
       <style>{`
-        @keyframes shimmer {
+        @keyframes shimmer-mid {
           0% {
             transform: translateX(-100%);
+            opacity: 0.45;
+          }
+          50% {
+            opacity: 0.7;
           }
           100% {
             transform: translateX(100%);
+            opacity: 0.45;
           }
         }
-        .before\:animate-shimmer::before {
-          animation: shimmer 1.5s linear infinite;
+        .before\\:animate-shimmer-mid::before {
+          animation: shimmer-mid 4s linear infinite;
         }
       `}</style>
     </button>
