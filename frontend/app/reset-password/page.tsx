@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { supabase } from "../../lib/supabaseClient";
+import { supabase } from "../../utils/supabaseClient";
 import Image from "next/image";
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 
