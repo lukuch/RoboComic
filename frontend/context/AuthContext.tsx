@@ -49,8 +49,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
+  const getRedirectTo = (path = "/") =>
+    typeof window !== "undefined"
+      ? `${window.location.origin}${path}`
+      : `https://robo-comic.vercel.app${path}`; // fallback for SSR
+
   const signUp = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo: getRedirectTo("/") },
+    });
     return { error: error?.message ?? null };
   };
 
@@ -63,7 +72,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signInWithGoogle = async () => {
-    await supabase.auth.signInWithOAuth({ provider: "google" });
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: getRedirectTo("/") },
+    });
   };
 
   const signOut = async () => {
@@ -71,12 +83,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const resetPassword = async (email: string) => {
-    const baseUrl =
-      typeof window !== "undefined"
-        ? window.location.origin
-        : "http://localhost:3000";
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${baseUrl}/reset-password`,
+      redirectTo: getRedirectTo("/reset-password"),
     });
     return { error: error?.message ?? null };
   };
