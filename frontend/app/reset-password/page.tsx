@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "../../utils/supabaseClient";
@@ -11,7 +12,7 @@ function getTokenFromHash(hash: string, key: string) {
   return params.get(key);
 }
 
-export default function ResetPasswordPage() {
+function ResetPasswordPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [accessToken, setAccessToken] = useState<string | null>(null);
@@ -227,5 +228,13 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResetPasswordPageInner />
+    </Suspense>
   );
 }
