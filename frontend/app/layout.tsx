@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "../context/AuthContext";
-import Footer from "./Home/Footer";
 
 export const metadata: Metadata = {
   title: "RoboComic",
@@ -34,7 +33,6 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col bg-gradient-to-br from-gray-100 via-blue-50 to-purple-100 dark:from-gray-950 dark:via-gray-900 dark:to-blue-950">
         <AuthProvider>
           <div className="flex-1 flex flex-col">{children}</div>
-          <Footer />
         </AuthProvider>
       </body>
     </html>

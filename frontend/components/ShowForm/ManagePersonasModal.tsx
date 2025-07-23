@@ -1,4 +1,10 @@
-import { Dialog, Transition } from "@headlessui/react";
+import {
+  Dialog,
+  DialogTitle,
+  DialogPanel,
+  Transition,
+  TransitionChild,
+} from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 import { supabase } from "../../utils/supabaseClient";
 import { useAuth } from "../../context/AuthContext";
@@ -116,7 +122,7 @@ export default function ManagePersonasModal({
         <div className="fixed inset-0 bg-black bg-opacity-70" />
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4">
-            <Transition.Child
+            <TransitionChild
               as={Fragment}
               enter="ease-out duration-300"
               enterFrom="opacity-0 scale-95"
@@ -125,15 +131,14 @@ export default function ManagePersonasModal({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900/95 border border-blue-700 p-10 text-left align-middle shadow-2xl transition-all">
-                <Dialog.Title
+              <DialogPanel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900/95 border border-blue-700 p-10 text-left align-middle shadow-2xl transition-all">
+                <DialogTitle
                   as="h3"
                   className="text-2xl font-bold leading-6 text-gray-900 dark:text-white mb-8 text-center flex items-center justify-center gap-3"
                 >
                   <FiUsers className="w-7 h-7 text-blue-400" />
                   {t.managePersonas}
-                </Dialog.Title>
-                {/* Close X icon in top-right */}
+                </DialogTitle>
                 <button
                   type="button"
                   onClick={onClose}
@@ -227,8 +232,8 @@ export default function ManagePersonasModal({
                     )}
                   </div>
                 </div>
-              </Dialog.Panel>
-            </Transition.Child>
+              </DialogPanel>
+            </TransitionChild>
           </div>
         </div>
       </Dialog>

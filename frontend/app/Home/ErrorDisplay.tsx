@@ -108,7 +108,6 @@ export function ErrorDisplay({ error, onDismiss }: ErrorDisplayProps) {
             </div>
           )}
         </div>
-        {/* Progress bar */}
         <div className="h-1 w-full bg-red-100 dark:bg-red-800">
           <div
             className="h-1 bg-red-400 dark:bg-red-500 transition-all duration-100 linear"

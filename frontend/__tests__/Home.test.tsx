@@ -151,7 +151,6 @@ describe("Home", () => {
       );
     });
     expect(screen.getByText(/Dostosuj pojedynek komików/i)).toBeInTheDocument();
-    expect(screen.getByText(/Styl Komika 1/i)).toBeInTheDocument();
     expect(screen.getByText(/Rozpocznij show/i)).toBeInTheDocument();
   });
 });

@@ -56,7 +56,6 @@ export function ManagerBubble({ message }: ManagerBubbleProps) {
               ${showManagerMsg ? "" : "hidden"}`}
             style={{ minWidth: "16rem", bottom: "calc(100% + 4.2rem)" }}
           >
-            {/* Arrow */}
             <div className="absolute bottom-[-14px] left-1/2 -translate-x-1/2">
               <svg
                 width="28"

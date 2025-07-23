@@ -67,12 +67,8 @@ export function ChatBubble({
     }
   }, [showPopup]);
 
-  // Helper to strip leading/trailing quotes
   function stripQuotes(text: string) {
-    if (text.length > 1 && text.startsWith('"') && text.endsWith('"')) {
-      return text.slice(1, -1);
-    }
-    return text;
+    return text.replace(/^[„"']+|[”"']+$/g, "");
   }
 
   return (
@@ -102,7 +98,6 @@ export function ChatBubble({
                         : "left-1/2 -translate-x-1/2"
                   }`}
                 >
-                  {/* Arrow */}
                   <div
                     className={`absolute bottom-[-14px] ${
                       popupPosition === "left"

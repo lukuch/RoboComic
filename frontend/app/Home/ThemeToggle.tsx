@@ -11,9 +11,7 @@ export function ThemeToggle() {
       style={{ width: "90px", height: "40px" }}
     >
       <div className="relative w-16 h-7 flex items-center">
-        {/* Track */}
         <div className="absolute inset-0 rounded-full bg-gray-200 dark:bg-gray-700 transition-colors" />
-        {/* Knob */}
         <span
           className={`absolute top-0 left-0 w-7 h-7 rounded-full transition-transform duration-300 flex items-center justify-center shadow-md bg-white dark:bg-gray-900 ${theme === "dark" ? "translate-x-9" : "translate-x-0"}`}
           style={{ top: 0 }}

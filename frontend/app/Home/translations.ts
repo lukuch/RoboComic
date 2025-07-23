@@ -75,6 +75,11 @@ export const TRANSLATIONS = {
     or: "or",
     loginButton: "Login",
     logoutButton: "Logout",
+    showHistory: "Show History",
+    noShowsYet: "No shows yet.",
+    backToCurrentSession: "Back to current session",
+    endOfHistory: "You have reached the end of your show history.",
+    guest: "Guest",
   },
   pl: {
     customize: "Dostosuj pojedynek komików",
@@ -153,6 +158,11 @@ export const TRANSLATIONS = {
     or: "lub",
     loginButton: "Zaloguj się",
     logoutButton: "Wyloguj się",
+    showHistory: "Historia show",
+    noShowsYet: "Brak show.",
+    backToCurrentSession: "Powrót do bieżącej sesji",
+    endOfHistory: "To już cała historia twoich show.",
+    guest: "Gość",
   },
 } as const;
 

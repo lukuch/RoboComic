@@ -8,6 +8,14 @@ import {
 import type { Personas, Persona } from "../types";
 import { ChatMessage, ShowFormParams, ApiError } from "../types";
 import { ERROR_MESSAGES, MODES } from "../constants";
+import { supabase } from "../utils/supabaseClient";
+import { useAuth } from "../context/AuthContext";
+import { toTitleCase } from "../utils/stringUtils";
+
+function formatDateForTitle(date: Date) {
+  const pad = (n: number) => n.toString().padStart(2, "0");
+  return `${pad(date.getHours())}:${pad(date.getMinutes())} ${pad(date.getDate())}.${pad(date.getMonth() + 1)}.${date.getFullYear()}`;
+}
 
 export function useShowGeneration(
   setPersonas?: (p: Personas) => void,
@@ -19,6 +27,7 @@ export function useShowGeneration(
   const [ttsMode, setTtsMode] = useState(false);
   const [comedian1, setComedian1] = useState<Persona | null>(null);
   const [comedian2, setComedian2] = useState<Persona | null>(null);
+  const { user } = useAuth();
 
   const generateShowHandler = async (params: ShowFormParams) => {
     setLoading(true);
@@ -61,6 +70,23 @@ export function useShowGeneration(
         temperature: params.temperature,
       });
       setHistory(data.history);
+
+      // Save to Supabase if user is logged in
+      if (user && data.history && data.history.length > 0) {
+        const showTitle = `${toTitleCase(params.comedian1_persona.name)} vs. ${toTitleCase(params.comedian2_persona.name)} - ${formatDateForTitle(new Date())}`;
+        try {
+          await supabase.from("shows").insert([
+            {
+              user_id: user.id,
+              title: showTitle,
+              data: JSON.stringify({ history: data.history, params }),
+            },
+          ]);
+        } catch (e) {
+          // Optionally handle/log error
+          console.error("Failed to save show to Supabase", e);
+        }
+      }
     } catch (e: unknown) {
       const error = e as ApiError;
       setError(error.message || ERROR_MESSAGES.GENERATE_SHOW_FAILED);

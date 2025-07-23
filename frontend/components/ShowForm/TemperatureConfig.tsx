@@ -137,7 +137,6 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
 
       {isOpen && (
         <div className="mt-4 space-y-6">
-          {/* Current Temperature Display */}
           <div className="text-center">
             <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
               {temperature}
@@ -149,7 +148,6 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
             </div>
           </div>
 
-          {/* Temperature Slider */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               {t.adjustCreativity}
@@ -169,7 +167,6 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
             </div>
           </div>
 
-          {/* Presets */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
               {t.quickPresets}
@@ -208,7 +205,6 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
             </div>
           </div>
 
-          {/* Help Text */}
           <div className="text-xs text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700">
             {t.temperatureHelp}
           </div>
