@@ -42,19 +42,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event: AuthChangeEvent, session: Session | null) => {
         setUser(session?.user ?? null);
+        // Clean up access_token and refresh_token from URL hash if present (after Supabase processes it)
+        if (
+          typeof window !== "undefined" &&
+          window.location.hash.includes("access_token")
+        ) {
+          window.history.replaceState(
+            null,
+            "",
+            window.location.pathname + window.location.search,
+          );
+        }
       },
     );
-    // Clean up access_token and refresh_token from URL hash if present
-    if (
-      typeof window !== "undefined" &&
-      window.location.hash.includes("access_token")
-    ) {
-      window.history.replaceState(
-        null,
-        "",
-        window.location.pathname + window.location.search,
-      );
-    }
     return () => {
       listener.subscription.unsubscribe();
     };
