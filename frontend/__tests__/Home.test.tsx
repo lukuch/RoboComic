@@ -4,6 +4,7 @@ import "@testing-library/jest-dom";
 import Home from "../app/Home/index";
 import { act } from "react";
 import { AuthProvider } from "../context/AuthContext";
+import { TRANSLATIONS } from "../app/Home/translations";
 
 let mockUseShowGeneration: any = () => ({
   history: [],
@@ -57,7 +58,11 @@ describe("Home", () => {
     await act(async () => {
       render(
         <AuthProvider>
-          <Home />
+          <Home
+            lang={mockLang}
+            setLang={jest.fn()}
+            t={TRANSLATIONS[mockLang as "en" | "pl"]}
+          />
         </AuthProvider>,
       );
     });
@@ -85,7 +90,11 @@ describe("Home", () => {
     await act(async () => {
       render(
         <AuthProvider>
-          <Home />
+          <Home
+            lang={mockLang}
+            setLang={jest.fn()}
+            t={TRANSLATIONS[mockLang as "en" | "pl"]}
+          />
         </AuthProvider>,
       );
     });
@@ -107,7 +116,11 @@ describe("Home", () => {
     await act(async () => {
       render(
         <AuthProvider>
-          <Home />
+          <Home
+            lang={mockLang}
+            setLang={jest.fn()}
+            t={TRANSLATIONS[mockLang as "en" | "pl"]}
+          />
         </AuthProvider>,
       );
     });
@@ -129,7 +142,11 @@ describe("Home", () => {
     await act(async () => {
       render(
         <AuthProvider>
-          <Home />
+          <Home
+            lang={mockLang}
+            setLang={jest.fn()}
+            t={TRANSLATIONS[mockLang as "en" | "pl"]}
+          />
         </AuthProvider>,
       );
     });

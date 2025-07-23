@@ -125,10 +125,10 @@ export default function ManagePersonasModal({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-gray-900/95 border border-blue-700 p-10 text-left align-middle shadow-2xl transition-all">
+              <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900/95 border border-blue-700 p-10 text-left align-middle shadow-2xl transition-all">
                 <Dialog.Title
                   as="h3"
-                  className="text-2xl font-bold leading-6 text-white mb-8 text-center flex items-center justify-center gap-3"
+                  className="text-2xl font-bold leading-6 text-gray-900 dark:text-white mb-8 text-center flex items-center justify-center gap-3"
                 >
                   <FiUsers className="w-7 h-7 text-blue-400" />
                   {t.managePersonas}
@@ -146,14 +146,16 @@ export default function ManagePersonasModal({
                   {personas.map((p) => (
                     <div
                       key={p.id}
-                      className="flex items-center justify-between border-b border-gray-700 pb-2"
+                      className="flex items-center justify-between border-b border-gray-300 dark:border-gray-700 pb-2"
                     >
                       <div>
-                        <div className="font-semibold text-white">{p.name}</div>
-                        <div className="text-xs text-gray-400">
+                        <div className="font-semibold text-gray-900 dark:text-white">
+                          {p.name}
+                        </div>
+                        <div className="text-xs text-gray-600 dark:text-gray-400">
                           {p.description}
                         </div>
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
                           {p.description_pl}
                         </div>
                       </div>
@@ -180,7 +182,7 @@ export default function ManagePersonasModal({
                 </div>
                 <div className="mt-8 flex flex-col space-y-5">
                   <input
-                    className="w-full p-3 rounded-xl bg-gray-800 text-white placeholder-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder={t.name}
                     value={form.name}
                     onChange={(e) =>
@@ -189,7 +191,7 @@ export default function ManagePersonasModal({
                     disabled={loading}
                   />
                   <textarea
-                    className="w-full p-3 rounded-xl bg-gray-800 text-white placeholder-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y min-h-[60px]"
+                    className="w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y min-h-[60px]"
                     placeholder={t.descriptionEn}
                     value={form.description}
                     onChange={(e) =>
@@ -198,7 +200,7 @@ export default function ManagePersonasModal({
                     disabled={loading}
                   />
                   <textarea
-                    className="w-full p-3 rounded-xl bg-gray-800 text-white placeholder-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y min-h-[60px]"
+                    className="w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y min-h-[60px]"
                     placeholder={t.descriptionPl}
                     value={form.description_pl}
                     onChange={(e) =>
@@ -216,7 +218,7 @@ export default function ManagePersonasModal({
                     </button>
                     {editing && (
                       <button
-                        className="flex-1 bg-gray-700 text-white font-bold py-2 rounded-xl shadow hover:bg-gray-600 transition"
+                        className="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-bold py-2 rounded-xl shadow hover:bg-gray-300 dark:hover:bg-gray-600 transition"
                         onClick={cancelEdit}
                         disabled={loading}
                       >

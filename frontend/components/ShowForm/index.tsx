@@ -11,6 +11,7 @@ import { useAuth } from "../../context/AuthContext";
 import ManagePersonasModal from "./ManagePersonasModal";
 import { FiUsers } from "react-icons/fi";
 import type { Persona } from "../../types";
+import { usePersonaSelection } from "../../hooks/usePersonaSelection";
 
 interface ShowFormProps {
   onSubmit: (params: {
@@ -43,8 +44,8 @@ export default function ShowForm({
   personasError,
   refetchPersonas,
 }: ShowFormProps) {
-  const [comedian1, setComedian1] = useState<string>(DEFAULTS.COMEDIAN1);
-  const [comedian2, setComedian2] = useState<string>(DEFAULTS.COMEDIAN2);
+  const { comedian1, setComedian1, comedian2, setComedian2 } =
+    usePersonaSelection(personas, DEFAULTS.COMEDIAN1, DEFAULTS.COMEDIAN2);
   const [topic, setTopic] = useState("");
   const [numRounds, setNumRounds] = useState<number>(DEFAULTS.NUM_ROUNDS);
   const [roastMode, setRoastMode] = useState<boolean>(DEFAULTS.ROAST_MODE);

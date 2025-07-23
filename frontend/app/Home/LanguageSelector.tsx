@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import CountryFlag from "react-country-flag";
 import { LANGUAGES } from "./translations";
 
@@ -13,12 +13,34 @@ export function LanguageSelector({
 }: LanguageSelectorProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const currentLanguage = LANGUAGES.find((l) => l.code === currentLang)!;
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!dropdownOpen) {
+      return;
+    }
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownOpen]);
 
   return (
-    <div className="w-full max-w-2xl flex justify-end mb-6 relative z-10">
+    <div
+      className="w-full max-w-2xl flex justify-end mb-6 relative z-10 gap-4"
+      ref={dropdownRef}
+    >
       <div className="relative">
         <button
-          className="flex items-center gap-2 pl-4 pr-6 py-2 rounded-full bg-white/30 dark:bg-gray-800/60 shadow-md border-none focus:ring-2 focus:ring-blue-400 text-sm font-semibold transition hover:bg-white/50 dark:hover:bg-gray-700/80 outline-none min-w-[110px]"
+          className="flex items-center gap-2 pl-4 pr-6 py-2 rounded-full bg-white/30 dark:bg-gray-800/60 shadow-md border-none focus:ring-2 focus:ring-blue-400 text-sm font-semibold transition hover:bg-white/50 dark:hover:bg-gray-700/80 outline-none min-w-[110px] text-gray-800 dark:text-gray-100"
           onClick={() => setDropdownOpen((v) => !v)}
           type="button"
         >
@@ -47,7 +69,7 @@ export function LanguageSelector({
             {LANGUAGES.map((l) => (
               <button
                 key={l.code}
-                className={`flex items-center gap-2 w-full px-4 py-2 text-left hover:bg-blue-100 dark:hover:bg-blue-900 transition ${currentLang === l.code ? "font-bold" : ""}`}
+                className={`flex items-center gap-2 w-full px-4 py-2 text-left hover:bg-blue-100 dark:hover:bg-blue-900 transition ${currentLang === l.code ? "font-bold" : ""} text-gray-800 dark:text-gray-100`}
                 onClick={() => {
                   onLanguageChange(l.code);
                   setDropdownOpen(false);

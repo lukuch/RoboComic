@@ -4,8 +4,14 @@ import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import Image from "next/image";
 import { FaEyeSlash, FaRegEnvelope, FaRegEye } from "react-icons/fa";
+import type { TranslationStrings } from "../../types";
 
-const AuthForm: React.FC = () => {
+interface AuthFormProps {
+  lang: string;
+  t: TranslationStrings;
+}
+
+const AuthForm: React.FC<AuthFormProps> = ({ t }) => {
   const { signUp, signIn, signInWithGoogle, user, loading, resetPassword } =
     useAuth();
   const [isRegister, setIsRegister] = useState(false);
@@ -96,9 +102,11 @@ const AuthForm: React.FC = () => {
     return (
       <div className="p-6 bg-green-50 rounded-lg shadow text-center">
         <div className="text-2xl font-semibold mb-2">
-          Welcome, {user.email}!
+          {t.welcome && user.email
+            ? t.welcome.replace("{email}", user.email)
+            : user?.email || ""}
         </div>
-        <div className="text-green-700">You are logged in.</div>
+        <div className="text-green-700">{t.loggedIn}</div>
       </div>
     );
   }
@@ -119,11 +127,10 @@ const AuthForm: React.FC = () => {
           </span>
         </div>
         <h2 className="text-xl font-bold mb-4 text-center text-gray-800 dark:text-gray-100">
-          Registration Successful!
+          {t.registrationSuccess}
         </h2>
         <p className="text-center text-gray-700 dark:text-gray-200 mb-4">
-          Please check your email and click the confirmation link to activate
-          your account before logging in.
+          {t.registrationSuccessMsg}
         </p>
         <button
           className="w-full text-blue-600 dark:text-blue-400 hover:underline mt-2"
@@ -133,7 +140,7 @@ const AuthForm: React.FC = () => {
             setRegistrationSuccess(false);
           }}
         >
-          Back to Login
+          {t.backToLogin}
         </button>
       </div>
     );
@@ -156,7 +163,7 @@ const AuthForm: React.FC = () => {
             </span>
           </div>
           <h2 className="text-xl font-bold mb-6 text-center text-gray-800 dark:text-gray-100">
-            Reset Password
+            {t.resetPassword}
           </h2>
           <form onSubmit={handleReset} className="space-y-4 w-full">
             <div>
@@ -164,7 +171,7 @@ const AuthForm: React.FC = () => {
                 htmlFor="reset-email"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
               >
-                Email
+                {t.email}
               </label>
               <div className="relative">
                 <input
@@ -188,7 +195,7 @@ const AuthForm: React.FC = () => {
                 disabled={formLoading}
                 className="w-full flex justify-center items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg shadow hover:from-blue-700 hover:to-purple-700 transition disabled:opacity-60 mt-4"
               >
-                {formLoading ? "Sending..." : "Send Reset Link"}
+                {formLoading ? t.sending : t.sendResetLink}
               </button>
               <div className="flex justify-end w-full mt-4">
                 <button
@@ -200,7 +207,7 @@ const AuthForm: React.FC = () => {
                     setError(null);
                   }}
                 >
-                  Back to Login
+                  {t.backToLogin}
                 </button>
               </div>
             </div>
@@ -237,7 +244,7 @@ const AuthForm: React.FC = () => {
           </span>
         </div>
         <h2 className="text-xl font-bold mb-4 text-center text-gray-800 dark:text-gray-100">
-          {isRegister ? "Create an Account" : "Sign In"}
+          {isRegister ? t.createAccount : t.signIn}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4 w-full">
           <div>
@@ -245,7 +252,7 @@ const AuthForm: React.FC = () => {
               htmlFor="email"
               className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
             >
-              Email
+              {t.email}
             </label>
             <div className="relative">
               <input
@@ -268,7 +275,7 @@ const AuthForm: React.FC = () => {
               htmlFor="password"
               className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
             >
-              Password
+              {t.password}
             </label>
             <div className="relative">
               <input
@@ -324,7 +331,7 @@ const AuthForm: React.FC = () => {
                   ></path>
                 </svg>
               )}
-              {isRegister ? "Register" : "Login"}
+              {isRegister ? t.register : t.login}
             </button>
             {!isRegister && (
               <div className="flex justify-end w-full mt-4">
@@ -336,7 +343,7 @@ const AuthForm: React.FC = () => {
                     setError(null);
                   }}
                 >
-                  Forgot password?
+                  {t.forgotPassword}
                 </button>
               </div>
             )}
@@ -344,7 +351,7 @@ const AuthForm: React.FC = () => {
         </form>
         <div className="my-6 flex items-center w-full">
           <div className="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
-          <span className="mx-4 text-gray-400 text-sm font-medium">or</span>
+          <span className="mx-4 text-gray-400 text-sm font-medium">{t.or}</span>
           <div className="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
         </div>
         <button
@@ -373,16 +380,16 @@ const AuthForm: React.FC = () => {
               <path fill="none" d="M0 0h48v48H0z" />
             </g>
           </svg>
-          Sign in with Google
+          <span className="text-gray-800 dark:text-white">
+            {t.signInWithGoogle}
+          </span>
         </button>
         <button
           onClick={() => setIsRegister((r) => !r)}
           className="w-full text-blue-600 dark:text-blue-400 hover:underline mt-2"
           type="button"
         >
-          {isRegister
-            ? "Already have an account? Login"
-            : "Don't have an account? Register"}
+          {isRegister ? t.alreadyHaveAccount : t.dontHaveAccount}
         </button>
         {error && (
           <div className="mt-4 text-red-600 text-center font-medium">

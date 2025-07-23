@@ -1,15 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Home from "./Home";
 import AuthForm from "../components/Auth/AuthForm";
 import { useAuth } from "../context/AuthContext";
 import { FaUser } from "react-icons/fa";
 import Tooltip from "../components/shared/Tooltip";
+import { TRANSLATIONS } from "./Home/translations";
+import { DEFAULTS } from "../constants";
+import { useLanguage } from "../hooks/useLanguage";
+import type { TranslationStrings } from "../types";
 
 export default function HomePage() {
   const [showAuth, setShowAuth] = useState(false);
   const { user, signOut } = useAuth();
+  const { lang, setLang } = useLanguage(DEFAULTS.LANGUAGE);
+  const t: TranslationStrings = TRANSLATIONS[lang as "en" | "pl"];
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = async () => {
     await signOut();
@@ -30,7 +37,7 @@ export default function HomePage() {
               onClick={handleLogout}
               className="px-4 py-1 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-lg shadow hover:from-red-600 hover:to-pink-600 transition"
             >
-              Logout
+              {t.logoutButton}
             </button>
           </div>
         ) : (
@@ -39,14 +46,25 @@ export default function HomePage() {
             className="px-5 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg shadow hover:from-blue-700 hover:to-purple-700 transition flex items-center gap-2"
           >
             <FaUser className="text-xl" />
-            Login
+            {t.loginButton}
           </button>
         )}
       </div>
-      <Home />
+      <Home lang={lang} setLang={setLang} t={t} />
       {showAuth && !user && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
-          <div className="relative">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+          onMouseDown={(e) => {
+            // Only close if clicking the overlay, not the modal content
+            if (
+              modalRef.current &&
+              !modalRef.current.contains(e.target as Node)
+            ) {
+              setShowAuth(false);
+            }
+          }}
+        >
+          <div className="relative" ref={modalRef}>
             <button
               onClick={() => setShowAuth(false)}
               className="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-2xl font-bold"
@@ -54,7 +72,7 @@ export default function HomePage() {
             >
               &times;
             </button>
-            <AuthForm />
+            <AuthForm lang={lang} t={t} />
           </div>
         </div>
       )}

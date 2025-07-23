@@ -103,7 +103,7 @@ export default function JudgingSection({
   }
   if (judging) {
     return (
-      <div className="mt-10 text-center text-xl font-bold animate-pulse">
+      <div className="mt-10 text-center text-xl font-bold animate-pulse text-gray-800 dark:text-gray-100">
         {t.judgingDuel}
       </div>
     );

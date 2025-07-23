@@ -63,9 +63,5 @@ export function usePersonas() {
       .finally(() => setLoading(false));
   }, [user]);
 
-  useEffect(() => {
-    fetchAll();
-  }, [user, fetchAll]);
-
   return { personas, loading, error, refetch: fetchAll };
 }

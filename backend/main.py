@@ -132,7 +132,7 @@ async def tts_api(request: Request, body: TTSRequest):
 
 
 @app.get("/personas", response_model=PersonasResponse)
-@limiter.limit("10/minute")
+@limiter.limit("20/minute")
 def get_personas(request: Request):
     return PersonasResponse(personas=COMEDIAN_PERSONAS)
 

@@ -44,6 +44,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(session?.user ?? null);
       },
     );
+    // Clean up access_token and refresh_token from URL hash if present
+    if (
+      typeof window !== "undefined" &&
+      window.location.hash.includes("access_token")
+    ) {
+      window.history.replaceState(
+        null,
+        "",
+        window.location.pathname + window.location.search,
+      );
+    }
     return () => {
       listener.subscription.unsubscribe();
     };

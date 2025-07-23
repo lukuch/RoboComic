@@ -2,21 +2,27 @@
 
 import ShowForm from "../../components/ShowForm/index";
 import ShowHistory from "../../components/ShowHistory/index";
-import { TRANSLATIONS } from "./translations";
 import type { TranslationStrings } from "../../types";
 import { LanguageSelector } from "./LanguageSelector";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { AppHeader } from "./AppHeader";
 import { ErrorDisplay } from "./ErrorDisplay";
 import { useShowGeneration } from "../../hooks/useShowGeneration";
-import { useLanguage } from "../../hooks/useLanguage";
-import { DEFAULTS } from "../../constants";
 import { useState, useEffect } from "react";
 import { fetchVoiceIds } from "../../services/apiService";
 import { usePersonas } from "../../hooks/usePersonas";
+import { useAuth } from "../../context/AuthContext";
+import { ThemeToggle } from "./ThemeToggle";
 
-export default function Home() {
-  const { lang, setLang } = useLanguage(DEFAULTS.LANGUAGE);
+interface HomeProps {
+  lang: string;
+  setLang: (lang: string) => void;
+  t: TranslationStrings;
+}
+
+export type { HomeProps };
+
+export default function Home({ lang, setLang, t }: HomeProps) {
   const [voiceIds, setVoiceIds] = useState<{
     comedian1_voice_id: string;
     comedian2_voice_id: string;
@@ -28,6 +34,8 @@ export default function Home() {
     error: personasError,
     refetch: refetchPersonas,
   } = usePersonas();
+
+  const { user } = useAuth();
 
   const {
     history,
@@ -46,15 +54,20 @@ export default function Home() {
       .catch(() => {});
   }, []);
 
-  const t: TranslationStrings = TRANSLATIONS[lang as "en" | "pl"];
+  useEffect(() => {
+    refetchPersonas();
+  }, [user]);
 
   const comedian1Name = comedian1 ? comedian1.name : "";
   const comedian2Name = comedian2 ? comedian2.name : "";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-blue-50 to-purple-100 dark:from-gray-950 dark:via-gray-900 dark:to-blue-950 flex flex-col items-center py-12 px-2">
+    <div className="min-h-screen flex flex-col items-center py-12 px-2">
       <LoadingOverlay isLoading={loading || personasLoading} />
-      <LanguageSelector currentLang={lang} onLanguageChange={setLang} />
+      <div className="flex w-full max-w-2xl justify-end gap-4 mb-6">
+        <LanguageSelector currentLang={lang} onLanguageChange={setLang} />
+        <ThemeToggle />
+      </div>
       <AppHeader />
       <ShowForm
         onSubmit={handleGenerateShow}

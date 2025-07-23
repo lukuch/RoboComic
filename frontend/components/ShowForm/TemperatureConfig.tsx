@@ -108,7 +108,7 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
   }
 
   return (
-    <div className="rounded-2xl bg-gray-900/90 border border-gray-800 shadow-lg p-3 mt-4">
+    <div className="rounded-2xl bg-white dark:bg-gray-900/90 border border-gray-200 dark:border-gray-800 shadow-lg p-3 mt-4">
       <button
         type="button"
         onClick={(e) => {
@@ -116,7 +116,8 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
           e.stopPropagation();
           onToggle();
         }}
-        className="flex items-center justify-between w-full text-left font-bold text-gray-100"
+        className="flex items-center justify-between w-full text-left font-bold text-gray-900 dark:text-gray-100"
+        aria-label="Toggle AI creativity settings"
       >
         <span>{t.aiCreativitySettings}</span>
         <svg
@@ -138,7 +139,7 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
         <div className="mt-4 space-y-6">
           {/* Current Temperature Display */}
           <div className="text-center">
-            <div className="text-2xl font-bold text-indigo-400">
+            <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
               {temperature}
             </div>
             <div
@@ -150,7 +151,7 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
 
           {/* Temperature Slider */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               {t.adjustCreativity}
             </label>
             <input
@@ -160,9 +161,9 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
               step="0.1"
               value={temperature}
               onChange={(e) => onTemperatureChange(parseFloat(e.target.value))}
-              className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
+              className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-1">
               <span>{t.conservative}</span>
               <span>{t.creative}</span>
             </div>
@@ -170,7 +171,7 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
 
           {/* Presets */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-3">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
               {t.quickPresets}
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -183,19 +184,19 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
                     e.stopPropagation();
                     handlePresetSelect(preset);
                   }}
-                  className={`min-w-0 p-2 sm:p-3 text-left rounded-lg border transition-colors font-medium text-gray-100 whitespace-normal text-sm sm:text-base ${
+                  className={`min-w-0 p-2 sm:p-3 text-left rounded-lg border transition-colors font-medium text-gray-900 dark:text-gray-100 whitespace-normal text-sm sm:text-base ${
                     Math.abs(temperature - preset.temperature) < 0.05
-                      ? "border-blue-500 bg-blue-900/60 text-blue-400"
-                      : "border-gray-700 bg-gray-800 hover:border-gray-600 hover:bg-gray-700"
+                      ? "border-blue-500 bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-400"
+                      : "border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700"
                   }`}
                 >
                   <div className="whitespace-normal text-sm sm:text-base font-bold">
                     {t[preset.name as keyof TranslationStrings]}
                   </div>
-                  <div className="text-xs sm:text-sm text-gray-400 whitespace-normal">
+                  <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 whitespace-normal">
                     {preset.temperature}
                   </div>
-                  <div className="text-xs text-gray-500 mt-1 whitespace-normal normal-case">
+                  <div className="text-xs text-gray-600 dark:text-gray-500 mt-1 whitespace-normal normal-case">
                     {toSentenceCase(
                       t[
                         `${preset.name}Desc` as keyof TranslationStrings
@@ -208,14 +209,18 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
           </div>
 
           {/* Help Text */}
-          <div className="text-xs text-gray-300 bg-gray-800 p-3 rounded border border-gray-700">
+          <div className="text-xs text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700">
             {t.temperatureHelp}
           </div>
           {!loading && error && (
-            <div className="text-sm text-red-400 mt-2">{error}</div>
+            <div className="text-sm text-red-600 dark:text-red-400 mt-2">
+              {error}
+            </div>
           )}
           {!loading && !error && presets.length === 0 && (
-            <div className="text-sm text-yellow-400 mt-2">{t.noPresets}</div>
+            <div className="text-sm text-yellow-700 dark:text-yellow-400 mt-2">
+              {t.noPresets}
+            </div>
           )}
         </div>
       )}
