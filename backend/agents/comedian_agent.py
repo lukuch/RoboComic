@@ -5,7 +5,6 @@ import structlog
 from autogen import ConversableAgent
 
 from config import settings
-from config.personas import COMEDIAN_PERSONAS
 from models import Language
 
 
@@ -18,15 +17,12 @@ class ComedianAgent:
         self.style = None
         self.agent = None
 
-    def _setup_agent(
-        self, persona_key: str, display_name: str, lang: str = Language.ENGLISH, temperature: float = None
-    ) -> None:
+    def _setup_agent(self, persona: dict, display_name: str, lang: str = Language.ENGLISH, temperature: float = None) -> None:
         """Setup the agent with specific persona and language"""
         self.name = display_name
-        self.persona = COMEDIAN_PERSONAS[persona_key]
-        self.style = self.persona["style"]
-
-        description = self.persona["description_pl"] if lang == Language.POLISH else self.persona["description"]
+        self.persona = persona
+        self.style = persona.get("style", persona.get("name", "unknown"))
+        description = persona.get("description_pl") if lang == Language.POLISH else persona.get("description")
 
         temp = temperature if temperature is not None else settings.DEFAULT_TEMPERATURE
 

@@ -18,8 +18,6 @@ class TestAgentManager:
         assert manager is not None
         assert hasattr(manager, "logger")
         assert hasattr(manager, "resilience_service")
-        assert hasattr(manager, "comedian1_key")
-        assert hasattr(manager, "comedian2_key")
 
     @patch("openai.OpenAI")
     def test_generate_show_basic(self, mock_openai):
@@ -36,6 +34,18 @@ class TestAgentManager:
         request = GenerateShowRequest(
             comedian1_style="relatable",
             comedian2_style="absurd",
+            comedian1_persona={
+                "name": "Relatable",
+                "style": "relatable",
+                "description": "Relatable comedian",
+                "description_pl": "Komik, z którym można się utożsamiać",
+            },
+            comedian2_persona={
+                "name": "Absurd",
+                "style": "absurd",
+                "description": "Absurd comedian",
+                "description_pl": "Absurdalny komik",
+            },
             lang="en",
             mode="topical",
             topic="airplanes",
@@ -92,6 +102,18 @@ class TestApiService:
         request = GenerateShowRequest(
             comedian1_style="relatable",
             comedian2_style="absurd",
+            comedian1_persona={
+                "name": "Relatable",
+                "style": "relatable",
+                "description": "Relatable comedian",
+                "description_pl": "Komik, z którym można się utożsamiać",
+            },
+            comedian2_persona={
+                "name": "Absurd",
+                "style": "absurd",
+                "description": "Absurd comedian",
+                "description_pl": "Absurdalny komik",
+            },
             lang="en",
             mode="topical",
             topic="airplanes",
@@ -164,6 +186,8 @@ class TestErrorHandling:
             GenerateShowRequest(
                 comedian1_style="invalid_comedian",
                 comedian2_style="another_invalid",
+                comedian1_persona={},  # Missing required keys
+                comedian2_persona={},  # Missing required keys
                 lang="en",
                 mode="topical",
                 topic="airplanes",

@@ -12,4 +12,7 @@ export default {
       { configFile: "./jest.babel.config.js" },
     ],
   },
+  transformIgnorePatterns: [
+    "/node_modules/(?!(isows|@supabase|@supabase/realtime-js|@supabase/supabase-js)/)",
+  ],
 };

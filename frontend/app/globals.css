@@ -80,3 +80,9 @@ a {
     opacity: 0.85;
   }
 }
+
+/* Custom scrollbar for persona modal */
+.persona-scrollbar {
+  scrollbar-width: thin !important;
+  scrollbar-color: #3b82f6 #181c2a !important; /* thumb color, track color */
+}

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { TemperaturePreset } from "../../types";
+import type { TranslationStrings } from "../../types";
 import {
   getDefaultLLMConfig,
   getTemperaturePresets,
@@ -14,7 +15,7 @@ interface TemperatureConfigProps {
   onTemperatureChange: (temperature: number) => void;
   isOpen: boolean;
   onToggle: () => void;
-  t: Record<string, string>;
+  t: TranslationStrings;
 }
 
 const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
@@ -150,7 +151,7 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
           {/* Temperature Slider */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              {t.adjustCreativityLevel}
+              {t.adjustCreativity}
             </label>
             <input
               type="range"
@@ -189,13 +190,17 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
                   }`}
                 >
                   <div className="whitespace-normal text-sm sm:text-base font-bold">
-                    {t[preset.name]}
+                    {t[preset.name as keyof TranslationStrings]}
                   </div>
                   <div className="text-xs sm:text-sm text-gray-400 whitespace-normal">
                     {preset.temperature}
                   </div>
                   <div className="text-xs text-gray-500 mt-1 whitespace-normal normal-case">
-                    {toSentenceCase(t[`${preset.name}Desc`]?.trim())}
+                    {toSentenceCase(
+                      t[
+                        `${preset.name}Desc` as keyof TranslationStrings
+                      ]?.trim(),
+                    )}
                   </div>
                 </button>
               ))}
@@ -210,9 +215,7 @@ const TemperatureConfig: React.FC<TemperatureConfigProps> = ({
             <div className="text-sm text-red-400 mt-2">{error}</div>
           )}
           {!loading && !error && presets.length === 0 && (
-            <div className="text-sm text-yellow-400 mt-2">
-              {t.noAIPresetsAvailable}
-            </div>
+            <div className="text-sm text-yellow-400 mt-2">{t.noPresets}</div>
           )}
         </div>
       )}

@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Home from "../app/Home/index";
 import { act } from "react";
+import { AuthProvider } from "../context/AuthContext";
 
 let mockUseShowGeneration: any = () => ({
   history: [],
@@ -26,6 +27,20 @@ jest.mock("../services/apiService", () => ({
   fetchPersonas: jest.fn(() => Promise.resolve({})),
 }));
 
+beforeEach(() => {
+  global.fetch = jest.fn(() =>
+    Promise.resolve({
+      json: () =>
+        Promise.resolve({
+          personas: {
+            comedian1: { description: "desc", description_pl: "desc_pl" },
+            comedian2: { description: "desc", description_pl: "desc_pl" },
+          },
+        }),
+    }),
+  ) as jest.Mock;
+});
+
 describe("Home", () => {
   it("renders main UI components", async () => {
     mockUseShowGeneration = () => ({
@@ -40,7 +55,11 @@ describe("Home", () => {
     });
     mockLang = "en";
     await act(async () => {
-      render(<Home />);
+      render(
+        <AuthProvider>
+          <Home />
+        </AuthProvider>,
+      );
     });
     expect(
       screen.getAllByRole("heading", { name: /RoboComic AI/i })[0],
@@ -64,7 +83,11 @@ describe("Home", () => {
     });
     mockLang = "en";
     await act(async () => {
-      render(<Home />);
+      render(
+        <AuthProvider>
+          <Home />
+        </AuthProvider>,
+      );
     });
     expect(screen.getByTestId("loading-overlay")).toBeInTheDocument();
   });
@@ -82,7 +105,11 @@ describe("Home", () => {
     });
     mockLang = "en";
     await act(async () => {
-      render(<Home />);
+      render(
+        <AuthProvider>
+          <Home />
+        </AuthProvider>,
+      );
     });
     expect(screen.getByTestId("error-display")).toBeInTheDocument();
   });
@@ -100,7 +127,11 @@ describe("Home", () => {
     });
     mockLang = "pl";
     await act(async () => {
-      render(<Home />);
+      render(
+        <AuthProvider>
+          <Home />
+        </AuthProvider>,
+      );
     });
     expect(screen.getByText(/Dostosuj pojedynek komików/i)).toBeInTheDocument();
     expect(screen.getByText(/Styl Komika 1/i)).toBeInTheDocument();

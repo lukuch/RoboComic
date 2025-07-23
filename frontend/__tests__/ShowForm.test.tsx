@@ -5,6 +5,7 @@ import ShowForm from "../components/ShowForm/index";
 import { TRANSLATIONS } from "../app/Home/translations";
 import * as apiService from "../services/apiService";
 import { act } from "react";
+import { AuthProvider } from "../context/AuthContext";
 
 describe("ShowForm", () => {
   const mockOnSubmit = jest.fn();
@@ -13,10 +14,12 @@ describe("ShowForm", () => {
   beforeEach(() => {
     jest.spyOn(apiService, "fetchPersonas").mockResolvedValue({
       comedian1: {
+        name: "Funny Person 1",
         description: "Funny Person 1",
         description_pl: "Zabawna Osoba 1",
       },
       comedian2: {
+        name: "Funny Person 2",
         description: "Funny Person 2",
         description_pl: "Zabawna Osoba 2",
       },
@@ -34,7 +37,17 @@ describe("ShowForm", () => {
   it("renders form fields", async () => {
     await act(async () => {
       render(
-        <ShowForm onSubmit={mockOnSubmit} loading={false} lang="en" t={t} />,
+        <AuthProvider>
+          <ShowForm
+            onSubmit={mockOnSubmit}
+            loading={false}
+            lang="en"
+            t={t}
+            personas={{}}
+            personasError={null}
+            refetchPersonas={jest.fn()}
+          />
+        </AuthProvider>,
       );
     });
     expect(
@@ -50,7 +63,17 @@ describe("ShowForm", () => {
   it("calls onSubmit with form values", async () => {
     await act(async () => {
       render(
-        <ShowForm onSubmit={mockOnSubmit} loading={false} lang="en" t={t} />,
+        <AuthProvider>
+          <ShowForm
+            onSubmit={mockOnSubmit}
+            loading={false}
+            lang="en"
+            t={t}
+            personas={{}}
+            personasError={null}
+            refetchPersonas={jest.fn()}
+          />
+        </AuthProvider>,
       );
     });
     // Fill out the form fields
@@ -77,7 +100,17 @@ describe("ShowForm", () => {
   it("submits successfully when topic is empty (if allowed)", async () => {
     await act(async () => {
       render(
-        <ShowForm onSubmit={mockOnSubmit} loading={false} lang="en" t={t} />,
+        <AuthProvider>
+          <ShowForm
+            onSubmit={mockOnSubmit}
+            loading={false}
+            lang="en"
+            t={t}
+            personas={{}}
+            personasError={null}
+            refetchPersonas={jest.fn()}
+          />
+        </AuthProvider>,
       );
     });
     const topicInput = await screen.findByTestId("topic-input");
@@ -103,7 +136,17 @@ describe("ShowForm", () => {
       .mockRejectedValue(new Error("API error"));
     await act(async () => {
       render(
-        <ShowForm onSubmit={mockOnSubmit} loading={false} lang="en" t={t} />,
+        <AuthProvider>
+          <ShowForm
+            onSubmit={mockOnSubmit}
+            loading={false}
+            lang="en"
+            t={t}
+            personas={{}}
+            personasError="API error"
+            refetchPersonas={jest.fn()}
+          />
+        </AuthProvider>,
       );
     });
     expect(await screen.findByTestId("personas-error")).toBeInTheDocument();

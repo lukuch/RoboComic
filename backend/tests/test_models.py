@@ -18,6 +18,18 @@ class TestGenerateShowRequest:
         request = GenerateShowRequest(
             comedian1_style="relatable",
             comedian2_style="absurd",
+            comedian1_persona={
+                "name": "Relatable",
+                "style": "relatable",
+                "description": "Relatable comedian",
+                "description_pl": "Komik, z którym można się utożsamiać",
+            },
+            comedian2_persona={
+                "name": "Absurd",
+                "style": "absurd",
+                "description": "Absurd comedian",
+                "description_pl": "Absurdalny komik",
+            },
             lang="en",
             mode="topical",
             topic="airplanes",
@@ -25,8 +37,8 @@ class TestGenerateShowRequest:
             build_context=False,
             temperature=0.7,
         )
-        assert request.comedian1_style == "relatable"
-        assert request.comedian2_style == "absurd"
+        assert request.comedian1_persona.style == "relatable"
+        assert request.comedian2_persona.style == "absurd"
         assert request.lang == "en"
         assert request.mode == "topical"
         assert request.topic == "airplanes"
@@ -39,6 +51,8 @@ class TestGenerateShowRequest:
             GenerateShowRequest(
                 comedian1_style="relatable",
                 comedian2_style="absurd",
+                comedian1_persona="relatable",
+                comedian2_persona="absurd",
                 lang="en",
                 mode="topical",
                 topic="airplanes",
@@ -52,6 +66,8 @@ class TestGenerateShowRequest:
             GenerateShowRequest(
                 comedian1_style="relatable",
                 comedian2_style="absurd",
+                comedian1_persona="relatable",
+                comedian2_persona="absurd",
                 lang="en",
                 mode="topical",
                 topic="airplanes",

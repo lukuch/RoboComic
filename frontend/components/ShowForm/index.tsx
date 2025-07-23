@@ -1,18 +1,21 @@
-import { useState, useEffect } from "react";
-import { fetchPersonas } from "../../services/apiService";
+import { useState } from "react";
 import { ComedianSelector } from "./ComedianSelector";
 import { FormInput } from "./FormInput";
 import { NumberInput } from "./NumberInput";
 import { CheckboxWithTooltip } from "./CheckboxWithTooltip";
 import { SubmitButton } from "./SubmitButton";
 import TemperatureConfig from "./TemperatureConfig";
-import { UI, DEFAULTS, PERSONAS_RETRY_TIMEOUT_MS } from "../../constants";
+import { UI, DEFAULTS } from "../../constants";
 import type { TranslationStrings } from "../../types";
+import { useAuth } from "../../context/AuthContext";
+import ManagePersonasModal from "./ManagePersonasModal";
+import { FiUsers } from "react-icons/fi";
+import type { Persona } from "../../types";
 
 interface ShowFormProps {
   onSubmit: (params: {
-    comedian1_style: string;
-    comedian2_style: string;
+    comedian1_persona: Persona;
+    comedian2_persona: Persona;
     lang: string;
     topic: string;
     num_rounds: number;
@@ -24,6 +27,11 @@ interface ShowFormProps {
   loading: boolean;
   lang: string;
   t: TranslationStrings;
+  personas: {
+    [key: string]: { description: string; description_pl: string };
+  } | null;
+  personasError: string | null;
+  refetchPersonas: () => void;
 }
 
 export default function ShowForm({
@@ -31,6 +39,9 @@ export default function ShowForm({
   loading,
   lang,
   t,
+  personas,
+  personasError,
+  refetchPersonas,
 }: ShowFormProps) {
   const [comedian1, setComedian1] = useState<string>(DEFAULTS.COMEDIAN1);
   const [comedian2, setComedian2] = useState<string>(DEFAULTS.COMEDIAN2);
@@ -41,41 +52,9 @@ export default function ShowForm({
   const [buildContext, setBuildContext] = useState<boolean>(false);
   const [temperature, setTemperature] = useState<number>(0.9);
   const [showAdvanced, setShowAdvanced] = useState<boolean>(false);
-  const [personas, setPersonas] = useState<{
-    [key: string]: { description: string; description_pl: string };
-  } | null>(null);
-  const [personasLoading, setPersonasLoading] = useState(false);
-  const [personasError, setPersonasError] = useState<string | null>(null);
 
-  const fetchPersonasWithState = async () => {
-    setPersonasLoading(true);
-    try {
-      const data = await fetchPersonas();
-      setPersonas(data);
-      setPersonasError(null);
-    } catch {
-      setPersonas(null);
-      setPersonasError("Failed to load personas");
-    } finally {
-      setPersonasLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchPersonasWithState();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (personasError && !personasLoading) {
-      const retry = setTimeout(
-        fetchPersonasWithState,
-        PERSONAS_RETRY_TIMEOUT_MS,
-      );
-      return () => clearTimeout(retry);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [personasError, personasLoading]);
+  const { user } = useAuth();
+  const [modalOpen, setModalOpen] = useState(false);
 
   const personaOptions = personas ? Object.keys(personas) : [];
 
@@ -91,9 +70,20 @@ export default function ShowForm({
         className="flex flex-col gap-6 p-8 bg-white/90 dark:bg-gray-900/90 rounded-2xl shadow-2xl max-w-2xl w-full border border-gray-200 dark:border-gray-800 backdrop-blur-lg mt-4"
         onSubmit={(e) => {
           e.preventDefault();
+          if (!personas) {
+            return;
+          }
           onSubmit({
-            comedian1_style: comedian1,
-            comedian2_style: comedian2,
+            comedian1_persona: {
+              name: comedian1,
+              style: comedian1.replace(/\s+/g, "_").toLowerCase(),
+              ...personas[comedian1],
+            },
+            comedian2_persona: {
+              name: comedian2,
+              style: comedian2.replace(/\s+/g, "_").toLowerCase(),
+              ...personas[comedian2],
+            },
             lang,
             topic,
             num_rounds: numRounds,
@@ -125,6 +115,26 @@ export default function ShowForm({
             lang={lang}
           />
         </div>
+        {user && (
+          <div className="flex justify-center w-full mb-2">
+            <button
+              type="button"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 px-5 py-2 text-white font-bold shadow-lg hover:from-blue-600 hover:to-purple-700 transition border border-blue-700"
+              onClick={() => setModalOpen(true)}
+            >
+              <FiUsers className="w-5 h-5" />
+              {t.managePersonas}
+            </button>
+            <ManagePersonasModal
+              open={modalOpen}
+              onClose={() => {
+                setModalOpen(false);
+                refetchPersonas();
+              }}
+              t={t}
+            />
+          </div>
+        )}
         <FormInput
           label={t.topic}
           value={topic}

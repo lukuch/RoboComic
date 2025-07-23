@@ -3,8 +3,6 @@ from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
-from config.personas import get_valid_comedian_styles, validate_comedian_style
-
 
 class Language(str, Enum):
     ENGLISH = "en"
@@ -32,9 +30,16 @@ class TemperaturePresetConfig(BaseModel):
     temperature: float = Field(..., description="Temperature value")
 
 
+class ComedianPersona(BaseModel):
+    name: str = Field(..., description="Comedian display name (required)")
+    style: Optional[str] = Field(None, description="Comedian style (optional)")
+    description: str = Field(..., description="Comedian description")
+    description_pl: str = Field(..., description="Comedian description in Polish (required)")
+
+
 class GenerateShowRequest(BaseModel):
-    comedian1_style: str = Field(..., description="Style of the first comedian")
-    comedian2_style: str = Field(..., description="Style of the second comedian")
+    comedian1_persona: ComedianPersona = Field(..., description="Full persona object for the first comedian")
+    comedian2_persona: ComedianPersona = Field(..., description="Full persona object for the second comedian")
     lang: Language = Field(default=Language.ENGLISH, description="Language for the comedy duel")
     mode: Mode = Field(default=Mode.TOPICAL, description="Mode of the comedy duel")
     topic: str = Field(default="", description="Topic for the comedy duel")
@@ -51,14 +56,6 @@ class GenerateShowRequest(BaseModel):
         if len(v) > 500:
             raise ValueError("Topic too long (max 500 characters)")
         return v.strip()
-
-    @field_validator("comedian1_style", "comedian2_style")
-    @classmethod
-    def validate_comedian_style(cls, v):
-        if not validate_comedian_style(v):
-            valid_styles = get_valid_comedian_styles()
-            raise ValueError(f'Invalid comedian style "{v}". Must be one of: {", ".join(valid_styles)}')
-        return v
 
 
 class TTSRequest(BaseModel):

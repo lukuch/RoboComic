@@ -5,26 +5,27 @@ import {
   fetchPersonas,
   fetchVoiceIds,
 } from "../services/apiService";
+import type { Personas, Persona } from "../types";
 import { ChatMessage, ShowFormParams, ApiError } from "../types";
-import { DEFAULTS, ERROR_MESSAGES, MODES } from "../constants";
+import { ERROR_MESSAGES, MODES } from "../constants";
 
 export function useShowGeneration(
-  setPersonas?: (p: any) => void,
-  setVoiceIds?: (v: any) => void,
+  setPersonas?: (p: Personas) => void,
+  setVoiceIds?: (v: any) => void, // TODO: Replace 'any' with a specific type for setVoiceIds if available
 ) {
   const [history, setHistory] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [ttsMode, setTtsMode] = useState(false);
-  const [comedian1, setComedian1] = useState<string>(DEFAULTS.COMEDIAN1);
-  const [comedian2, setComedian2] = useState<string>(DEFAULTS.COMEDIAN2);
+  const [comedian1, setComedian1] = useState<Persona | null>(null);
+  const [comedian2, setComedian2] = useState<Persona | null>(null);
 
   const generateShowHandler = async (params: ShowFormParams) => {
     setLoading(true);
     setError(null);
     setTtsMode(params.tts_mode);
-    setComedian1(params.comedian1_style);
-    setComedian2(params.comedian2_style);
+    setComedian1(params.comedian1_persona);
+    setComedian2(params.comedian2_persona);
 
     // Lazy fetch personas/voiceIds if missing
     if (setPersonas) {
@@ -50,8 +51,8 @@ export function useShowGeneration(
 
     try {
       const data = await generateShow({
-        comedian1_style: params.comedian1_style,
-        comedian2_style: params.comedian2_style,
+        comedian1_persona: params.comedian1_persona,
+        comedian2_persona: params.comedian2_persona,
         lang: params.lang,
         mode: params.roast_mode ? MODES.ROAST : MODES.TOPICAL,
         topic: params.topic,

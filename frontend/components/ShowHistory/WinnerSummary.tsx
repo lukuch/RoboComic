@@ -2,15 +2,13 @@ import Confetti from "react-confetti";
 import { useEffect, useState } from "react";
 import { toTitleCase } from "../../utils/stringUtils";
 import type { TranslationStrings } from "../../types";
+import type { Persona } from "../../types";
 
 interface WinnerSummaryProps {
   winner: string;
   summary: string;
   t: TranslationStrings;
-  personas?: Record<
-    string,
-    { description: string; description_pl: string }
-  > | null;
+  personas?: Record<string, Persona> | null;
 }
 
 export default function WinnerSummary({

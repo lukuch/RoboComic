@@ -18,33 +18,29 @@ class AgentManager:
         self,
         logger: structlog.BoundLogger,
         resilience_service: ResilienceService,
-        comedian1_key="sarcastic",
-        comedian2_key="absurd",
-        lang="en",
     ):
         self.logger = logger
         self.resilience_service = resilience_service
-        self.comedian1_key = comedian1_key
-        self.comedian2_key = comedian2_key
-        self.lang = lang
-        self.reset_agents()
         self.history = []
 
-    def reset_agents(self, temperature: float = None) -> None:
-        self.logger.debug(f"Resetting agents: {self.comedian1_key} and {self.comedian2_key}")
-        # Instantiate new ComedianAgent objects directly to avoid singleton issue
+    def reset_agents(self, temperature: float = None, persona1: dict = None, persona2: dict = None) -> None:
+        self.logger.debug(
+            f"Resetting agents: {getattr(self, 'comedian1_name', 'Comedian_1')} and {getattr(self, 'comedian2_name', 'Comedian_2')}"
+        )
         self.comedian1 = ComedianAgent(self.logger)
-        self.comedian1._setup_agent(self.comedian1_key, "Comedian_1", self.lang, temperature)
+        self.comedian1._setup_agent(persona1, "Comedian_1", self.lang, temperature)
         self.comedian2 = ComedianAgent(self.logger)
-        self.comedian2._setup_agent(self.comedian2_key, "Comedian_2", self.lang, temperature)
+        self.comedian2._setup_agent(persona2, "Comedian_2", self.lang, temperature)
 
-    def set_personas(self, comedian1_key: str, comedian2_key: str, lang: str = None) -> None:
-        self.logger.info(f"Setting personas: {comedian1_key} vs {comedian2_key}, lang={lang or self.lang}")
-        self.comedian1_key = comedian1_key
-        self.comedian2_key = comedian2_key
+    def set_personas(self, persona1: dict, persona2: dict, lang: str = None) -> None:
+        self.logger.info(
+            f"Setting personas: {persona1.get('name', 'Comedian_1')} vs {persona2.get('name', 'Comedian_2')}, lang={lang or self.lang}"
+        )
+        self.comedian1_name = persona1.get("name", "Comedian_1")
+        self.comedian2_name = persona2.get("name", "Comedian_2")
         if lang is not None:
             self.lang = lang
-        self.reset_agents()
+        self.reset_agents(persona1=persona1, persona2=persona2)
 
     def _format_initial_prompt(self, mode, topic, lang, context):
         if mode == Mode.TOPICAL:
@@ -69,12 +65,20 @@ class AgentManager:
             )
 
     def run_duel(
-        self, mode: str, topic: str = None, max_rounds: int = 2, lang: str = "en", context: str = "", temperature: float = None
+        self,
+        mode: str,
+        topic: str = None,
+        max_rounds: int = 2,
+        lang: str = "en",
+        context: str = "",
+        temperature: float = None,
+        persona1: dict = None,
+        persona2: dict = None,
     ) -> list:
         self.logger.info(
             f"Starting duel: mode={mode}, topic={topic}, max_rounds={max_rounds}, lang={lang}, temperature={temperature}"
         )
-        self.reset_agents(temperature)
+        self.reset_agents(temperature, persona1=persona1, persona2=persona2)
         agents = [
             self.comedian1.agent,
             self.comedian2.agent,

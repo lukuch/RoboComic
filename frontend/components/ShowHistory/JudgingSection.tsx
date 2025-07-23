@@ -3,6 +3,7 @@ import WinnerSummary from "./WinnerSummary";
 import { judgeShow } from "../../services/apiService";
 import { ChatMessage } from "../../types";
 import type { TranslationStrings } from "../../types";
+import type { Persona } from "../../types";
 
 interface JudgingSectionProps {
   comedian1Name: string;
@@ -16,10 +17,7 @@ interface JudgingSectionProps {
   setSummary: (v: string) => void;
   lang: string;
   t: TranslationStrings;
-  personas?: Record<
-    string,
-    { description: string; description_pl: string }
-  > | null;
+  personas?: Record<string, Persona> | null;
 }
 
 export default function JudgingSection({

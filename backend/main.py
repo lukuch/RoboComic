@@ -97,7 +97,6 @@ def generate_show_worker(body_dict):
 @limiter.limit("2/minute")
 async def generate_show_api(request: Request, body: GenerateShowRequest):
     loop = asyncio.get_running_loop()
-    # Passing only picklable data to the worker
     body_dict = body.model_dump()
     result = await loop.run_in_executor(process_pool, generate_show_worker, body_dict)
     return result

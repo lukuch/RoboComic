@@ -24,10 +24,12 @@ class ApiService:
 
     def generate_show(self, request: GenerateShowRequest) -> GenerateShowResponse:
         self.logger.info(
-            f"Generating show: {request.comedian1_style} vs {request.comedian2_style}, mode={request.mode}, rounds={request.num_rounds}, temperature={request.temperature}"
+            f"Generating show: {request.comedian1_persona.style} vs {request.comedian2_persona.style}, mode={request.mode}, rounds={request.num_rounds}, temperature={request.temperature}"
         )
         try:
-            self.agent_manager.set_personas(request.comedian1_style, request.comedian2_style, lang=request.lang)
+            self.agent_manager.set_personas(
+                request.comedian1_persona.model_dump(), request.comedian2_persona.model_dump(), lang=request.lang
+            )
             context = ""
             if request.build_context and request.topic.strip():
                 self.logger.info(f"Generating topic context for: {request.topic}")
@@ -40,6 +42,8 @@ class ApiService:
                 lang=request.lang,
                 context=context,
                 temperature=request.temperature,
+                persona1=request.comedian1_persona.model_dump(),
+                persona2=request.comedian2_persona.model_dump(),
             )
             chat_messages = [ChatMessage(role=msg["role"], content=msg["content"]) for msg in history]
             self.logger.info(f"Successfully generated show with {len(chat_messages)} messages")

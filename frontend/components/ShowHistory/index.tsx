@@ -6,6 +6,7 @@ import { ErrorDisplay } from "../../app/Home/ErrorDisplay";
 import JudgingSection from "./JudgingSection";
 import type { TranslationStrings } from "../../types";
 import { SkeletonBubble } from "./SkeletonBubble";
+import type { Persona } from "../../types";
 
 interface ShowHistoryProps {
   history: { role: string; content: string }[];
@@ -32,6 +33,20 @@ const bubbleColors = [
   "bg-yellow-100 dark:bg-yellow-800",
   "bg-gray-100 dark:bg-gray-700",
 ];
+
+// Helper to get persona name from string or object
+function getPersonaName(persona: Persona | string | undefined): string {
+  if (!persona) {
+    return "";
+  }
+  if (typeof persona === "string") {
+    return persona;
+  }
+  if (typeof persona === "object" && "name" in persona) {
+    return persona.name;
+  }
+  return "";
+}
 
 export default function ShowHistory({
   history,
@@ -157,8 +172,8 @@ export default function ShowHistory({
                   ];
                 const personaKey =
                   (roundIdx * bubblesPerRound + i) % 2 === 0
-                    ? comedian1Persona
-                    : comedian2Persona;
+                    ? getPersonaName(comedian1Persona)
+                    : getPersonaName(comedian2Persona);
                 const voiceId =
                   (roundIdx * bubblesPerRound + i) % 2 === 0
                     ? voiceIds?.comedian1_voice_id
@@ -189,8 +204,8 @@ export default function ShowHistory({
         ))}
         {/* Winner & Summary Section */}
         <JudgingSection
-          comedian1Name={comedian1Persona}
-          comedian2Name={comedian2Persona}
+          comedian1Name={getPersonaName(comedian1Persona)}
+          comedian2Name={getPersonaName(comedian2Persona)}
           history={rest}
           judged={judged}
           setJudged={setJudged}

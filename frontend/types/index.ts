@@ -1,7 +1,14 @@
 // API Types
+export interface Persona {
+  name: string;
+  style?: string;
+  description: string;
+  description_pl: string;
+}
+
 export interface GenerateShowParams {
-  comedian1_style: string;
-  comedian2_style: string;
+  comedian1_persona: Persona;
+  comedian2_persona: Persona;
   lang: string;
   mode: string;
   topic: string;
@@ -19,40 +26,8 @@ export interface ChatMessage {
   content: string;
 }
 
-export interface Persona {
-  description: string;
-  description_pl: string;
-}
-
 export interface Personas {
   [key: string]: Persona;
-}
-
-export interface TTSResponse {
-  audioUrl: string;
-}
-
-// Form Types
-export interface ShowFormParams {
-  comedian1_style: string;
-  comedian2_style: string;
-  lang: string;
-  topic: string;
-  num_rounds: number;
-  roast_mode: boolean;
-  tts_mode: boolean;
-  build_context: boolean;
-  temperature?: number;
-}
-
-export interface ShowFormData {
-  comedian1_style: string;
-  comedian2_style: string;
-  lang: string;
-  mode: string;
-  topic: string;
-  num_rounds: number;
-  temperature?: number;
 }
 
 export interface TemperaturePreset {
@@ -63,26 +38,6 @@ export interface TemperaturePreset {
 
 export interface LLMConfig {
   temperature: number;
-}
-
-// Translation Types
-export interface Translations {
-  customize: string;
-  comedian1: string;
-  comedian2: string;
-  language: string;
-  topic: string;
-  numRounds: string;
-  roastMode: string;
-  ttsMode: string;
-  generate: string;
-  generating: string;
-  placeholder: string;
-  roastModeTooltip: string;
-  ttsModeTooltip: string;
-  numRoundsTooltip: string;
-  judgingDuel: string;
-  roundsLabel: string;
 }
 
 export interface Language {
@@ -96,7 +51,7 @@ export interface ShowFormProps {
   onSubmit: (params: ShowFormParams) => void;
   loading: boolean;
   lang: string;
-  t: Translations;
+  t: TranslationStrings;
 }
 
 export interface ShowHistoryProps {
@@ -132,7 +87,7 @@ export interface TTSRequest {
 }
 
 export interface PersonasResponse {
-  personas: Record<string, Record<string, string>>;
+  personas: Record<string, Persona>;
 }
 
 export interface HealthResponse {
@@ -161,3 +116,15 @@ export interface JudgeShowResponse {
 export type TranslationStrings =
   | (typeof import("../app/Home/translations").TRANSLATIONS)["en"]
   | (typeof import("../app/Home/translations").TRANSLATIONS)["pl"];
+
+export interface ShowFormParams {
+  comedian1_persona: Persona;
+  comedian2_persona: Persona;
+  lang: string;
+  topic: string;
+  num_rounds: number;
+  roast_mode: boolean;
+  tts_mode: boolean;
+  build_context: boolean;
+  temperature?: number;
+}
