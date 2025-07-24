@@ -27,15 +27,15 @@ export default function HomePage() {
     <>
       <div className="fixed top-4 right-4 z-50">
         {user ? (
-          <div className="flex items-center gap-3 bg-white/80 dark:bg-gray-800/80 px-5 py-2 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg shadow border text-sm bg-white/80 dark:bg-gray-800/80 border-gray-200 dark:border-gray-700 sm:gap-3 sm:px-5 sm:py-2 sm:rounded-xl sm:text-base">
             <Tooltip content={user.email || ""}>
-              <span className="text-gray-900 dark:text-gray-100 font-semibold truncate max-w-[160px] cursor-pointer">
+              <span className="text-gray-900 dark:text-gray-100 font-semibold truncate max-w-[120px] sm:max-w-[160px] cursor-pointer">
                 {user.email}
               </span>
             </Tooltip>
             <button
               onClick={handleLogout}
-              className="px-4 py-1 bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold rounded-lg shadow hover:from-red-600 hover:to-pink-600 transition"
+              className="px-3 py-1 text-sm rounded-md bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold shadow hover:from-red-600 hover:to-pink-600 transition sm:px-4 sm:py-1 sm:text-base sm:rounded-lg"
             >
               {t.logoutButton}
             </button>

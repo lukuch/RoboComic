@@ -129,28 +129,39 @@ export default function Home({ lang, setLang, t }: HomeProps) {
   return (
     <>
       <div className="min-h-screen flex flex-row w-full relative pb-16">
+        {/* Sidebar for desktop (md and up) */}
         {user && sidebarOpen && (
-          <div
-            className="fixed top-0 left-0 h-full z-20 transition-transform duration-300 translate-x-0"
-            style={{ width: 288 }}
-          >
-            <UserShowHistorySidebar
-              onCloseSidebar={() => setSidebarOpen(false)}
-              onSelectShow={handleSelectShow}
-              onDeselectShow={handleDeselectShow}
-              showSelected={selectedShowHistory !== null}
-              selectedShowId={selectedShowId}
-              t={t}
-              lang={lang}
+          <>
+            {/* Overlay for mobile only */}
+            <div
+              className="fixed inset-0 bg-black/60 z-40 transition-opacity duration-300 md:hidden"
+              onClick={() => setSidebarOpen(false)}
+              aria-label="Close sidebar overlay"
             />
-          </div>
+            {/* Sidebar drawer for mobile, fixed panel for desktop */}
+            <div
+              className="fixed top-0 left-0 h-full z-50 md:z-20 transition-transform duration-300 md:translate-x-0"
+              style={{
+                width: 288,
+                transform: sidebarOpen ? "translateX(0)" : "translateX(-100%)",
+              }}
+            >
+              <UserShowHistorySidebar
+                onCloseSidebar={() => setSidebarOpen(false)}
+                onSelectShow={handleSelectShow}
+                onDeselectShow={handleDeselectShow}
+                showSelected={selectedShowHistory !== null}
+                selectedShowId={selectedShowId}
+                t={t}
+                lang={lang}
+                isMobile={true}
+              />
+            </div>
+          </>
         )}
 
-        <div
-          className={`flex-1 flex flex-col items-center py-12 px-2 transition-all duration-300 ${
-            user && sidebarOpen ? "ml-72" : ""
-          }`}
-        >
+        {/* Main content */}
+        <div className="flex-1 flex flex-col items-center py-12 px-2 transition-all duration-300 mt-8 md:mt-0">
           {!user && <div className="mb-8" />}
           {!sidebarOpen && user && (
             <button
@@ -212,8 +223,8 @@ export default function Home({ lang, setLang, t }: HomeProps) {
       <Footer
         className={`fixed bottom-0 z-40 transition-all duration-300 ${
           user && sidebarOpen
-            ? "left-72 right-0 w-auto rounded-tr-2xl"
-            : "left-0 w-full rounded-tl-2xl rounded-tr-2xl"
+            ? "md:left-72 left-0 right-0 w-auto rounded-tr-2xl"
+            : "left-0 right-0 w-full rounded-tl-2xl rounded-tr-2xl"
         }`}
       />
     </>

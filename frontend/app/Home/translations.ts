@@ -78,7 +78,7 @@ export const TRANSLATIONS = {
     showHistory: "Show History",
     noShowsYet: "No shows yet.",
     backToCurrentSession: "Back to current session",
-    endOfHistory: "You have reached the end of your show history.",
+    endOfHistory: "It's the end of your show history.",
     guest: "Guest",
   },
   pl: {
