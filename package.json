@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "@supabase/supabase-js": "^2.52.0"
-  },
-  "devDependencies": {
-    "tailwind-scrollbar": "^4.0.2"
-  }
-}
