@@ -1,29 +1,39 @@
 # <img src="frontend/public/icon-192x192.png" alt="RoboComic Icon" width="32" style="vertical-align:middle;"/> RoboComic
 
-RoboComic is an AI-powered standup comedy duel app where virtual comedians battle it out with jokes, roasts, and text-to-speech performances. Users can generate comedy duels and listen to jokes.<br><br>
-[![Click Here](https://img.shields.io/badge/Click%20Here-Live%20Demo-green?style=for-the-badge)](https://robo-comic.vercel.app)<br><br>
+RoboComic is an AI-powered standup comedy duel app where virtual comedians battle it out with jokes, roasts, and text-to-speech performances. Users can generate comedy duels and listen to jokes.
+
+[![Click Here](https://img.shields.io/badge/Click%20Here-Live%20Demo-green?style=for-the-badge)](https://robo-comic.vercel.app)
+
 ![Build Status](https://img.shields.io/github/actions/workflow/status/lukuch/RoboComic/ci.yml?branch=main)
 ![Last Commit](https://img.shields.io/github/last-commit/lukuch/RoboComic)
-![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)  
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 **Frontend:**  
 [![Snyk](https://snyk.io/test/github/lukuch/RoboComic/badge.svg?targetFile=frontend/package.json)](https://snyk.io/test/github/lukuch/RoboComic?targetFile=frontend/package.json)  
 **Backend:**  
 [![Snyk](https://snyk.io/test/github/lukuch/RoboComic/badge.svg?targetFile=backend/requirements.txt)](https://snyk.io/test/github/lukuch/RoboComic?targetFile=backend/requirements.txt)
 
 ## Features
-- AI-generated standup comedy duels powered by agent orchestration (AutoGen)
-- Multiple comedian personas and styles
-- Text-to-Speech (TTS) playback for jokes
-- Bilingual support (English & Polish) with project-wide internationalization
-- Progressive Web App (PWA): installable on desktop and mobile
-- Modern, responsive UI
-- **Extensible backend:** Easily add new TTS providers or AI agents
-- **Modular architecture:** Clean separation of backend services, models, and utilities
-- **Automated dependency management:** Dependabot for backend (Poetry) and frontend (npm)
-- **CI/CD:** Automated testing, linting, formatting, and security checks via GitHub Actions
-- **Docker support:** Production-ready Dockerfile for backend deployment
-- **Pre-commit hooks:** Enforced code quality and requirements sync
-- **LangSmith tracing** for LLM/agent calls (optional, see environment variables)
+- Generate AI-powered standup comedy duels with agent orchestration (AutoGen)
+- Choose from multiple comedian personas and styles
+- Listen to jokes with text-to-speech (TTS) playback
+- Enjoy bilingual (English & Polish) support with full internationalization
+- Install as a Progressive Web App (PWA) on desktop and mobile
+- Use a modern and responsive UI
+- Easily extend the backend with new TTS providers or AI agents
+- Benefit from a modular architecture with clean separation of backend services, models, and utilities
+- Automated dependency management for backend (Poetry) and frontend (npm)
+- CI/CD with automated testing, linting, formatting, and security checks via GitHub Actions
+- Production-ready Dockerfile for backend deployment
+- Pre-commit hooks for code quality and requirements synchronization
+- Optional LangSmith tracing for LLM/agent calls (see environment variables)
+
+## Supabase Integration
+
+RoboComic uses [Supabase](https://supabase.com/) for several key frontend features:
+
+- User authentication (email/password and Google sign-in)
+- User show history (persisted across sessions and devices)
+- Persistent TTS storage for generated audio
 
 ## Customization
 
@@ -36,9 +46,9 @@ RoboComic is an AI-powered standup comedy duel app where virtual comedians battl
   - The backend uses the `injector` library for Inversion of Control (IoC) to manage dependencies and service injection.
 
 ## Technologies Used
-- **Frontend:** Next.js 15, React 19, Tailwind CSS 3.4+, next-pwa
-- **Backend:** FastAPI (Python 3.11+), AutoGen for agent orchestration, TTS services (ElevenLabs, Bark), LangChain for LLM orchestration, prompt management, and output parsing
-- **Other:** TypeScript, Service Workers, PWA Manifest, Docker, GitHub Actions, Dependabot
+- **Frontend:** Next.js 15, React 19, Tailwind CSS 3.4+, next-pwa, TypeScript, Supabase, Jest, React Testing Library
+- **Backend:** FastAPI (Python 3.11+), AutoGen (agent orchestration), TTS services (e.g., ElevenLabs), LangChain (LLM orchestration), LangSmith, slowapi, tenacity, structlog, injector
+- **Other:** Service Workers, PWA Manifest, Docker, GitHub Actions, Dependabot, Codecov, Gitleaks
 
 ## Getting Started
 
@@ -63,24 +73,25 @@ RoboComic is an AI-powered standup comedy duel app where virtual comedians battl
    OPENAI_API_KEY=your-openai-api-key-here
    ELEVENLABS_API_KEY=your-elevenlabs-api-key-here
 
-   ### Voice IDs for comedians (from ElevenLabs)
+   # Voice IDs for comedians (from ElevenLabs)
    COMEDIAN1_VOICE_ID=your-voice-id-1
    COMEDIAN2_VOICE_ID=your-voice-id-2
 
-   ### LLM model (use gpt-4o for optimal performance - previous models can make mistakes even with the right prompting)
+   # LLM model (use gpt-4o for optimal performance; previous models may make mistakes even with correct prompting)
    LLM_MODEL=gpt-4o
 
-   ### If you want to enable LangSmith tracing for LLM/agent orchestration, set the following variables:
+   # If you want to enable LangSmith tracing for LLM/agent orchestration, set the following variables:
    LANGSMITH_TRACING=true
    LANGSMITH_ENDPOINT="https://api.smith.langchain.com"
    LANGSMITH_API_KEY="<your-api-key>"
    LANGSMITH_PROJECT="robo-comic"
    ```
 
-   If you don't have Poetry installed, run:
+   If you don't have Poetry installed, run the following:
    ```bash
    pip install poetry
    ```
+   Then, to install dependencies and run the API server (default port 8000):
    ```bash
    cd backend
    poetry install
@@ -88,6 +99,15 @@ RoboComic is an AI-powered standup comedy duel app where virtual comedians battl
    ```
    > **Note:** The `api` argument is required. If omitted, the Streamlit app will run instead of the API server.
 3. **Frontend:**
+   Add a `.env.local` file in the `frontend` directory with your Supabase credentials:
+
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=https://your-supabase-url.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+   ```
+
+   These are required for the app to connect to your Supabase project for authentication, storage, and user data.
+   To install dependencies and start the development server (default port 3000):
    ```bash
    cd frontend
    npm install
@@ -110,10 +130,11 @@ RoboComic is an AI-powered standup comedy duel app where virtual comedians battl
 - **Pre-commit hooks:** Formatting (Black), import sorting (isort), linting (flake8), requirements export (Poetry), frontend lint (ESLint), Prettier formatting, and TypeScript type checks
 - **CI/CD:**
   - Linting, formatting, and type checks for both backend and frontend
-  - Automated tests with coverage
-  - Security scanning (Snyk, Trivy)
-  - Docker build validation
-  - **Render cloud deployment** via GitHub Actions
+  - Automated tests with coverage (Codecov)
+  - Security scanning (Snyk, Trivy, Gitleaks)
+  - Docker build validation (with non-root user and healthcheck)
+  - Bundle size analysis (with @next/bundle-analyzer)
+  - Render cloud deployment via GitHub Actions
 
 ## PWA Installation
 - Visit the app in Chrome, Edge, or Safari.
@@ -127,7 +148,7 @@ RoboComic is an AI-powered standup comedy duel app where virtual comedians battl
 - Verify ElevenLabs API key is valid
 - Check voice IDs exist in your ElevenLabs account
 - Ensure internet connection for API calls
-- **Free plan users**: You may have run out of monthly credits - check your ElevenLabs dashboard
+- **Free plan users:** You may have run out of monthly credits — check your ElevenLabs dashboard
 
 ## Project Structure (and crucial files)
 ```
@@ -153,6 +174,10 @@ RoboComic/
       eleven_tts_service.py       # ElevenLabs TTS service
       bark_tts_service.py         # Bark TTS service
     utils/                        # Error handling, logging, exceptions
+      error_handler.py
+      exceptions.py
+      logger.py
+      resilience.py
     ui/
       streamlit_ui.py             # Streamlit app (optional)
       style.css                   # Streamlit UI styles
@@ -179,12 +204,18 @@ RoboComic/
       Home/                       # Home page components
         AppHeader.tsx
         ErrorDisplay.tsx
+        Footer.tsx                # App footer
         LanguageSelector.tsx
         LoadingOverlay.tsx
         translations.ts
         index.tsx                 # Home page main component
+      reset-password/
+        page.tsx                  # Password reset page
+      page.module.css
+      globals.css
     components/
-      Footer.tsx                  # App footer
+      Auth/
+        AuthForm.tsx
       shared/
         Tooltip.tsx               # Shared tooltip component
       ShowForm/                   # Show generation form
@@ -199,25 +230,33 @@ RoboComic/
       ShowHistory/                # Show history display
         Avatar.tsx
         ChatBubble.tsx
+        ChatBubble.css
+        CustomAudioPlayer.tsx
         ManagerBubble.tsx
         TTSButton.tsx
         WinnerSummary.tsx
         JudgingSection.tsx
         SkeletonBubble.tsx
         index.tsx                 # Show history main component
+      UserShowHistorySidebar/
+        index.tsx
     hooks/
       useShowGeneration.ts        # Show generation hook
       useKeepAlive.ts             # Keep-alive hook
       useLanguage.ts              # Language management hook
+      usePersonas.ts              # Persona management hook
+      usePersonaSelection.ts      # Persona selection hook
+      useTheme.ts                 # Theme management hook
     services/
       apiService.ts               # API service layer
+    utils/
+      stringUtils.ts              # String case utility functions
+      supabaseClient.ts           # Supabase client
+    constants/
+      index.ts                    # App constants
     types/
       index.ts                    # TypeScript type definitions
       next-pwa.d.ts               # PWA type definitions
-    utils/
-      stringUtils.ts              # String case utility functions
-    constants/
-      index.ts                    # App constants
     public/
       manifest.json               # PWA manifest
       icon-192x192.png            # PWA icons
@@ -243,7 +282,6 @@ RoboComic/
 
 LICENSE
 README.md
-
 ```
 
 ## License
