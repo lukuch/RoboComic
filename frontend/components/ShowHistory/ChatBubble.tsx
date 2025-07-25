@@ -24,6 +24,7 @@ interface ChatBubbleProps {
   cached?: boolean;
   comedianType?: "comedian1" | "comedian2";
   t: TranslationStrings;
+  activeAudioIdx: number | null;
 }
 
 export function ChatBubble({
@@ -43,6 +44,7 @@ export function ChatBubble({
   cached,
   comedianType = "comedian1",
   t,
+  activeAudioIdx,
 }: ChatBubbleProps) {
   const isComedian = !["manager", "chat_manager", "system"].includes(
     message.role.toLowerCase(),
@@ -163,7 +165,7 @@ export function ChatBubble({
                 loading={loadingIdx === index}
                 cached={cached}
               />
-              {audioUrl && playingIdx === index && (
+              {audioUrl && activeAudioIdx === index && (
                 <CustomAudioPlayer
                   className="ml-2"
                   src={audioUrl}

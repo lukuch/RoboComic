@@ -87,6 +87,7 @@ const ShowHistory = forwardRef<HTMLDivElement, ShowHistoryProps>(
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
     const [playingIdx, setPlayingIdx] = useState<number | null>(null);
     const [loadingIdx, setLoadingIdx] = useState<number | null>(null);
+    const [activeAudioIdx, setActiveAudioIdx] = useState<number | null>(null);
     const [ttsError, setTtsError] = useState<string | null>(null);
     const [judged, setJudged] = useState(false);
     const [winner, setWinner] = useState<string | null>(null);
@@ -162,6 +163,7 @@ const ShowHistory = forwardRef<HTMLDivElement, ShowHistoryProps>(
       setPlayingIdx(null);
       setAudioUrl(null);
       setTtsError(null); // Reset error on new play
+      setActiveAudioIdx(idx);
       const cacheKeyHash = await getTTSCacheKeyHash(text, lang, voiceId);
       // 2. Check Supabase persistent cache
       const supabaseUrl = await getCachedTTS(cacheKeyHash);
@@ -337,6 +339,7 @@ const ShowHistory = forwardRef<HTMLDivElement, ShowHistoryProps>(
                       cached={isCached}
                       comedianType={comedianType}
                       t={t}
+                      activeAudioIdx={activeAudioIdx}
                     />
                   );
                 })}

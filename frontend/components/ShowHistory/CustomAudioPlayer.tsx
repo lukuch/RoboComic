@@ -191,12 +191,14 @@ export default function CustomAudioPlayer({
             <span>{formatTime(duration)}</span>
           </div>
         </div>
-        <button
-          ref={moreBtnRef}
-          className="ml-1 text-gray-400 hover:text-gray-600 relative"
-          onClick={() => setShowSpeedMenu((v) => !v)}
-        >
-          <FiMoreVertical className="w-4 h-4" />
+        <div className="relative ml-1">
+          <button
+            ref={moreBtnRef}
+            className="text-gray-400 hover:text-gray-600"
+            onClick={() => setShowSpeedMenu((v) => !v)}
+          >
+            <FiMoreVertical className="w-4 h-4" />
+          </button>
           {showSpeedMenu && (
             <div
               ref={speedMenuRef}
@@ -233,23 +235,29 @@ export default function CustomAudioPlayer({
                 <span>{t.download}</span>
               </button>
               {/* Speed options */}
-              <div className="border-t border-gray-200 dark:border-gray-700 my-1" />
-              {SPEEDS.map((speed) => (
-                <button
-                  key={speed}
-                  onClick={() => {
-                    setPlaybackSpeed(speed);
-                    setShowSpeedMenu(false);
-                  }}
-                  className={`w-full text-left px-4 py-1 text-sm hover:bg-blue-100 dark:hover:bg-blue-900 rounded-xl transition ${playbackSpeed === speed ? "font-bold text-blue-600 dark:text-blue-300" : "text-gray-700 dark:text-gray-200"}`}
-                >
-                  {speed}x{" "}
-                  {playbackSpeed === speed && <span className="ml-1">✓</span>}
-                </button>
-              ))}
+              <div className="border-t border-gray-400 dark:border-gray-700 my-2 mx-2 opacity-100" />
+              <div className="flex flex-wrap justify-center gap-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-lg max-w-[120px] mb-1">
+                {SPEEDS.map((speed) => (
+                  <button
+                    key={speed}
+                    onClick={() => {
+                      setPlaybackSpeed(speed);
+                    }}
+                    className={`px-2 py-0.5 text-xs rounded-full border transition min-w-0 min-h-0 leading-tight
+                      ${
+                        playbackSpeed === speed
+                          ? "bg-blue-500 text-white border-blue-500 shadow"
+                          : "bg-transparent text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-700 hover:bg-blue-100 dark:hover:bg-blue-900"
+                      }
+                    `}
+                  >
+                    {speed}x
+                  </button>
+                ))}
+              </div>
             </div>
           )}
-        </button>
+        </div>
       </div>
     </div>
   );
