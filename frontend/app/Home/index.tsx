@@ -9,6 +9,7 @@ import { AppHeader } from "./AppHeader";
 import { ErrorDisplay } from "./ErrorDisplay";
 import { useShowGeneration } from "../../hooks/useShowGeneration";
 import { useState, useEffect, useRef } from "react";
+import { useIsMobile } from "../../utils/isMobile";
 import { fetchVoiceIds } from "../../services/apiService";
 import { usePersonas } from "../../hooks/usePersonas";
 import { useAuth } from "../../context/AuthContext";
@@ -37,9 +38,8 @@ export type { HomeProps };
 
 export default function Home({ lang, setLang, t }: HomeProps) {
   // Set initial sidebar state based on screen size
-  const getIsMobile = () =>
-    typeof window !== "undefined" && window.innerWidth < 768;
-  const [sidebarOpen, setSidebarOpen] = useState(() => !getIsMobile());
+  const isMobile = useIsMobile();
+  const [sidebarOpen, setSidebarOpen] = useState(() => !isMobile);
   const [sidebarRefreshKey, setSidebarRefreshKey] = useState(0);
   const [voiceIds, setVoiceIds] = useState<{
     comedian1_voice_id: string;
@@ -152,7 +152,7 @@ export default function Home({ lang, setLang, t }: HomeProps) {
   // Update sidebar open state on resize
   useEffect(() => {
     function handleResize() {
-      if (window.innerWidth < 768) {
+      if (isMobile) {
         setSidebarOpen(false);
       } else {
         setSidebarOpen(true);
@@ -162,7 +162,7 @@ export default function Home({ lang, setLang, t }: HomeProps) {
     // Set initial state on mount
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [isMobile]);
 
   const comedian1Name = comedian1 ? comedian1.name : "";
   const comedian2Name = comedian2 ? comedian2.name : "";

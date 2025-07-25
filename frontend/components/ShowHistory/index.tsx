@@ -336,6 +336,7 @@ const ShowHistory = forwardRef<HTMLDivElement, ShowHistoryProps>(
                       onAudioEnd={() => setPlayingIdx(null)}
                       cached={isCached}
                       comedianType={comedianType}
+                      t={t}
                     />
                   );
                 })}

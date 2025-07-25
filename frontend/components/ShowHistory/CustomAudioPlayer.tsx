@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import type { TranslationStrings } from "../../types";
 import {
   FiPlay,
   FiPause,
@@ -15,6 +16,7 @@ interface CustomAudioPlayerProps {
   onEnded?: () => void;
   autoPlay?: boolean;
   className?: string;
+  t: TranslationStrings;
 }
 
 export default function CustomAudioPlayer({
@@ -22,6 +24,7 @@ export default function CustomAudioPlayer({
   onEnded,
   autoPlay,
   className,
+  t,
 }: CustomAudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
@@ -146,7 +149,7 @@ export default function CustomAudioPlayer({
 
   return (
     <div
-      className={`w-full rounded-2xl bg-gradient-to-r from-blue-200/80 to-purple-200/80 dark:from-gray-800 dark:to-blue-900 p-2 flex flex-col gap-1 shadow-lg border border-gray-200 dark:border-gray-700 relative ${className || ""}`}
+      className={`min-w-[180px] w-full max-w-xs sm:max-w-sm rounded-2xl bg-gradient-to-r from-blue-200/80 to-purple-200/80 dark:from-gray-800 dark:to-blue-900 p-1 flex flex-col gap-0.5 shadow-lg border border-gray-200 dark:border-gray-700 relative ${className || ""}`}
     >
       <audio
         ref={audioRef}
@@ -183,36 +186,11 @@ export default function CustomAudioPlayer({
             onChange={handleSeek}
             className="w-full accent-blue-500 h-1 rounded-lg cursor-pointer"
           />
-          <div className="flex justify-between text-xs text-gray-600 dark:text-gray-300 mt-0.5">
+          <div className="flex justify-between text-[10px] text-gray-600 dark:text-gray-300 mt-0">
             <span>{formatTime(currentTime)}</span>
             <span>{formatTime(duration)}</span>
           </div>
         </div>
-        <button
-          onClick={toggleMute}
-          className="ml-1 text-blue-500 hover:text-blue-700"
-        >
-          {muted || volume === 0 ? (
-            <FiVolumeX className="w-4 h-4" />
-          ) : (
-            <FiVolume2 className="w-4 h-4" />
-          )}
-        </button>
-        <input
-          type="range"
-          min={0}
-          max={1}
-          step={0.01}
-          value={muted ? 0 : volume}
-          onChange={handleVolume}
-          className="w-12 accent-blue-500 ml-1"
-        />
-        <button
-          onClick={handleDownload}
-          className="ml-1 text-blue-500 hover:text-blue-700"
-        >
-          <FiDownload className="w-4 h-4" />
-        </button>
         <button
           ref={moreBtnRef}
           className="ml-1 text-gray-400 hover:text-gray-600 relative"
@@ -222,8 +200,40 @@ export default function CustomAudioPlayer({
           {showSpeedMenu && (
             <div
               ref={speedMenuRef}
-              className="absolute z-50 right-0 mt-2 w-24 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-1"
+              className="absolute z-[9999] right-0 bottom-full mb-2 w-32 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-1 flex flex-col gap-1"
             >
+              {/* Volume control */}
+              <div className="flex items-center px-4 py-1 gap-2">
+                <button
+                  onClick={toggleMute}
+                  className="text-blue-500 hover:text-blue-700"
+                >
+                  {muted || volume === 0 ? (
+                    <FiVolumeX className="w-4 h-4" />
+                  ) : (
+                    <FiVolume2 className="w-4 h-4" />
+                  )}
+                </button>
+                <input
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={muted ? 0 : volume}
+                  onChange={handleVolume}
+                  className="w-16 accent-blue-500"
+                />
+              </div>
+              {/* Download button */}
+              <button
+                onClick={handleDownload}
+                className="flex items-center gap-2 w-full text-blue-500 hover:text-blue-700 px-4 py-1 text-sm"
+              >
+                <FiDownload className="w-4 h-4" />
+                <span>{t.download}</span>
+              </button>
+              {/* Speed options */}
+              <div className="border-t border-gray-200 dark:border-gray-700 my-1" />
               {SPEEDS.map((speed) => (
                 <button
                   key={speed}

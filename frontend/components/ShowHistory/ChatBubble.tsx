@@ -4,7 +4,7 @@ import { toTitleCase } from "../../utils/stringUtils";
 import { useState, useRef, useEffect } from "react";
 import CustomAudioPlayer from "./CustomAudioPlayer";
 import "./ChatBubble.css";
-
+import type { TranslationStrings } from "../../types";
 interface ChatBubbleProps {
   message: { role: string; content: string };
   index: number;
@@ -23,6 +23,7 @@ interface ChatBubbleProps {
   onAudioEnd: () => void;
   cached?: boolean;
   comedianType?: "comedian1" | "comedian2";
+  t: TranslationStrings;
 }
 
 export function ChatBubble({
@@ -41,6 +42,7 @@ export function ChatBubble({
   onAudioEnd,
   cached,
   comedianType = "comedian1",
+  t,
 }: ChatBubbleProps) {
   const isComedian = !["manager", "chat_manager", "system"].includes(
     message.role.toLowerCase(),
@@ -163,10 +165,11 @@ export function ChatBubble({
               />
               {audioUrl && playingIdx === index && (
                 <CustomAudioPlayer
-                  className="ml-4"
+                  className="ml-2"
                   src={audioUrl}
                   onEnded={onAudioEnd}
                   autoPlay
+                  t={t}
                 />
               )}
             </div>

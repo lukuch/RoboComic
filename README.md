@@ -7,6 +7,7 @@ RoboComic is an AI-powered standup comedy duel app where virtual comedians battl
 ![Build Status](https://img.shields.io/github/actions/workflow/status/lukuch/RoboComic/ci.yml?branch=main)
 ![Last Commit](https://img.shields.io/github/last-commit/lukuch/RoboComic)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+
 **Frontend:**  
 [![Snyk](https://snyk.io/test/github/lukuch/RoboComic/badge.svg?targetFile=frontend/package.json)](https://snyk.io/test/github/lukuch/RoboComic?targetFile=frontend/package.json)  
 **Backend:**  
