@@ -238,11 +238,15 @@ const ShowHistory = forwardRef<HTMLDivElement, ShowHistoryProps>(
       // Hide the main spinner in LoadingOverlay when skeletons are shown
       const skeletonAligns = ["right", "left", "right", "left"];
       return (
-        <section className="w-full h-[60vh] flex flex-col justify-center items-center mt-20">
+        <section className="w-full h-[60vh] flex flex-col justify-center items-center mt-6">
           <div className="flex flex-col gap-6 items-center w-full max-w-md">
             {skeletonAligns.map((align, idx) => {
               return (
-                <SkeletonBubble key={idx} align={align as "left" | "right"} />
+                <SkeletonBubble
+                  key={idx}
+                  align={align as "left" | "right"}
+                  isFirst={idx === 0}
+                />
               );
             })}
           </div>
@@ -308,6 +312,10 @@ const ShowHistory = forwardRef<HTMLDivElement, ShowHistoryProps>(
                   const hashIdx = roundIdx * bubblesPerRound + i;
                   const cacheKeyHash = cacheKeyHashes[hashIdx] || "";
                   const isCached = !!cachedTTS[cacheKeyHash];
+                  const comedianType =
+                    (roundIdx * bubblesPerRound + i) % 2 === 0
+                      ? "comedian1"
+                      : "comedian2";
                   return (
                     <ChatBubble
                       key={i}
@@ -327,6 +335,7 @@ const ShowHistory = forwardRef<HTMLDivElement, ShowHistoryProps>(
                       audioUrl={audioUrl}
                       onAudioEnd={() => setPlayingIdx(null)}
                       cached={isCached}
+                      comedianType={comedianType}
                     />
                   );
                 })}

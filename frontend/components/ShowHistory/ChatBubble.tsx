@@ -3,6 +3,7 @@ import { TTSButton } from "./TTSButton";
 import { toTitleCase } from "../../utils/stringUtils";
 import { useState, useRef, useEffect } from "react";
 import CustomAudioPlayer from "./CustomAudioPlayer";
+import "./ChatBubble.css";
 
 interface ChatBubbleProps {
   message: { role: string; content: string };
@@ -21,6 +22,7 @@ interface ChatBubbleProps {
   audioUrl: string | null;
   onAudioEnd: () => void;
   cached?: boolean;
+  comedianType?: "comedian1" | "comedian2";
 }
 
 export function ChatBubble({
@@ -38,6 +40,7 @@ export function ChatBubble({
   audioUrl,
   onAudioEnd,
   cached,
+  comedianType = "comedian1",
 }: ChatBubbleProps) {
   const isComedian = !["manager", "chat_manager", "system"].includes(
     message.role.toLowerCase(),
@@ -93,7 +96,7 @@ export function ChatBubble({
               {isComedian && showPopup && persona && (
                 <div
                   ref={popupRef}
-                  className={`absolute bottom-full mb-3 z-40 bg-gray-900/90 text-gray-100 rounded-2xl shadow-xl border border-gray-700 px-6 py-4 w-64 text-sm backdrop-blur ${
+                  className={`absolute bottom-full mb-3 z-40 bg-gray-900/90 text-gray-100 rounded-2xl shadow-xl px-6 py-4 w-64 text-sm backdrop-blur ${
                     popupPosition === "left"
                       ? "left-0"
                       : popupPosition === "right"
@@ -134,16 +137,24 @@ export function ChatBubble({
           </div>
         </div>
         <div
-          className={`rounded-2xl px-6 py-4 shadow-md ${bubbleColor} max-w-[80vw] md:max-w-[70%] w-fit border border-gray-200 dark:border-gray-700`}
+          className={`${comedianType === "comedian2" ? "bubble-animated-border-c2" : "bubble-animated-border-c1"} bubble-animated-border relative rounded-2xl px-7 py-5 shadow-2xl max-w-[80vw] md:max-w-[70%] w-fit transition-transform duration-150 ${bubbleColor} bg-white/60 dark:bg-gray-900/60 backdrop-blur-lg hover:scale-[1.008] hover:brightness-105 border-0`}
+          style={{
+            boxShadow:
+              "0 8px 32px 0 rgba(31, 38, 135, 0.18), 0 1.5px 8px 0 rgba(80, 0, 200, 0.10)",
+          }}
         >
-          <div className="font-semibold mb-1 text-xs text-gray-500 dark:text-gray-300">
+          {/* Glass reflection overlay */}
+          <span className="bubble-glass-reflection pointer-events-none absolute left-0 top-0 w-full h-full rounded-2xl overflow-hidden z-10">
+            <span className="absolute left-0 top-0 w-2/3 h-1/3 bg-gradient-to-br from-white/30 to-transparent rotate-12" />
+          </span>
+          <div className="relative z-20 font-semibold mb-1 text-xs text-gray-500 dark:text-gray-300">
             {toTitleCase(personaKey)}
           </div>
-          <div className="mb-3 whitespace-pre-line text-base leading-relaxed text-gray-900 dark:text-gray-100 font-medium">
+          <div className="relative z-20 mb-3 whitespace-pre-line text-base leading-relaxed text-gray-900 dark:text-gray-100 font-medium">
             {stripQuotes(message.content)}
           </div>
           {ttsMode && !message.role.toLowerCase().includes("manager") && (
-            <div className="flex flex-row items-center gap-2">
+            <div className="relative z-20 flex flex-row items-center gap-2">
               <TTSButton
                 onClick={() => onPlayTTS(message.content, index)}
                 disabled={playingIdx === index || loadingIdx === index}

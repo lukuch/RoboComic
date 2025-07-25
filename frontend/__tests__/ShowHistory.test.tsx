@@ -103,7 +103,9 @@ describe("ShowHistory", () => {
       );
     });
     // Find and click the Judge Duel button
-    const judgeButton = screen.getByRole("button", { name: /judge/i });
+    const judgeButton = screen.getByRole("button", {
+      name: /show the winner/i,
+    });
     await act(async () => {
       judgeButton.click();
     });

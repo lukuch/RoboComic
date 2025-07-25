@@ -31,7 +31,16 @@ export default function HomePage() {
           <div className="flex items-center gap-2 sm:gap-4 p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white/10 dark:bg-gray-900/60 backdrop-blur-md border border-white/20 shadow-lg min-h-[48px]">
             <Tooltip content={user.email || ""}>
               <span className="font-bold text-white text-sm sm:text-base drop-shadow-sm tracking-wide select-all">
-                {user.email}
+                {user.email ? (
+                  <>
+                    <span className="block sm:hidden">
+                      {user.email.split("@")[0]}@
+                    </span>
+                    <span className="hidden sm:block">{user.email}</span>
+                  </>
+                ) : (
+                  ""
+                )}
               </span>
             </Tooltip>
             <button

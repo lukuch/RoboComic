@@ -4,6 +4,7 @@ import { judgeShow } from "../../services/apiService";
 import { ChatMessage } from "../../types";
 import type { TranslationStrings } from "../../types";
 import type { Persona } from "../../types";
+import { LuSparkles } from "react-icons/lu";
 
 interface JudgingSectionProps {
   comedian1Name: string;
@@ -36,6 +37,10 @@ export default function JudgingSection({
 }: JudgingSectionProps) {
   const [judging, setJudging] = useState(false);
   const [triggered, setTriggered] = useState(false);
+  const [shinePos, setShinePos] = useState<{ x: number; y: number } | null>(
+    null,
+  );
+  const buttonRef = useState<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     setTriggered(false);
@@ -90,13 +95,43 @@ export default function JudgingSection({
         data-testid="judging-section"
       >
         <button
-          className="bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-white text-xl font-bold py-3 px-8 rounded-full shadow-lg flex items-center gap-2 transition-all duration-200"
+          ref={buttonRef[1]}
+          className="judge-duel-button-cyberpunk relative bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 hover:from-purple-500 hover:via-pink-500 hover:to-blue-500 text-white text-xl font-bold py-4 px-10 rounded-full shadow-2xl flex items-center gap-3 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 border-2 border-cyan-400/50 overflow-hidden group"
           onClick={() => setTriggered(true)}
+          onMouseMove={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            setShinePos({
+              x: e.clientX - rect.left,
+              y: e.clientY - rect.top,
+            });
+          }}
+          onMouseLeave={() => setShinePos(null)}
         >
-          <span role="img" aria-label="trophy">
-            🏆
-          </span>{" "}
-          {t.judgeDuel}
+          {/* Cyberpunk animated background */}
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 animate-cyberpunk-gradient rounded-full"></div>
+          {/* Neon border glow */}
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-pink-400 rounded-full blur-sm opacity-70 group-hover:opacity-100 transition-opacity duration-300"></div>
+          {/* Scanning line effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-300/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-800 ease-out rounded-full"></div>
+          {/* Electric pulse effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-400/30 to-pink-400/30 rounded-full animate-pulse"></div>
+          {/* Cursor-following shine */}
+          {shinePos && (
+            <div
+              className="pointer-events-none absolute inset-0 rounded-full z-20 transition-opacity duration-200"
+              style={{
+                background: `radial-gradient(600px circle at ${shinePos.x}px ${shinePos.y}px, rgba(255,255,255,0.18) 0%, rgba(59,130,246,0.10) 40%, transparent 80%)`,
+                opacity: 1,
+              }}
+            />
+          )}
+          {/* Content */}
+          <div className="relative z-10 flex items-center gap-3 drop-shadow-lg">
+            <LuSparkles className="w-7 h-7 text-yellow-300 drop-shadow-sm animate-sparkle-slow" />
+            <span className="font-extrabold tracking-wider text-shadow-neon">
+              {t.judgeDuel}
+            </span>
+          </div>
         </button>
       </div>
     );

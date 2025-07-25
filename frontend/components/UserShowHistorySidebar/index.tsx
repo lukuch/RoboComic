@@ -121,7 +121,11 @@ export default function UserShowHistorySidebar({
                         : "bg-white/80 hover:bg-zinc-100 dark:bg-zinc-900/60 dark:hover:bg-zinc-800/80 border-transparent hover:scale-[1.02] hover:shadow-lg"
                     }
                   `}
-                  onClick={() => onSelectShow?.(show)}
+                  onClick={() => {
+                    if (!isSelected) {
+                      onSelectShow?.(show);
+                    }
+                  }}
                 >
                   <span className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-purple-400/80 to-blue-400/80 dark:from-purple-500/80 dark:to-blue-500/80 text-white shadow group-hover:scale-110 transition-transform">
                     <SparklesIcon className="h-5 w-5" />

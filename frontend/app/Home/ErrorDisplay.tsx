@@ -62,7 +62,7 @@ export function ErrorDisplay({ error, onDismiss }: ErrorDisplayProps) {
   return (
     <div
       data-testid="error-display"
-      className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full mx-4 transition-all duration-300 ease-in-out ${
+      className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 max-w-xs sm:max-w-sm md:max-w-md w-full mx-2 sm:mx-4 transition-all duration-300 ease-in-out ${
         isAnimating ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
       }`}
     >

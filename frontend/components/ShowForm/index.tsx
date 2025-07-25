@@ -120,7 +120,7 @@ export default function ShowForm({
           <div className="flex justify-center w-full mb-2">
             <button
               type="button"
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 px-5 py-2 text-white font-bold shadow-lg hover:from-blue-600 hover:to-purple-700 transition border border-blue-700"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 px-5 py-2 text-white font-bold shadow-lg hover:from-blue-600 hover:to-purple-700 transition transform hover:scale-105 hover:brightness-110 duration-150"
               onClick={() => setModalOpen(true)}
             >
               <FiUsers className="w-5 h-5" />

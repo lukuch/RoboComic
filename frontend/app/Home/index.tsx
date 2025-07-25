@@ -36,7 +36,10 @@ interface HomeProps {
 export type { HomeProps };
 
 export default function Home({ lang, setLang, t }: HomeProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  // Set initial sidebar state based on screen size
+  const getIsMobile = () =>
+    typeof window !== "undefined" && window.innerWidth < 768;
+  const [sidebarOpen, setSidebarOpen] = useState(() => !getIsMobile());
   const [sidebarRefreshKey, setSidebarRefreshKey] = useState(0);
   const [voiceIds, setVoiceIds] = useState<{
     comedian1_voice_id: string;
@@ -146,6 +149,21 @@ export default function Home({ lang, setLang, t }: HomeProps) {
     }
   }, [selectedShowHistory]);
 
+  // Update sidebar open state on resize
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth < 768) {
+        setSidebarOpen(false);
+      } else {
+        setSidebarOpen(true);
+      }
+    }
+    window.addEventListener("resize", handleResize);
+    // Set initial state on mount
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const comedian1Name = comedian1 ? comedian1.name : "";
   const comedian2Name = comedian2 ? comedian2.name : "";
 
@@ -201,7 +219,7 @@ export default function Home({ lang, setLang, t }: HomeProps) {
           <LoadingOverlay
             isLoading={loading || personasLoading || selectedShowLoading}
           />
-          <div className="flex w-full max-w-2xl justify-end gap-4 mb-6">
+          <div className="flex w-full max-w-2xl justify-end gap-4 mb-6 mr-4">
             <LanguageSelector currentLang={lang} onLanguageChange={setLang} />
             <ThemeToggle />
           </div>

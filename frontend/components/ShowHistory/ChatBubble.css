@@ -1,0 +1,39 @@
+.bubble-animated-border {
+  position: relative;
+  z-index: 0;
+}
+.bubble-animated-border-c1::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 1.25rem;
+  z-index: 1;
+  background: linear-gradient(120deg, #3b82f6, #8b5cf6, #3b82f6);
+  background-size: 300% 300%;
+  animation: borderMove 16s linear infinite;
+  opacity: 0.7;
+  pointer-events: none;
+}
+.bubble-animated-border-c2::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 1.25rem;
+  z-index: 1;
+  background: linear-gradient(120deg, #ec4899, #f59e42, #ec4899);
+  background-size: 300% 300%;
+  animation: borderMove 16s linear infinite;
+  opacity: 0.7;
+  pointer-events: none;
+}
+@keyframes borderMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+.bubble-glass-reflection {
+  z-index: 2;
+}

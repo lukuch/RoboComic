@@ -41,11 +41,11 @@ export const TRANSLATIONS = {
     buildContextTooltip:
       "When enabled, the AI will research and build background context about the selected topic to create more informed and relevant jokes.",
     round: "Round",
-    judgeDuel: "Judge the Duel!",
+    judgeDuel: "Show the winner!",
     congratulations: "Congratulations!",
     judgingDuel: "Judging the duel...",
     roundsLabel: "ROUNDS",
-    managePersonas: "Manage Personas",
+    managePersonas: "Manage Your Personas",
     name: "Name",
     descriptionEn: "Comedian persona description (english)",
     descriptionPl: "Comedian persona description (polish)",
@@ -125,7 +125,7 @@ export const TRANSLATIONS = {
     buildContextTooltip:
       "Gdy włączone, AI będzie badać i budować tło kontekstowe dla wybranego tematu, aby tworzyć bardziej świadome i trafne żarty.",
     round: "Runda",
-    judgeDuel: "Oceń pojedynek!",
+    judgeDuel: "Sprawdź zwycięzcę!",
     congratulations: "Gratulacje!",
     judgingDuel: "Trwa ocenianie pojedynku...",
     roundsLabel: "ILOŚĆ RUND",

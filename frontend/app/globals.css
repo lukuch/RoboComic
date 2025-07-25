@@ -86,3 +86,206 @@ a {
   scrollbar-width: thin !important;
   scrollbar-color: #3b82f6 #181c2a !important; /* thumb color, track color */
 }
+
+/* Judge Duel Button Animations */
+@keyframes gradient-x {
+  0%,
+  100% {
+    background-size: 200% 200%;
+    background-position: left center;
+  }
+  50% {
+    background-size: 200% 200%;
+    background-position: right center;
+  }
+}
+
+.animate-gradient-x {
+  animation: gradient-x 3s ease infinite;
+}
+
+.judge-duel-button {
+  position: relative;
+  background: linear-gradient(45deg, #fbbf24, #f59e0b, #d97706, #fbbf24);
+  background-size: 300% 300%;
+  animation: gradient-x 3s ease infinite;
+  box-shadow:
+    0 10px 25px rgba(251, 191, 36, 0.3),
+    0 0 0 1px rgba(251, 191, 36, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.judge-duel-button:hover {
+  box-shadow:
+    0 15px 35px rgba(251, 191, 36, 0.4),
+    0 0 0 1px rgba(251, 191, 36, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.judge-duel-button:active {
+  transform: translateY(2px) scale(0.98);
+  box-shadow:
+    0 5px 15px rgba(251, 191, 36, 0.3),
+    0 0 0 1px rgba(251, 191, 36, 0.1);
+}
+
+/* Cyberpunk Judge Duel Button */
+@keyframes cyberpunk-gradient {
+  0%,
+  100% {
+    background-size: 400% 400%;
+    background-position: 0% 50%;
+  }
+  50% {
+    background-size: 400% 400%;
+    background-position: 100% 50%;
+  }
+}
+
+.animate-cyberpunk-gradient {
+  animation: cyberpunk-gradient 4s ease infinite;
+}
+
+.text-shadow-neon {
+  text-shadow:
+    0 0 2px #fff,
+    0 0 4px #0ff;
+}
+
+.judge-duel-button-cyberpunk {
+  position: relative;
+  background: linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6);
+  background-size: 400% 400%;
+  animation: cyberpunk-gradient 4s ease infinite;
+  box-shadow:
+    0 0 16px #3b82f6,
+    0 0 32px #8b5cf6,
+    0 0 48px #ec4899,
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.judge-duel-button-cyberpunk:hover {
+  box-shadow:
+    0 0 30px #3b82f6,
+    0 0 60px #8b5cf6,
+    0 0 90px #ec4899,
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.judge-duel-button-cyberpunk:hover .text-shadow-neon {
+  text-shadow:
+    0 0 5px #8b5cf6,
+    0 0 10px #3b82f6,
+    0 0 15px #ec4899;
+}
+
+.judge-duel-button-cyberpunk:active {
+  transform: translateY(3px) scale(0.95);
+  box-shadow:
+    0 0 10px rgba(34, 211, 238, 0.5),
+    0 0 20px rgba(34, 211, 238, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+@keyframes sparkle-slow {
+  0%,
+  100% {
+    filter: brightness(1) drop-shadow(0 0 2px #fde68a);
+  }
+  50% {
+    filter: brightness(1.15) drop-shadow(0 0 6px #fde68a);
+  }
+}
+.animate-sparkle-slow {
+  animation: sparkle-slow 2.5s ease-in-out infinite;
+}
+
+/* Winner Summary Supercool Styles */
+@keyframes gradient-x {
+  0%,
+  100% {
+    background-size: 200% 200%;
+    background-position: left center;
+  }
+  50% {
+    background-size: 200% 200%;
+    background-position: right center;
+  }
+}
+.animate-gradient-x {
+  animation: gradient-x 4s ease-in-out infinite;
+}
+
+.supercool-animated-border {
+  border-radius: 1.5rem;
+  z-index: 10;
+  background: linear-gradient(120deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6);
+  background-size: 300% 300%;
+  animation: gradient-x 8s linear infinite;
+  opacity: 0.7;
+  border: 2.5px solid transparent;
+  box-shadow:
+    0 0 32px 0 #8b5cf6,
+    0 0 16px 0 #ec4899;
+  pointer-events: none;
+}
+
+.winner-gradient-text {
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6);
+  background-size: 200% 200%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-x 4s ease-in-out infinite;
+}
+
+@keyframes float-slow {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-16px) scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.7;
+  }
+}
+.animate-float-slow {
+  animation: float-slow 3.5s ease-in-out infinite;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.animate-bounce-in {
+  animation: bounce-in 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-fade-in {
+  animation: fade-in 1.2s ease-in;
+}
