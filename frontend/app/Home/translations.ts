@@ -1,6 +1,6 @@
 export const TRANSLATIONS = {
   en: {
-    customize: "Customize Your Comedy Duel",
+    customize: "Customize Comedy Duel",
     comedian1: "Comedian 1 Style",
     comedian2: "Comedian 2 Style",
     language: "Language",
@@ -47,8 +47,8 @@ export const TRANSLATIONS = {
     roundsLabel: "ROUNDS",
     managePersonas: "Manage Personas",
     name: "Name",
-    descriptionEn: "Description (EN)",
-    descriptionPl: "Description (PL)",
+    descriptionEn: "Comedian persona description (english)",
+    descriptionPl: "Comedian persona description (polish)",
     add: "Add",
     update: "Update",
     cancel: "Cancel",
@@ -80,6 +80,7 @@ export const TRANSLATIONS = {
     backToCurrentSession: "Back to current session",
     endOfHistory: "It's the end of your show history.",
     guest: "Guest",
+    deleteShow: "Delete show",
   },
   pl: {
     customize: "Dostosuj pojedynek komików",
@@ -130,8 +131,8 @@ export const TRANSLATIONS = {
     roundsLabel: "ILOŚĆ RUND",
     managePersonas: "Zarządzaj własnymi personami",
     name: "Nazwa",
-    descriptionEn: "Opis (EN)",
-    descriptionPl: "Opis (PL)",
+    descriptionEn: "Opis persony komika (angielski)",
+    descriptionPl: "Opis persony komika (polski)",
     add: "Dodaj",
     update: "Aktualizuj",
     cancel: "Anuluj",
@@ -163,6 +164,7 @@ export const TRANSLATIONS = {
     backToCurrentSession: "Powrót do bieżącej sesji",
     endOfHistory: "To już cała historia twoich show.",
     guest: "Gość",
+    deleteShow: "Usuń show",
   },
 } as const;
 

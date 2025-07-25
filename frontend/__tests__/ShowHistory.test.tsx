@@ -5,6 +5,8 @@ import ShowHistory from "../components/ShowHistory/index";
 import { TRANSLATIONS } from "../app/Home/translations";
 import { act } from "react";
 import * as apiService from "../services/apiService";
+import userEvent from "@testing-library/user-event";
+import { waitFor } from "@testing-library/react";
 
 jest.mock("react-confetti", () => () => null);
 
@@ -60,7 +62,7 @@ describe("ShowHistory", () => {
   it("calls TTS API and plays audio when TTS button is clicked", async () => {
     const ttsMock = jest
       .spyOn(apiService, "tts")
-      .mockResolvedValue("test-audio-url.mp3");
+      .mockResolvedValue(new Blob(["dummy audio"], { type: "audio/wav" }));
     await act(async () => {
       render(
         <ShowHistory
@@ -75,12 +77,10 @@ describe("ShowHistory", () => {
     });
     const ttsButtons = screen.getAllByTestId("tts-button");
     expect(ttsButtons.length).toBeGreaterThan(0);
-    await act(async () => {
-      ttsButtons[0].click();
+    await userEvent.click(ttsButtons[0]);
+    await waitFor(() => {
+      expect(ttsMock).toHaveBeenCalled();
     });
-    expect(ttsMock).toHaveBeenCalled();
-    // Optionally, check for audio element
-    // expect(await screen.findByRole("audio")).toBeInTheDocument();
   });
 
   it("shows winner and summary after judging", async () => {

@@ -6,7 +6,10 @@ import {
   ArrowUturnLeftIcon,
   SparklesIcon,
   UserCircleIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
+import Tooltip from "../shared/Tooltip";
+import type { TranslationStrings } from "../../types";
 
 interface Show {
   id: string;
@@ -20,9 +23,10 @@ interface UserShowHistorySidebarProps {
   onDeselectShow?: () => void;
   showSelected?: boolean;
   selectedShowId?: string | null;
-  t: any;
+  t: TranslationStrings;
   lang: string;
   isMobile?: boolean;
+  refreshKey?: number | string;
 }
 
 function trimShowTitle(title: string) {
@@ -38,6 +42,7 @@ export default function UserShowHistorySidebar({
   selectedShowId,
   t,
   lang,
+  refreshKey,
 }: UserShowHistorySidebarProps) {
   const { user } = useAuth();
   const [shows, setShows] = useState<Show[]>([]);
@@ -59,7 +64,12 @@ export default function UserShowHistorySidebar({
         }
         setLoading(false);
       });
-  }, [user]);
+  }, [user, refreshKey]);
+
+  const handleRemoveShow = async (showId: string) => {
+    setShows((prev) => prev.filter((s) => s.id !== showId));
+    await supabase.from("shows").delete().eq("id", showId);
+  };
 
   if (!user) {
     return null;
@@ -124,6 +134,18 @@ export default function UserShowHistorySidebar({
                       {new Date(show.created_at).toLocaleString(lang)}
                     </span>
                   </div>
+                  <Tooltip content={t.deleteShow}>
+                    <button
+                      className="ml-2 p-1 rounded-full hover:bg-red-100 dark:hover:bg-red-900/60 text-red-500 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity duration-150"
+                      style={{ pointerEvents: "auto" }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveShow(show.id);
+                      }}
+                    >
+                      <TrashIcon className="h-5 w-5" />
+                    </button>
+                  </Tooltip>
                 </li>
               );
             })}

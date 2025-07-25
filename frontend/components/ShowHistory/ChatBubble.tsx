@@ -2,6 +2,7 @@ import { Avatar } from "./Avatar";
 import { TTSButton } from "./TTSButton";
 import { toTitleCase } from "../../utils/stringUtils";
 import { useState, useRef, useEffect } from "react";
+import CustomAudioPlayer from "./CustomAudioPlayer";
 
 interface ChatBubbleProps {
   message: { role: string; content: string };
@@ -19,6 +20,7 @@ interface ChatBubbleProps {
   loadingIdx: number | null;
   audioUrl: string | null;
   onAudioEnd: () => void;
+  cached?: boolean;
 }
 
 export function ChatBubble({
@@ -35,6 +37,7 @@ export function ChatBubble({
   loadingIdx,
   audioUrl,
   onAudioEnd,
+  cached,
 }: ChatBubbleProps) {
   const isComedian = !["manager", "chat_manager", "system"].includes(
     message.role.toLowerCase(),
@@ -140,20 +143,22 @@ export function ChatBubble({
             {stripQuotes(message.content)}
           </div>
           {ttsMode && !message.role.toLowerCase().includes("manager") && (
-            <TTSButton
-              onClick={() => onPlayTTS(message.content, index)}
-              disabled={playingIdx === index || loadingIdx === index}
-              loading={loadingIdx === index}
-            />
-          )}
-          {audioUrl && playingIdx === index && (
-            <audio
-              src={audioUrl}
-              controls
-              autoPlay
-              className="mt-2 w-full"
-              onEnded={onAudioEnd}
-            />
+            <div className="flex flex-row items-center gap-2">
+              <TTSButton
+                onClick={() => onPlayTTS(message.content, index)}
+                disabled={playingIdx === index || loadingIdx === index}
+                loading={loadingIdx === index}
+                cached={cached}
+              />
+              {audioUrl && playingIdx === index && (
+                <CustomAudioPlayer
+                  className="ml-4"
+                  src={audioUrl}
+                  onEnded={onAudioEnd}
+                  autoPlay
+                />
+              )}
+            </div>
           )}
         </div>
       </div>

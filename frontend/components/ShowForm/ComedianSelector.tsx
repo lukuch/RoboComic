@@ -8,7 +8,6 @@ import {
 } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { toTitleCase } from "../../utils/stringUtils";
-import { FormLabel } from "./FormLabel";
 
 interface ComedianSelectorProps {
   label: string;
@@ -47,9 +46,29 @@ export function ComedianSelector({
       </div>
     );
   }
+  let badgeIcon = null;
+  if (label.toLowerCase().includes("1")) {
+    badgeIcon = (
+      <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-blue-500 to-purple-500 text-white font-bold text-base shadow-md drop-shadow border border-white">
+        1
+      </span>
+    );
+  } else if (label.toLowerCase().includes("2")) {
+    badgeIcon = (
+      <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-gradient-to-br from-pink-500 to-purple-500 text-white font-bold text-base shadow-md drop-shadow border border-white">
+        2
+      </span>
+    );
+  }
+  const personaLabel = lang === "pl" ? "Persona Komika" : "Comedian Persona";
   return (
     <div className="flex-1">
-      <FormLabel>{label}</FormLabel>
+      <div className="flex flex-col items-center gap-1 mb-1">
+        {badgeIcon}
+        <span className="font-semibold text-gray-900 dark:text-gray-100">
+          {personaLabel}
+        </span>
+      </div>
       <Listbox value={value} onChange={onChange}>
         <div className="relative">
           <ListboxButton
@@ -70,7 +89,7 @@ export function ComedianSelector({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <ListboxOptions className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-white dark:bg-gray-800 py-1 text-base shadow-lg ring-1 ring-black/10 focus:outline-none">
+            <ListboxOptions className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-white dark:bg-gray-800 py-1 text-base shadow-lg ring-1 ring-black/10 focus:outline-none scrollbar-thin scrollbar-thumb-zinc-300 scrollbar-track-zinc-100 dark:scrollbar-thumb-zinc-700 dark:scrollbar-track-zinc-900 scrollbar-rounded-lg hover:scrollbar-thumb-zinc-400 dark:hover:scrollbar-thumb-zinc-500">
               {personaOptions.map((option) => (
                 <ListboxOption
                   key={option}

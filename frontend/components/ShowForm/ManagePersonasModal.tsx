@@ -8,7 +8,7 @@ import {
 import { Fragment, useEffect, useState } from "react";
 import { supabase } from "../../utils/supabaseClient";
 import { useAuth } from "../../context/AuthContext";
-import { FiEdit2, FiX, FiUsers } from "react-icons/fi";
+import { FiEdit2, FiX, FiUsers, FiPlus, FiCheck } from "react-icons/fi";
 import type { TranslationStrings } from "../../types";
 
 interface ManagePersonasModalProps {
@@ -147,86 +147,97 @@ export default function ManagePersonasModal({
                 >
                   <FiX className="w-6 h-6" />
                 </button>
-                <div className="space-y-6 max-h-[240px] overflow-y-auto pr-2 persona-scrollbar">
+                <div className="flex-1 max-h-[320px] overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-300 scrollbar-track-zinc-100 dark:scrollbar-thumb-zinc-700 dark:scrollbar-track-zinc-900 scrollbar-rounded-lg hover:scrollbar-thumb-zinc-400 dark:hover:scrollbar-thumb-zinc-500">
                   {personas.map((p) => (
                     <div
-                      key={p.id}
-                      className="flex items-center justify-between border-b border-gray-300 dark:border-gray-700 pb-2"
+                      key={p.name}
+                      className="bg-white/90 dark:bg-gray-900/80 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 p-4 mb-4 flex flex-col gap-2 transition hover:shadow-lg hover:-translate-y-1 mx-3"
                     >
-                      <div>
-                        <div className="font-semibold text-gray-900 dark:text-white">
-                          {p.name}
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <div className="font-bold text-lg text-gray-900 dark:text-gray-100">
+                            {p.name}
+                          </div>
+                          <div className="text-sm text-gray-700 dark:text-gray-300">
+                            {p.description}
+                          </div>
+                          <div className="text-xs text-gray-400 dark:text-gray-500">
+                            {p.description_pl}
+                          </div>
                         </div>
-                        <div className="text-xs text-gray-600 dark:text-gray-400">
-                          {p.description}
+                        <div className="flex gap-2">
+                          <button
+                            className="text-blue-400 hover:text-blue-200"
+                            onClick={() => startEdit(p)}
+                            title={t.update}
+                            aria-label={t.update}
+                          >
+                            <FiEdit2 className="w-5 h-5" />
+                          </button>
+                          <button
+                            className="text-red-400 hover:text-red-200 mr-2"
+                            onClick={() => handleDelete(p.id)}
+                            title={t.cancel}
+                            aria-label={t.cancel}
+                          >
+                            <FiX className="w-5 h-5" />
+                          </button>
                         </div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">
-                          {p.description_pl}
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          className="text-blue-400 hover:text-blue-200"
-                          onClick={() => startEdit(p)}
-                          title={t.update}
-                          aria-label={t.update}
-                        >
-                          <FiEdit2 className="w-5 h-5" />
-                        </button>
-                        <button
-                          className="text-red-400 hover:text-red-200 mr-2"
-                          onClick={() => handleDelete(p.id)}
-                          title={t.cancel}
-                          aria-label={t.cancel}
-                        >
-                          <FiX className="w-5 h-5" />
-                        </button>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="mt-8 flex flex-col space-y-5">
+                <div className="mt-2 flex flex-col space-y-5 p-4 scrollbar-thin scrollbar-thumb-zinc-300 scrollbar-track-zinc-100 dark:scrollbar-thumb-zinc-700 dark:scrollbar-track-zinc-900 scrollbar-rounded-lg hover:scrollbar-thumb-zinc-400 dark:hover:scrollbar-thumb-zinc-500 overflow-y-auto">
                   <input
-                    className="w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-white/80 dark:bg-gray-800/80 text-gray-900 dark:text-gray-100 placeholder-gray-400 px-4 py-2 mb-2 text-base shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition"
                     placeholder={t.name}
                     value={form.name}
                     onChange={(e) =>
                       setForm((f) => ({ ...f, name: e.target.value }))
                     }
-                    disabled={loading}
+                    maxLength={40}
+                    autoFocus
                   />
                   <textarea
-                    className="w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y min-h-[60px]"
+                    className="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-white/80 dark:bg-gray-800/80 text-gray-900 dark:text-gray-100 placeholder-gray-400 px-4 py-2 mb-2 text-base shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition resize-none scrollbar-thin scrollbar-thumb-zinc-300 scrollbar-track-zinc-100 dark:scrollbar-thumb-zinc-700 dark:scrollbar-track-zinc-900 scrollbar-rounded-lg hover:scrollbar-thumb-zinc-400 dark:hover:scrollbar-thumb-zinc-500"
                     placeholder={t.descriptionEn}
                     value={form.description}
                     onChange={(e) =>
                       setForm((f) => ({ ...f, description: e.target.value }))
                     }
-                    disabled={loading}
+                    maxLength={200}
                   />
                   <textarea
-                    className="w-full p-3 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y min-h-[60px]"
+                    className="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-white/80 dark:bg-gray-800/80 text-gray-900 dark:text-gray-100 placeholder-gray-400 px-4 py-2 mb-2 text-base shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 transition resize-none scrollbar-thin scrollbar-thumb-zinc-300 scrollbar-track-zinc-100 dark:scrollbar-thumb-zinc-700 dark:scrollbar-track-zinc-900 scrollbar-rounded-lg hover:scrollbar-thumb-zinc-400 dark:hover:scrollbar-thumb-zinc-500"
                     placeholder={t.descriptionPl}
                     value={form.description_pl}
                     onChange={(e) =>
                       setForm((f) => ({ ...f, description_pl: e.target.value }))
                     }
-                    disabled={loading}
+                    maxLength={200}
                   />
                   <div className="flex gap-2 mt-2">
                     <button
-                      className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-2 rounded-xl shadow hover:from-blue-600 hover:to-purple-700 transition"
+                      type="submit"
+                      className={`${editing ? "w-full" : "w-3/4 mx-auto"} mt-2 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold text-lg shadow-md hover:brightness-110 hover:scale-[1.01] transition-all duration-150 flex items-center justify-center`}
                       onClick={handleSave}
                       disabled={loading || !form.name}
                     >
+                      {editing ? (
+                        <FiCheck className="w-5 h-5 mr-2" />
+                      ) : (
+                        <FiPlus className="w-5 h-5 mr-2" />
+                      )}
                       {editing ? t.update : t.add}
                     </button>
                     {editing && (
                       <button
-                        className="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-bold py-2 rounded-xl shadow hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+                        type="button"
+                        className="w-full mt-2 py-2 rounded-xl bg-gradient-to-r from-gray-300 to-gray-400 text-gray-800 font-bold text-lg shadow-md hover:brightness-110 hover:scale-[1.01] transition-all duration-150 flex items-center justify-center"
                         onClick={cancelEdit}
                         disabled={loading}
                       >
+                        <FiX className="w-5 h-5 mr-2" />
                         {t.cancel}
                       </button>
                     )}

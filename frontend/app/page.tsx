@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import Home from "./Home";
 import AuthForm from "../components/Auth/AuthForm";
 import { useAuth } from "../context/AuthContext";
-import { FaUser } from "react-icons/fa";
+import { FiLogIn, FiLogOut } from "react-icons/fi";
 import Tooltip from "../components/shared/Tooltip";
 import { TRANSLATIONS } from "./Home/translations";
 import { DEFAULTS } from "../constants";
@@ -17,6 +17,7 @@ export default function HomePage() {
   const { lang, setLang } = useLanguage(DEFAULTS.LANGUAGE);
   const t: TranslationStrings = TRANSLATIONS[lang as "en" | "pl"];
   const modalRef = useRef<HTMLDivElement>(null);
+  const isLoggedIn = !!user;
 
   const handleLogout = async () => {
     await signOut();
@@ -27,30 +28,37 @@ export default function HomePage() {
     <>
       <div className="fixed top-4 right-4 z-50">
         {user ? (
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg shadow border text-sm bg-white/80 dark:bg-gray-800/80 border-gray-200 dark:border-gray-700 sm:gap-3 sm:px-5 sm:py-2 sm:rounded-xl sm:text-base">
+          <div className="flex items-center gap-2 sm:gap-4 p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white/10 dark:bg-gray-900/60 backdrop-blur-md border border-white/20 shadow-lg min-h-[48px]">
             <Tooltip content={user.email || ""}>
-              <span className="text-gray-900 dark:text-gray-100 font-semibold truncate max-w-[120px] sm:max-w-[160px] cursor-pointer">
+              <span className="font-bold text-white text-sm sm:text-base drop-shadow-sm tracking-wide select-all">
                 {user.email}
               </span>
             </Tooltip>
             <button
               onClick={handleLogout}
-              className="px-3 py-1 text-sm rounded-md bg-gradient-to-r from-red-500 to-pink-500 text-white font-semibold shadow hover:from-red-600 hover:to-pink-600 transition sm:px-4 sm:py-1 sm:text-base sm:rounded-lg"
+              className="flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-4 sm:py-1.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-pink-500 to-orange-400 text-white font-bold shadow-lg hover:scale-105 hover:brightness-110 transition-all duration-150 text-xs sm:text-sm"
             >
+              <FiLogOut className="w-4 h-4 sm:w-5 sm:h-5" />
               {t.logoutButton}
             </button>
           </div>
         ) : (
-          <button
-            onClick={() => setShowAuth(true)}
-            className="px-5 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg shadow hover:from-blue-700 hover:to-purple-700 transition flex items-center gap-2"
-          >
-            <FaUser className="text-xl" />
-            {t.loginButton}
-          </button>
+          <div className="flex items-center gap-2 sm:gap-4 p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-white/10 dark:bg-gray-900/60 backdrop-blur-md border border-white/20 shadow-lg min-h-[48px]">
+            <button
+              onClick={() => setShowAuth(true)}
+              className="flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-4 sm:py-1.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold shadow-lg hover:scale-105 hover:brightness-110 transition-all duration-150 text-xs sm:text-sm"
+            >
+              <FiLogIn className="w-4 h-4 sm:w-5 sm:h-5" />
+              {t.loginButton}
+            </button>
+          </div>
         )}
       </div>
-      <Home lang={lang} setLang={setLang} t={t} />
+      <div
+        className={`min-h-screen flex flex-row w-full relative pb-16 ${!isLoggedIn ? "mt-4 sm:mt-0" : ""}`}
+      >
+        <Home lang={lang} setLang={setLang} t={t} />
+      </div>
       {showAuth && !user && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"

@@ -11,6 +11,7 @@ import {
   JudgeShowResponse,
 } from "../types";
 import { API_CONFIG, ERROR_MESSAGES } from "../constants";
+import { supabase } from "../utils/supabaseClient";
 
 // Create axios instance with default config
 const api = axios.create({
@@ -76,9 +77,9 @@ export async function tts(
   text: string,
   lang: string,
   voiceId?: string,
-): Promise<string> {
+): Promise<Blob> {
   return apiRequest(async () => {
-    const response = await api.post<Blob>(
+    const response = await api.post(
       "/tts",
       { text, lang, voice_id: voiceId },
       {
@@ -86,7 +87,7 @@ export async function tts(
         timeout: API_CONFIG.TTS_TIMEOUT,
       },
     );
-    return URL.createObjectURL(response.data);
+    return response.data; // Return the actual Blob
   });
 }
 
@@ -136,4 +137,51 @@ export async function getTemperaturePresets(): Promise<TemperaturePreset[]> {
     const { data } = await api.get<TemperaturePreset[]>("/temperature-presets");
     return data;
   });
+}
+
+// Helper to get TTS audio from Supabase cache
+export async function getCachedTTS(hash: string): Promise<string | null> {
+  const { data, error } = await supabase
+    .from("tts_audio")
+    .select("audio_url")
+    .eq("cache_key", hash)
+    .single();
+  if (data && data.audio_url) {
+    return data.audio_url;
+  }
+  return null;
+}
+
+// Helper to upload TTS audio to Supabase Storage and return the public URL
+export async function uploadTTSAudio(
+  hash: string,
+  blob: Blob,
+): Promise<string | null> {
+  const filePath = `tts/${hash}.wav`;
+  const { data, error } = await supabase.storage
+    .from("tts-audio")
+    .upload(filePath, blob, { upsert: true, contentType: "audio/wav" });
+  if (error) {
+    // If file already exists, get the public URL anyway
+    const { data: urlData } = supabase.storage
+      .from("tts-audio")
+      .getPublicUrl(filePath);
+    return urlData?.publicUrl || null;
+  }
+  const { data: urlData } = supabase.storage
+    .from("tts-audio")
+    .getPublicUrl(filePath);
+  return urlData?.publicUrl || null;
+}
+
+// Helper to insert TTS audio metadata into the tts_audio table
+export async function insertTTSMetadata(
+  hash: string,
+  audioUrl: string,
+): Promise<void> {
+  await supabase
+    .from("tts_audio")
+    .upsert([{ cache_key: hash, audio_url: audioUrl }], {
+      onConflict: "cache_key",
+    });
 }

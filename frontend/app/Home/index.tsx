@@ -18,6 +18,7 @@ import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import Footer from "./Footer";
 import { supabase } from "../../utils/supabaseClient";
 import type { ChatMessage } from "../../types";
+import type { ShowFormParams } from "../../types";
 
 // Show type for sidebar selection
 interface Show {
@@ -36,6 +37,7 @@ export type { HomeProps };
 
 export default function Home({ lang, setLang, t }: HomeProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarRefreshKey, setSidebarRefreshKey] = useState(0);
   const [voiceIds, setVoiceIds] = useState<{
     comedian1_voice_id: string;
     comedian2_voice_id: string;
@@ -57,9 +59,26 @@ export default function Home({ lang, setLang, t }: HomeProps) {
     ttsMode,
     comedian1,
     comedian2,
-    generateShow: handleGenerateShow,
+    generateShow: handleGenerateShowRaw,
     clearError,
   } = useShowGeneration(undefined, setVoiceIds);
+
+  // Wrap the generateShow handler to trigger sidebar refresh after show is saved
+  const handleGenerateShow = async (params: ShowFormParams) => {
+    const newShowId = await handleGenerateShowRaw(params);
+    setSidebarRefreshKey((k) => k + 1);
+    if (newShowId) {
+      // Fetch the new show and select it
+      const { data, error } = await supabase
+        .from("shows")
+        .select("id, title, created_at")
+        .eq("id", newShowId)
+        .single();
+      if (!error && data) {
+        await handleSelectShow(data);
+      }
+    }
+  };
 
   // --- New state for selected show ---
   const [selectedShowHistory, setSelectedShowHistory] = useState<
@@ -69,6 +88,8 @@ export default function Home({ lang, setLang, t }: HomeProps) {
   const [selectedComedian1, setSelectedComedian1] = useState("");
   const [selectedComedian2, setSelectedComedian2] = useState("");
   const [selectedShowId, setSelectedShowId] = useState<string | null>(null);
+  const [selectedShowTtsMode, setSelectedShowTtsMode] =
+    useState<boolean>(false);
   const showHistoryRef = useRef<HTMLDivElement | null>(null);
 
   // --- Handler to select a show from sidebar ---
@@ -78,6 +99,7 @@ export default function Home({ lang, setLang, t }: HomeProps) {
     setSelectedComedian1("");
     setSelectedComedian2("");
     setSelectedShowId(show.id);
+    setSelectedShowTtsMode(false);
     const { data, error } = await supabase
       .from("shows")
       .select("data, title, created_at")
@@ -91,6 +113,7 @@ export default function Home({ lang, setLang, t }: HomeProps) {
       setSelectedShowHistory(parsed?.history || []);
       setSelectedComedian1(parsed?.params?.comedian1_persona?.name || "");
       setSelectedComedian2(parsed?.params?.comedian2_persona?.name || "");
+      setSelectedShowTtsMode(!!parsed?.params?.tts_mode);
     }
     setSelectedShowLoading(false);
   }
@@ -155,13 +178,16 @@ export default function Home({ lang, setLang, t }: HomeProps) {
                 t={t}
                 lang={lang}
                 isMobile={true}
+                refreshKey={sidebarRefreshKey}
               />
             </div>
           </>
         )}
 
         {/* Main content */}
-        <div className="flex-1 flex flex-col items-center py-12 px-2 transition-all duration-300 mt-8 md:mt-0">
+        <div
+          className={`flex-1 flex flex-col items-center py-12 px-2 transition-all duration-300 ${user ? "mt-8 md:mt-0" : "-mt-4 md:-mt-8"}`}
+        >
           {!user && <div className="mb-8" />}
           {!sidebarOpen && user && (
             <button
@@ -196,7 +222,7 @@ export default function Home({ lang, setLang, t }: HomeProps) {
                 ref={showHistoryRef}
                 history={selectedShowHistory}
                 lang={lang}
-                ttsMode={false}
+                ttsMode={selectedShowTtsMode}
                 comedian1Persona={selectedComedian1}
                 comedian2Persona={selectedComedian2}
                 personas={personas}

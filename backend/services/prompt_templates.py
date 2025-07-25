@@ -79,17 +79,22 @@ COMEDIANIFY_PROMPT = {
 
 JUDGING_PROMPT = {
     "en": (
-        "Given the following comedy duel between {comedian1_name} and {comedian2_name}, who was the funnier comedian?\n"
-        "Respond in this format:\n"
+        "Judge the comedy duel between {comedian1_name} and {comedian2_name}.\n"
+        'IMPORTANT: In your answer, use ONLY the persona names: "{comedian1_name}" and "{comedian2_name}". '
+        "Do NOT use generic labels like 'Comedian 1' or 'Comedian 2'.\n"
+        "Who was funnier? Answer in this format:\n"
         "{format_instructions}\n"
-        "Chat history:\n{history_text}"
+        "Chat history:\n{history_text}\n"
+        "Answer ONLY in English."
     ),
     "pl": (
         "Oceń pojedynek komików pomiędzy {comedian1_name} i {comedian2_name}.\n"
+        'WAŻNE: W odpowiedzi używaj WYŁĄCZNIE imion person: "{comedian1_name}" i "{comedian2_name}". '
+        "Nie używaj ogólnych etykiet typu 'Komik 1' czy 'Komik 2'.\n"
         "Kto był zabawniejszy? Odpowiedz w tym formacie:\n"
         "{format_instructions}\n"
         "Historia czatu:\n{history_text}\n"
-        "Odpowiadaj wyłącznie po polsku."
+        "Odpowiadaj WYŁĄCZNIE po polsku."
     ),
 }
 
