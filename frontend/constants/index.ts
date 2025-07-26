@@ -8,8 +8,8 @@ export const API_CONFIG = {
 // Default Values
 export const DEFAULTS = {
   LANGUAGE: "pl",
-  COMEDIAN1: "janusz",
-  COMEDIAN2: "gen_z",
+  COMEDIAN1: "relatable",
+  COMEDIAN2: "observational",
   NUM_ROUNDS: 1,
   ROAST_MODE: true,
   TTS_MODE: true,
