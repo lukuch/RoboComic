@@ -172,8 +172,18 @@ export default function UserShowHistorySidebar({
         </div>
       </div>
       <div className="py-0.5 px-2 sm:py-0.5 sm:px-2 border-t border-zinc-200 dark:border-zinc-700/60 flex flex-row items-center gap-3 text-gray-700 dark:text-gray-200 text-xs sm:text-sm bg-white/80 dark:bg-zinc-900/80">
-        <span className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-300 to-blue-300 dark:from-purple-400 dark:to-blue-400 flex items-center justify-center shadow">
-          {user.email ? user.email[0].toUpperCase() : <UserCircleIcon />}
+        <span className="flex items-center justify-center h-8">
+          {user.user_metadata?.avatar_url ? (
+            <img
+              src={user.user_metadata.avatar_url}
+              alt={user.email || "User avatar"}
+              className="w-7 h-7 rounded-full object-cover shadow"
+            />
+          ) : (
+            <span className="w-7 h-7 rounded-full bg-gradient-to-br from-purple-300 to-blue-300 dark:from-purple-400 dark:to-blue-400 flex items-center justify-center shadow">
+              {user.email ? user.email[0].toUpperCase() : <UserCircleIcon />}
+            </span>
+          )}
         </span>
         <span className="text-base font-semibold truncate max-w-[200px]">
           {user.email || t.guest}
