@@ -19,6 +19,7 @@ const avatars: Record<string, string> = {
   mietek: "🛠️",
   wiesiek_mechanik: "🚗",
   janusz_budowlaniec: "👷",
+  dresiarz: "💪",
 
   // System roles
   chat_manager: "🤖",

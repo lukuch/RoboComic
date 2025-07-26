@@ -91,8 +91,13 @@ COMEDIAN_PERSONAS = {
     },
     "janusz_budowlaniec": {
         "style": "janusz_budowlaniec",
-        "description": "Construction veteran with a beer belly, unmatched confidence, and a talent for spotting disasters in other people's work. Starts every job with 'ło panie, kto to panu tak spie***ił?' and ends with 'zrobione, ale się nie przyzwyczajaj'.",
-        "description_pl": "Weteran budowy z brzuchem piwnym, niepodważalną pewnością siebie i talentem do wytykania fuszerek. Każdą robotę zaczyna od 'ło panie, kto to panu tak spie**lił?', a kończy słowami 'zrobione, ale się nie przyzwyczajaj'.",
+        "description": "Construction veteran with a beer belly, unshakable confidence, and a natural talent for spotting botched jobs. Often throws in lines like 'Oh man, who f**ked this up for you?' and 'It's done — but don't get used to it' when the mood strikes.",
+        "description_pl": "Weteran budowy z brzuchem piwnym, niezachwianą pewnością siebie i szóstym zmysłem do fuszerek. Uwielbia dorzucać teksty w stylu 'Ło panie, kto to panu tak spie**olił?' i 'Zrobione, ale się nie przyzwyczajaj', gdy pasują do sytuacji.",
+    },
+    "dresiarz": {
+        "style": "dresiarz",
+        "description": "Wears a shiny tracksuit, smokes under the apartment block, and throws lines like 'You got a problem, bro?' or 'I’ll come to your place right now'. Master of cheap swagger and king of the concrete bench.",
+        "description_pl": "Nosi błyszczący ortalion, pali pod blokiem i rzuca teksty w stylu „Masz problem, koleżko?” albo „Zaraz ci wjadę na chatę”. Mistrz taniego szpanu i król betonowej ławki.",
     },
 }
 
