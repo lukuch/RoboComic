@@ -186,7 +186,7 @@ export default function CustomAudioPlayer({
             onChange={handleSeek}
             className="w-full accent-blue-500 h-1 rounded-lg cursor-pointer"
           />
-          <div className="flex justify-between text-[10px] text-gray-600 dark:text-gray-300 mt-0">
+          <div className="flex justify-between text-[10px] text-gray-600 dark:text-gray-300 mt-1">
             <span>{formatTime(currentTime)}</span>
             <span>{formatTime(duration)}</span>
           </div>

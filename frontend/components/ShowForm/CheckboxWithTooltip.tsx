@@ -15,13 +15,13 @@ export function CheckboxWithTooltip({
   tooltip,
 }: CheckboxWithTooltipProps) {
   return (
-    <label className="flex items-center gap-3 font-semibold text-gray-700 dark:text-gray-200 cursor-pointer select-none">
+    <div className="flex items-center gap-3 font-semibold text-gray-700 dark:text-gray-200 select-none">
       <span className="relative flex items-center justify-center">
         <input
           type="checkbox"
           checked={checked}
           onChange={(e) => onChange(e.target.checked)}
-          className="peer appearance-none w-6 h-6 rounded-md border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 checked:bg-gradient-to-br checked:from-blue-500 checked:to-blue-400 transition-colors duration-200 focus:outline-none shadow-sm"
+          className="peer appearance-none w-6 h-6 rounded-md border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 checked:bg-gradient-to-br checked:from-blue-500 checked:to-blue-400 transition-colors duration-200 focus:outline-none shadow-sm cursor-pointer"
         />
         <span className="pointer-events-none absolute left-1/2 top-1/2 w-4 h-4 -translate-x-1/2 -translate-y-1/2 scale-0 opacity-0 peer-checked:scale-100 peer-checked:opacity-100 transition-all duration-200">
           <svg
@@ -49,6 +49,6 @@ export function CheckboxWithTooltip({
           />
         </Tooltip>
       </span>
-    </label>
+    </div>
   );
 }
