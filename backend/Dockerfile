@@ -1,5 +1,5 @@
 # Production deployment with PyTorch compatibility
-FROM python:3.11-slim as builder
+FROM python:3.14.0rc1-slim as builder
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
@@ -20,7 +20,7 @@ RUN pip install --upgrade pip && \
     pip install --no-cache-dir --compile -r requirements.txt
 
 # Production stage
-FROM python:3.11-slim as production
+FROM python:3.14.0rc1-slim as production
 
 # Install only runtime dependencies
 RUN apt-get update && apt-get install -y \
