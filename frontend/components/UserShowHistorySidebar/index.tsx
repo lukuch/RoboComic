@@ -64,7 +64,7 @@ export default function UserShowHistorySidebar({
         }
         setLoading(false);
       });
-  }, [user, refreshKey]);
+  }, [user?.id, refreshKey]);
 
   const handleRemoveShow = async (showId: string) => {
     setShows((prev) => prev.filter((s) => s.id !== showId));

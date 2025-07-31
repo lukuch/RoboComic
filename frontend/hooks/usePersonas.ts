@@ -61,11 +61,11 @@ export function usePersonas() {
       })
       .catch((err) => setError(err.message || "Failed to fetch personas"))
       .finally(() => setLoading(false));
-  }, [user]);
+  }, [user?.id]);
 
   useEffect(() => {
     fetchAll();
-  }, [user, fetchAll]);
+  }, [user?.id, fetchAll]);
 
   return { personas, loading, error, refetch: fetchAll };
 }

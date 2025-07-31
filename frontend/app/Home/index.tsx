@@ -138,7 +138,7 @@ export default function Home({ lang, setLang, t }: HomeProps) {
     if (user) {
       refetchPersonas();
     }
-  }, [user, refetchPersonas]);
+  }, [user?.id]);
 
   useEffect(() => {
     if (selectedShowHistory && showHistoryRef.current) {
