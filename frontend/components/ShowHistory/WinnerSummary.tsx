@@ -68,26 +68,26 @@ export default function WinnerSummary({
         </div>
       )}
       <div className="flex flex-col items-center justify-center gap-4 animate-bounce-in">
-        <div className="relative text-5xl font-extrabold mb-2 flex items-center justify-center gap-3 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 animate-gradient-x drop-shadow-xl winner-animated-text">
-          <LuSparkles className="text-yellow-300 drop-shadow-lg animate-sparkle-slow w-10 h-10" />
-          <span className="winner-glow winner-gradient-text animate-gradient-x px-2">
+        <div className="relative text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-2 flex items-center justify-center gap-2 sm:gap-3 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 animate-gradient-x drop-shadow-xl winner-animated-text">
+          <LuSparkles className="text-yellow-300 drop-shadow-lg animate-sparkle-slow w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10" />
+          <span className="winner-glow winner-gradient-text animate-gradient-x px-2 text-center break-words">
             {displayWinner}
           </span>
-          <LuSparkles className="text-yellow-300 drop-shadow-lg animate-sparkle-slow w-10 h-10" />
+          <LuSparkles className="text-yellow-300 drop-shadow-lg animate-sparkle-slow w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10" />
           {/* Floating sparkles */}
           <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-20">
-            <LuSparkles className="text-blue-400 animate-float-slow w-7 h-7 opacity-70" />
+            <LuSparkles className="text-blue-400 animate-float-slow w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 opacity-70" />
           </span>
-          <span className="absolute right-8 bottom-0 pointer-events-none z-20">
-            <LuSparkles className="text-pink-400 animate-float-slow w-6 h-6 opacity-60" />
+          <span className="absolute right-2 sm:right-4 md:right-8 bottom-0 pointer-events-none z-20">
+            <LuSparkles className="text-pink-400 animate-float-slow w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 opacity-60" />
           </span>
-          <span className="absolute left-8 bottom-0 pointer-events-none z-20">
-            <LuSparkles className="text-purple-400 animate-float-slow w-5 h-5 opacity-60" />
+          <span className="absolute left-2 sm:left-4 md:left-8 bottom-0 pointer-events-none z-20">
+            <LuSparkles className="text-purple-400 animate-float-slow w-4 h-4 sm:w-5 sm:h-5 md:w-5 md:h-5 opacity-60" />
           </span>
         </div>
       </div>
       <div
-        className="winner-summary-card supercool-glass-border relative rounded-3xl px-10 py-8 shadow-2xl text-lg font-semibold max-w-2xl mx-auto mt-8 animate-fade-in backdrop-blur-xl bg-white/20 dark:bg-gray-900/40 border-0 overflow-hidden"
+        className="winner-summary-card supercool-glass-border relative rounded-3xl px-4 sm:px-6 md:px-10 py-6 sm:py-8 shadow-2xl text-lg font-semibold max-w-2xl mx-auto mt-8 animate-fade-in backdrop-blur-xl bg-white/20 dark:bg-gray-900/40 border-0 overflow-hidden"
         style={{
           color: "#5a3e1b",
           boxShadow:
@@ -97,13 +97,13 @@ export default function WinnerSummary({
         {/* Animated border overlay */}
         <span className="pointer-events-none absolute inset-0 rounded-3xl z-10 supercool-animated-border"></span>
         <div
-          className="text-3xl font-extrabold text-green-600 dark:text-green-300 mb-4 text-center tracking-wide drop-shadow-sm animate-gradient-x winner-gradient-text"
+          className="text-xl sm:text-2xl md:text-3xl font-extrabold text-green-600 dark:text-green-300 mb-4 text-center tracking-wide drop-shadow-sm animate-gradient-x winner-gradient-text"
           style={{ letterSpacing: "0.03em" }}
         >
           {t.congratulations}
         </div>
         <div
-          className="text-base md:text-xl font-medium text-brown-900 dark:text-yellow-100 text-center"
+          className="text-sm sm:text-base md:text-xl font-medium text-brown-900 dark:text-yellow-100 text-center break-words"
           style={{ lineHeight: 1.6 }}
         >
           {formattedSummary}
