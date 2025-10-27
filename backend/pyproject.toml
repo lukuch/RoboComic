@@ -14,7 +14,7 @@ python-dotenv = "^1.1.1"
 injector = "^0.22.0"
 structlog = "^25.4.0"
 elevenlabs = "^2.6.0"
-autogen = {version = "^0.9.5", python = ">=3.9,<3.14"}
+autogen = {version = "^0.10.0", python = ">=3.9,<3.14"}
 numpy = "^2.3.1"
 openai = "^1.93.0"
 langchain = "^0.3.26"
